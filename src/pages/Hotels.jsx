@@ -1,13 +1,13 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import PermanentDrawerLeft from '../components/drawer'
 import Box from '@mui/material/Box';
-import { Button, Checkbox, Dialog, DialogContent, DialogTitle, FormControlLabel, IconButton, Paper, Radio, RadioGroup, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, TextField } from "@mui/material";
-
+import { Button, Checkbox, Dialog, DialogContent, DialogTitle, FormControlLabel, IconButton, Paper, Radio, RadioGroup, Stack, Tab, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, TextField } from "@mui/material";
+import HotelService from '../services/HotelService';
 
 export const Hotels = () => {
 
   const columns = [
-    {id: '_id', name: 'ID'},
+    // {id: '_id', name: 'ID'},
     {id: 'hotelName', name: 'Name'},
     {id: 'hotelDistrict', name: 'District'},
     {id: 'hotelImage', name: 'Image'},
@@ -38,6 +38,22 @@ export const Hotels = () => {
     console.log(_obj);
   }
 
+  const [hotels, setHotels] = useState([]);
+
+  useEffect(() => { 
+    async function fetchHotels() {
+      try {
+        const data = await HotelService.getHotels();
+        console.log('Hotels data:', data.data);
+        setHotels(data.data);
+      } catch (error) {
+        console.log('Error fetching hotels:', error);
+      }
+    }
+  
+    fetchHotels();
+  }, []);
+  
   
 
   return (
@@ -47,11 +63,11 @@ export const Hotels = () => {
      <h1 className='text-cyan-900'>Hotels</h1>
     </Box>
      
-     <Paper sx={{margin: '1%'}}>
+     <Paper sx={{margin: '1%', pl: '10%'}}>
       <div className='flex justify-end'>
         <Button onClick={functionAdd} variant="contained" color="primary">Add New Hotel</Button>
       </div>
-      <div style={{margin: '1%'}}>
+      <div style={{margin: '1%'}}> 
       <TableContainer>
         <Table>
           <TableHead>
@@ -64,8 +80,21 @@ export const Hotels = () => {
             </TableRow> 
           </TableHead>
           <TableBody>
-            
-          </TableBody>
+          {hotels.map((hotel) => (
+              <TableRow key={hotel._id}>
+                {/* <TableCell>{hotel._id}</TableCell> */}
+                <TableCell>{hotel.hotelName}</TableCell>
+                <TableCell>{hotel.hotelDistrict}</TableCell>
+                <TableCell>
+                  <img src={hotel.hotelImage} alt={hotel.hotelName} style={{ maxWidth: '100px' }} />
+                </TableCell>
+                <TableCell>
+                  {/* Actions buttons go here */}
+                </TableCell>
+              </TableRow>
+            ))} 
+</TableBody>
+
         </Table>
       </TableContainer> 
       </div>
