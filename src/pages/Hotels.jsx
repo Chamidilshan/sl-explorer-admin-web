@@ -5,6 +5,10 @@ import { Button, Checkbox, Dialog, DialogContent, DialogTitle, FormControlLabel,
 import HotelService from '../services/HotelService';
 import { ToastContainer } from 'react-toastify'
 import { toast } from 'react-toastify'
+import { imageDb } from '../../config';
+import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+import { v4 } from 'uuid';
+
 
 export const Hotels = () => {
 
@@ -28,17 +32,35 @@ export const Hotels = () => {
   const [img,setImg] =useState('')
     const [imgUrl,setImgUrl] =useState([])
 
-    const handleClick = () =>{
-    //  if(img !==null){
-    //     const imgRef =  ref(imageDb,`files/${v4()}`)
-    //     uploadBytes(imgRef,img).then(value=>{
-    //         console.log(value)
-    //         getDownloadURL(value.ref).then(url=>{
-    //             setImgUrl(data=>[...data,url])
-    //         })
-    //     })
-    //  }
-    }
+    const handleFileChange = (e) => {
+      const file = e.target.files[0];
+      setImg(file);
+  
+      // Read the selected file and set it as the source for the image element
+      const reader = new FileReader();
+      reader.onload = () => {
+        setImgUrl(reader.result);
+      };
+      reader.readAsDataURL(file);
+    };
+
+    const handleClick = async () => {
+      if (img) {
+        const imgRef = ref(imageDb, `hotelImages/${v4()}`);
+        try {
+          const snapshot = await uploadBytes(imgRef, img);
+          const url = await getDownloadURL(snapshot.ref);
+          console.log('Uploaded image URL:', url);
+          hotelImageChange(url);
+          setImgUrl((data) => [...data, url]);
+          return url;
+        } catch (error) {
+          console.error('Error uploading image:', error);
+          throw error; 
+        }
+      }
+    };
+
 
 
   const functionAdd = ()=>{
@@ -62,25 +84,25 @@ export const Hotels = () => {
     setPage(0);
   }
 
-  const handleSubmit= async(e)=>{
+  const handleSubmit = async (e) => { 
     e.preventDefault();
-    const newHotel = {
-      hotelName,
-      hotelDistrict,
-      hotelImage
-    };
-
-    try{
-      setLoading(true); 
-      await HotelService.createHotel(newHotel);
+    try {
+      setLoading(true);
+      const imageUrl = await handleClick(); 
+      const newHotel = {
+        hotelName,
+        hotelDistrict,
+        hotelImage: imageUrl, 
+      };
+      await HotelService.createHotel(newHotel); 
       setLoading(false);
       openChange(false);
-    }catch(error){
+    } catch (error) {
       setLoading(false);
-      toast.error('Failed to create hotel : ', error.message); 
-      console.log('Error:', error);
+      toast.error('Failed to create hotel: ', error.message);
+      console.error('Error:', error);
     }
-  }
+  };
 
   const [hotels, setHotels] = useState([]);
 
@@ -159,21 +181,14 @@ export const Hotels = () => {
       <DialogTitle>
         <span>Create A Hotel</span>
       </DialogTitle>
-      <DialogContent>
+      <DialogContent> 
         <form onSubmit={handleSubmit}>
           <Stack spacing={2} margin={2}>
             <TextField value={hotelName} required onChange={e=>{hotelNameChange(e.target.value)}} variant='outlined' label='Hotel Name'></TextField>
             <TextField value={hotelDistrict} onChange={e=>{hotelDistrictChange(e.target.value)}} variant='outlined' label='Hotel District'></TextField>
-            <TextField value={hotelImage} onChange={e=>{hotelImageChange(e.target.value)}} variant='outlined' label='Hotel Image'></TextField>
-            <input type="file" onChange={(e)=>setImg(e.target.files[0])} /> 
-                <button onClick={handleClick}>Upload</button>
+            <input type="file" onChange={handleFileChange}/> 
+            {img !== '' ? (imgUrl && <img src={imgUrl} alt="Selected" />) : null} 
                 <br/>
-                {/* {
-                    imgUrl.map(dataVal=><div>
-                        <img src={dataVal} height="200px" width="200px" />
-                        <br/> 
-                    </div>)
-                } */}
             <Button type='submit' variant='contained' disabled={loading}>Save</Button>
           </Stack>
         </form> 
@@ -182,4 +197,4 @@ export const Hotels = () => {
     </div>  
    </>
   )
-}
+} 

@@ -17,7 +17,7 @@ const HotelService = {
     async createHotel(hotel){
         try{
             const response = await api.post('/api/v1/hotels', hotel);
-            console.log(response);
+            console.log(response); 
             toast.success('Hotel created successfully');
             return response.data;
         }catch(error){
