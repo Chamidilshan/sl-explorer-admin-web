@@ -25,7 +25,20 @@ const HotelService = {
             toast.error('Failed to create hotel : ', error.message);
             throw error;
         }
-    }
+    },
+    
+    async deleteHotel(hotelId){
+        try{
+            const response = await api.delete(`/api/v1/hotels/${hotelId}`);
+            console.log(response);
+            toast.success('Hotel deleted successfully');
+            return response.data;
+        }catch(error){
+            console.log(error);
+            toast.error('Failed to delete hotel : ', error.message);
+            throw error;
+        }
+    },
  
 }
 

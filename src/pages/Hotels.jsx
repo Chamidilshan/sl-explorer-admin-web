@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import PermanentDrawerLeft from '../components/drawer'
 import Box from '@mui/material/Box';
-import { Button, Checkbox, Dialog, DialogContent, DialogTitle, FormControlLabel, IconButton, Paper, Radio, RadioGroup, Stack, Tab, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, TextField } from "@mui/material";
+import { Button, Checkbox, Dialog, DialogContent, DialogTitle, FormControlLabel, IconButton, Paper, Radio, RadioGroup, Stack, Tab, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, TextField, DialogActions } from "@mui/material";
 import HotelService from '../services/HotelService';
 import { ToastContainer } from 'react-toastify'
 import { toast } from 'react-toastify'
@@ -30,13 +30,38 @@ export const Hotels = () => {
   const [page, setPage] = useState(0);
 
   const [img,setImg] =useState('')
-    const [imgUrl,setImgUrl] =useState([])
+  const [imgUrl,setImgUrl] =useState([])
+  const [deleteConfirmationOpen, setDeleteConfirmationOpen] = useState(false);
+  const [hotelIdToDelete, setHotelIdToDelete] = useState(null);
+
+  const handleDelete = (hotelId) => { 
+    setHotelIdToDelete(hotelId);
+    setDeleteConfirmationOpen(true);
+  };
+
+  const cancelDelete = () => {
+    setHotelIdToDelete(null);
+    setDeleteConfirmationOpen(false);
+  };
+
+  const confirmDelete = async () => {
+    try {
+      await HotelService.deleteHotel(hotelIdToDelete);
+      setHotels((prevHotels) => prevHotels.filter((hotel) => hotel._id !== hotelIdToDelete));
+    } catch (error) {
+      console.error('Error deleting hotel:', error);
+      toast.error('Failed to delete hotel: ', error.message);
+    } finally {
+      setDeleteConfirmationOpen(false);
+    }
+  };
+
+
 
     const handleFileChange = (e) => {
       const file = e.target.files[0];
       setImg(file);
   
-      // Read the selected file and set it as the source for the image element
       const reader = new FileReader();
       reader.onload = () => {
         setImgUrl(reader.result);
@@ -157,7 +182,7 @@ export const Hotels = () => {
                 </TableCell>
                 <TableCell>
                 <Button variant='contained' color='primary' sx={{margin: '5px'}} >Edit</Button>
-                  <Button variant='contained' color='secondary' >Delete</Button>
+                  <Button variant='contained' onClick={e=>{handleDelete(hotel._id)}} color='secondary' >Delete</Button>
                 </TableCell>
               </TableRow>
             ))} 
@@ -182,7 +207,7 @@ export const Hotels = () => {
         <span>Create A Hotel</span>
       </DialogTitle>
       <DialogContent> 
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit}> 
           <Stack spacing={2} margin={2}>
             <TextField value={hotelName} required onChange={e=>{hotelNameChange(e.target.value)}} variant='outlined' label='Hotel Name'></TextField>
             <TextField value={hotelDistrict} onChange={e=>{hotelDistrictChange(e.target.value)}} variant='outlined' label='Hotel District'></TextField>
@@ -194,6 +219,18 @@ export const Hotels = () => {
         </form> 
       </DialogContent>
      </Dialog>
+
+     <Dialog open={deleteConfirmationOpen} onClose={cancelDelete}>
+        <DialogTitle>Confirm Delete</DialogTitle>
+        <DialogContent>
+          Are you sure you want to delete this hotel?
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={cancelDelete}>Cancel</Button>
+          <Button onClick={confirmDelete} color='secondary'>Delete</Button>
+        </DialogActions>
+      </Dialog>
+
     </div>  
    </>
   )
