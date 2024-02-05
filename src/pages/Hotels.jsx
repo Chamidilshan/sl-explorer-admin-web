@@ -34,6 +34,9 @@ export const Hotels = () => {
   const [deleteConfirmationOpen, setDeleteConfirmationOpen] = useState(false);
   const [hotelIdToDelete, setHotelIdToDelete] = useState(null);
 
+  const [isEdit, setIsEdit] = useState(false);
+  const [title, setTitle] = useState('Add Hotel');
+
   const handleDelete = (hotelId) => { 
     setHotelIdToDelete(hotelId);
     setDeleteConfirmationOpen(true);
@@ -89,7 +92,32 @@ export const Hotels = () => {
 
 
   const functionAdd = ()=>{
+    setIsEdit(false);
+    setTitle('Add hotel');
     openPopUp();
+  }
+
+  const handleEdit = async (id)=>{
+    setIsEdit(true);
+    setTitle('Update Hotel');
+    openPopUp();
+
+    try{
+      const hotel = await HotelService.getHotel(id);
+      if(hotel){
+        hotelNameChange(hotel.body.hotelName);
+        hotelDistrictChange(hotel.body.hotelDistrict);
+        setImg(null);
+        idChange(hotel.body._id);
+        setImgUrl(hotel.body.hotelImage); 
+      }{
+        // toast.error('Hotel not found');
+        console.error('Hotel not found');
+      }
+    }catch(error){
+      console.error('Error fetching hotel details:', error);
+    }
+
   }
 
   const closePopUp = ()=>{
@@ -113,37 +141,46 @@ export const Hotels = () => {
     e.preventDefault();
     try {
       setLoading(true);
-      const imageUrl = await handleClick(); 
+      const imageUrl = await handleClick();  
       const newHotel = {
         hotelName,
         hotelDistrict,
         hotelImage: imageUrl, 
       };
-      await HotelService.createHotel(newHotel); 
+      if (isEdit) {
+        // Call the update function instead of create function
+        await HotelService.updateHotel(_id, newHotel); 
+        fetchHotels(); 
+      } else {
+        // Call the create function
+        await HotelService.createHotel(newHotel); 
+        fetchHotels();
+      }
       setLoading(false);
       openChange(false);
     } catch (error) {
       setLoading(false);
-      toast.error('Failed to create hotel: ', error.message);
+      toast.error('Failed to save hotel: ', error.message);
       console.error('Error:', error);
     }
-  };
-
+  }; 
+  
   const [hotels, setHotels] = useState([]);
 
   useEffect(() => { 
-    async function fetchHotels() {
-      try {
-        const data = await HotelService.getHotels();
-        console.log('Hotels data:', data.data);
-        setHotels(data.data);
-      } catch (error) {
-        console.log('Error fetching hotels:', error);
-      }
-    }
-  
     fetchHotels();
   }, []);
+ 
+  async function fetchHotels() {
+    try {
+      const data = await HotelService.getHotels();
+      console.log('Hotels data:', data.data);
+      setHotels(data.data);
+    } catch (error) {
+      console.log('Error fetching hotels:', error);
+    }
+  }
+
   
   
 
@@ -181,8 +218,8 @@ export const Hotels = () => {
                   <img src={hotel.hotelImage} alt={hotel.hotelName} style={{ maxWidth: '100px' }} />
                 </TableCell>
                 <TableCell>
-                <Button variant='contained' color='primary' sx={{margin: '5px'}} >Edit</Button>
-                  <Button variant='contained' onClick={e=>{handleDelete(hotel._id)}} color='secondary' >Delete</Button>
+                <Button variant='contained' onClick={e=>{handleEdit(hotel._id)}} color='primary' sx={{margin: '5px'}} >Edit</Button>
+                  <Button variant='contained' onClick={e=>{handleDelete(hotel._id)}} style={{backgroundColor: '#D97706'}} >Delete</Button>
                 </TableCell>
               </TableRow>
             ))} 
@@ -204,8 +241,8 @@ export const Hotels = () => {
 
      <Dialog open={open} onClose={closePopUp} fullWidth maxWidth='sm' >
       <DialogTitle>
-        <span>Create A Hotel</span>
-      </DialogTitle>
+        <span>{title}</span>
+      </DialogTitle> 
       <DialogContent> 
         <form onSubmit={handleSubmit}> 
           <Stack spacing={2} margin={2}>

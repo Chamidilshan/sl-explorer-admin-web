@@ -39,6 +39,31 @@ const HotelService = {
             throw error;
         }
     },
+
+    async getHotel(hotelId){
+        try{
+            const response = await api.get(`/api/v1/hotels/${hotelId}`);
+            console.log(response);
+            return response.data;
+        }catch(error){
+            console.log(error);
+            toast.error('Failed to fetch hotel details: ', error.message);
+            throw error;
+        }
+    },
+
+    async updateHotel(hotelId, hotel){
+        try{
+            const response = await api.patch(`/api/v1/hotels/${hotelId}`, hotel);
+            console.log(response);
+            toast.success('Hotel updated successfully');
+            return response.data;
+        }catch(error){
+            console.log(error);
+            toast.error('Failed to update hotel : ', error.message);
+            throw error;
+        }
+    }
  
 }
 
