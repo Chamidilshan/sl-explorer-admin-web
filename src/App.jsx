@@ -10,10 +10,8 @@ import {DayTrips} from './pages/DayTrips.jsx'
 import {RoundTrips} from './pages/RoundTrips.jsx'
 import {Messages} from './pages/Messages.jsx'
 import {NotificationCampaign} from './pages/NotificationCampaign.jsx'
-
-
-
-
+import { ToastContainer } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css';
 
 function App() {
   const [count, setCount] = useState(0)
@@ -31,7 +29,8 @@ function App() {
         <Route path="/messages" exact element={<Messages />}></Route>
         <Route path="/settings" exact element={<Settings />}></Route>
       </Routes>
-    </BrowserRouter>
+    </BrowserRouter>  
+    <ToastContainer position='top-right'></ToastContainer> 
     </>
   ) 
 } 
