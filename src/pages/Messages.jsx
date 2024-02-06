@@ -4,6 +4,7 @@ import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 
+
 export const Messages = () => {
   return (
     <> 
@@ -11,7 +12,7 @@ export const Messages = () => {
      <PermanentDrawerLeft />
       <h1 className='text-cyan-900'>Messages</h1>
      </Box>
-     
+        
     </>
   )
 }

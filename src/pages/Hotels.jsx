@@ -269,6 +269,6 @@ export const Hotels = () => {
       </Dialog>
 
     </div>  
-   </>
+   </> 
   )
 } 
