@@ -9,6 +9,7 @@ import {CruiseShips} from './pages/CruiseShips.jsx'
 import {DayTrips} from './pages/DayTrips.jsx'
 import {RoundTrips} from './pages/RoundTrips.jsx'
 import {Messages} from './pages/Messages.jsx'
+import {LoginPage} from './pages/LoginPage.jsx' 
 import {NotificationCampaign} from './pages/NotificationCampaign.jsx'
 import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css';
@@ -20,7 +21,7 @@ function App() {
     <>
     <BrowserRouter>
       <Routes>
-        <Route path="/" exact element={<Home />}></Route> 
+        <Route path="/" exact element={<LoginPage />}></Route> 
         <Route path="/cruise-ships" exact element={<CruiseShips />}></Route>
         <Route path="/round-trips" exact element={<RoundTrips />}></Route>
         <Route path="/day-trips" exact element={<DayTrips />}></Route>
