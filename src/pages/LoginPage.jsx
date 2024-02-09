@@ -21,13 +21,19 @@ export const LoginPage = () => {
         e.preventDefault();
 
         signInWithEmailAndPassword(auth, email, password)
-            .then((userCredential) => {
-                // Signed up 
+            .then(async (userCredential) => {
                 try{
                     const user = userCredential.user;
-                console.log('user:', user);
-                dispatch({type: 'LOGIN', payload: user});
-                navigate('/hotels');
+                    const idTokenResult = await user.getIdTokenResult();
+                    const isAdmin = idTokenResult.claims.admin;
+                    console.log('user:', user);
+                    console.log('isAdmin:', isAdmin);
+                    if (isAdmin) { 
+                        dispatch({ type: 'LOGIN', payload: user });
+                        navigate('/');
+                    } else {
+                        toast.error('You are not authorized');
+                    }
                 }catch(e){
                     console.log(e);
                 }
