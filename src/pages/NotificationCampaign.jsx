@@ -71,7 +71,6 @@ export const NotificationCampaign = () => {
   return (
     <> 
       <Box sx={{ display: 'flex' }}>
-        <PermanentDrawerLeft />
         <Typography sx={{ ml: 2, mt: 2 }}>Notification Campaign</Typography>
       </Box>
 
