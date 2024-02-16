@@ -1,16 +1,14 @@
-import React from "react";
+import React, { useContext } from "react";
 import Cam from "../../assets/cam.png";
 import Add from "../../assets/add.png";
 import More from "../../assets/more.png";
-import Messages from "./ChatMessage";
+import Messages from "./ChatMessages";
 import Input from "./MessageInput";
+import { ChatContext } from "../../contexts/ChatContext";
 
 const Chat = () => { 
-  const data = {
-    user: {
-      displayName: "John Doe",
-    },
-  }; 
+
+  const { data } = useContext(ChatContext); 
 
   return (           
     <div className="chat flex-2">
