@@ -8,7 +8,6 @@ export const DayTrips = () => {
   return (
     <> 
      <Box sx={{ display: 'flex' }}>
-     <PermanentDrawerLeft />
       <h1 className='text-cyan-900'>Day Trips</h1>
      </Box>
      
