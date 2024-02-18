@@ -6,7 +6,6 @@ export const Settings = () => {
   return (
     <>
     <Box sx={{ display: 'flex' }}>
-    <PermanentDrawerLeft />
      <h1 className='text-cyan-900'>Settings</h1>
     </Box>
     
