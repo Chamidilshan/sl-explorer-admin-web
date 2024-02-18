@@ -15,6 +15,8 @@ import PermanentDrawerTop from "../components/TopDrawer";
 import { PackDetails } from "../components/TripComponents/PackDetails/PackDetails";
 import KeyboardDoubleArrowLeftIcon from "@mui/icons-material/KeyboardDoubleArrowLeft";
 import KeyboardDoubleArrowRightIcon from "@mui/icons-material/KeyboardDoubleArrowRight";
+import { Itinerary } from "../components/tripComponents/PackDetails/Itinerary";
+import { Hotel } from "../components/tripComponents/PackDetails/Hotel";
 
 export const RoundTrips = () => {
   const totalPages = 2;
@@ -37,24 +39,26 @@ export const RoundTrips = () => {
         flexFlow: "column nowrap",
         width: "100%",
         height: "100%",
-        alignItems: "flex-start",
         justifyContent: "space-between",
       }}
       gap={2}
     >
-      <Box>
+      <Box sx={{ display: "flex" }}>
         <Typography>Dashboard / Round Trips</Typography>
       </Box>
 
       <Box
         sx={{
           width: "100%",
+          height: "100%",
           display: "flex",
           flexFlow: "row wrap",
         }}
         // bgcolor="secondary.main"
       >
         <PackDetails />
+        <Itinerary />
+        <Hotel />
       </Box>
 
       <Box
