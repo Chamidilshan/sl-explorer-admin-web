@@ -57,8 +57,8 @@ export const RoundTrips = () => {
         // bgcolor="secondary.main"
       >
         <PackDetails />
-        <Itinerary />
-        <Hotel />
+        {/* <Itinerary />
+        <Hotel /> */}
       </Box>
 
       <Box

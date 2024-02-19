@@ -22,9 +22,11 @@ import ImageIcon from "@mui/icons-material/Image";
 import HideImageIcon from "@mui/icons-material/HideImage";
 import DeleteIcon from "@mui/icons-material/Delete";
 import AddIcon from "@mui/icons-material/Add";
+import { Form, useSubmit } from "react-router-dom";
 
 const PackDetails = () => {
-  const saveDetails = () => {
+  const saveDetails = (e) => {
+    e.preventDefault;
     alert(
       "Save Details: ",
       packName,
@@ -98,119 +100,122 @@ const PackDetails = () => {
               bgcolor: "primary",
             }}
           />
-          <Box
-            p={2}
-            display="flex"
-            sx={{
-              flexDirection: "column",
-              alignItems: "flex-start",
-            }}
-            width="100%"
-            gap={2}
-          >
+
+          <form onSubmit={saveDetails} className="w-full">
             <Box
+              p={2}
               display="flex"
               sx={{
                 flexDirection: "column",
                 alignItems: "flex-start",
               }}
               width="100%"
-              gap={1}
+              gap={2}
             >
-              <Typography variant="body2">Package Name</Typography>
-              <TextField
+              <Box
+                display="flex"
+                sx={{
+                  flexDirection: "column",
+                  alignItems: "flex-start",
+                }}
+                width="100%"
+                gap={1}
+              >
+                <Typography variant="body2">Package Name</Typography>
+                <TextField
+                  fullWidth
+                  value={packName}
+                  onChange={(e) => setPackName(e.target.value)}
+                  placeholder="Sri Lanka Culture & Nature"
+                  size="small"
+                />
+              </Box>
+              <Box
+                display="flex"
+                sx={{
+                  flexDirection: "column",
+                  alignItems: "flex-start",
+                }}
+                width="100%"
+                gap={1}
+              >
+                <Typography variant="body2">Package Subtitle</Typography>
+                <TextField
+                  fullWidth
+                  value={packSubtitle}
+                  onChange={(e) => setPackSubtitle(e.target.value)}
+                  placeholder="9 Days/8 Nights Highlights Tour"
+                  size="small"
+                />
+              </Box>
+
+              <Box
+                display="flex"
+                sx={{
+                  flexDirection: "column",
+                  alignItems: "flex-start",
+                }}
+                width="100%"
+                gap={1}
+              >
+                <Typography variant="body2">Cover Description</Typography>
+
+                <TextField
+                  multiline
+                  value={packCoverDescription}
+                  onChange={(e) => setPackCoverDescription(e.target.value)}
+                  rows={2}
+                  type="text"
+                  size="small"
+                  helperText="Will be shown in the package lists"
+                  fullWidth
+                  placeholder="Sri Lanka, the pearl of the Indian Ocean, is rich in beautiful sights  ..."
+                />
+              </Box>
+
+              <Box
+                display="flex"
+                sx={{
+                  flexDirection: "column",
+                  alignItems: "flex-start",
+                }}
+                width="100%"
+                gap={1}
+              >
+                <Typography variant="body2">Short Description</Typography>
+
+                <TextField
+                  multiline
+                  value={packShortDescription}
+                  onChange={(e) => setPackShortDescription(e.target.value)}
+                  rows={3}
+                  type="text"
+                  size="small"
+                  helperText="Will be shown in the package details page"
+                  fullWidth
+                  placeholder="Cover Description Our comprehensive 9-day Sri Lanka tour will show you the highlights of our island, tell you the history ..."
+                />
+              </Box>
+
+              <Button
+                variant="contained"
+                type="submit"
                 fullWidth
-                value={packName}
-                onChange={(e) => setPackName(e.target.value)}
-                placeholder="Sri Lanka Culture & Nature"
-                size="small"
-              />
+                // onClick={saveDetails}
+                disabled={
+                  !(
+                    packName &&
+                    packSubtitle &&
+                    packShortDescription &&
+                    packCoverDescription
+                  )
+                }
+                aria-label="save package details"
+              >
+                Save
+              </Button>
             </Box>
-
-            <Box
-              display="flex"
-              sx={{
-                flexDirection: "column",
-                alignItems: "flex-start",
-              }}
-              width="100%"
-              gap={1}
-            >
-              <Typography variant="body2">Package Subtitle</Typography>
-              <TextField
-                fullWidth
-                value={packSubtitle}
-                onChange={(e) => setPackSubtitle(e.target.value)}
-                placeholder="9 Days/8 Nights Highlights Tour"
-                size="small"
-              />
-            </Box>
-
-            <Box
-              display="flex"
-              sx={{
-                flexDirection: "column",
-                alignItems: "flex-start",
-              }}
-              width="100%"
-              gap={1}
-            >
-              <Typography variant="body2">Cover Description</Typography>
-
-              <TextField
-                multiline
-                value={packCoverDescription}
-                onChange={(e) => setPackCoverDescription(e.target.value)}
-                rows={2}
-                type="text"
-                size="small"
-                helperText="Will be shown in the package lists"
-                fullWidth
-                placeholder="Sri Lanka, the pearl of the Indian Ocean, is rich in beautiful sights  ..."
-              />
-            </Box>
-
-            <Box
-              display="flex"
-              sx={{
-                flexDirection: "column",
-                alignItems: "flex-start",
-              }}
-              width="100%"
-              gap={1}
-            >
-              <Typography variant="body2">Short Description</Typography>
-
-              <TextField
-                multiline
-                value={packShortDescription}
-                onChange={(e) => setPackShortDescription(e.target.value)}
-                rows={3}
-                type="text"
-                size="small"
-                helperText="Will be shown in the package details page"
-                fullWidth
-                placeholder="Cover Description Our comprehensive 9-day Sri Lanka tour will show you the highlights of our island, tell you the history ..."
-              />
-            </Box>
-
-            <Button
-              variant="contained"
-              fullWidth
-              onClick={saveDetails}
-              disabled={
-                !(
-                  packName &&
-                  packSubtitle &&
-                  packShortDescription &&
-                  packCoverDescription
-                )
-              }
-              aria-label="save package details"
-            >
-              Save
-            </Button>
-          </Box>
+          </form>
         </Paper>
       </Box>
 
