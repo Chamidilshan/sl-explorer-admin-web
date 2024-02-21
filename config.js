@@ -1,6 +1,7 @@
 import { initializeApp } from "firebase/app";
 import { getStorage } from "firebase/storage";
 import { getAuth } from "firebase/auth";
+import { getFirestore } from "firebase/firestore";
 
  
 const firebaseConfig = {   
@@ -12,6 +13,7 @@ const firebaseConfig = {
   appId: import.meta.env.VITE_REACT_APP_FIREBASE_APP_ID
 };
 
-const app = initializeApp(firebaseConfig); 
+export const app = initializeApp(firebaseConfig); 
 export const imageDb = getStorage(app);
 export const auth = getAuth();
+export const db = getFirestore(); 
