@@ -188,7 +188,6 @@ export const Hotels = () => {
     <>
     <div >
     <Box sx={{ display: 'flex' }}>
-    <PermanentDrawerLeft />
      <h1 className='text-cyan-900'>Hotels</h1>
     </Box>
      

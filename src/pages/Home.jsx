@@ -8,7 +8,6 @@ export const Home = () => {
   return (
     <> 
      <Box sx={{ display: 'flex' }}>
-     <PermanentDrawerLeft />
       <h1 className='text-cyan-900'>Home</h1>
      </Box>
      

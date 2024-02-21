@@ -1,4 +1,8 @@
-# React + Vite
+# SL EXPLORER ADMIN PAGE - React + Vite
+
+## npm install
+## add .env file with firebase API keys
+## npm run dev
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 

@@ -11,6 +11,6 @@ ReactDOM.createRoot(document.getElementById('root')).render(
     <ChatContextProvider> 
       <App />
       </ChatContextProvider>
-  </React.StrictMode>
-  </AuthContextProvider>
+    </AuthContextProvider>
+  </React.StrictMode>,
 )
