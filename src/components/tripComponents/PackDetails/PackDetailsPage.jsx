@@ -24,31 +24,77 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import AddIcon from "@mui/icons-material/Add";
 import { Form, useSubmit } from "react-router-dom";
 
-const PackDetails = () => {
+const PackDetails = ({
+  onSaveDetails,
+  onSaveImages,
+  prevImages,
+  prevDetails,
+}) => {
+  const [basicDetails, setBasicDetails] = useState(prevDetails);
+  const [fd, setFd] = useState(false);
+
   const saveDetails = (e) => {
-    e.preventDefault;
-    alert(
-      "Save Details: ",
-      packName,
+    e.preventDefault();
+    setBasicDetails([
+      packageName,
       packSubtitle,
-      packCoverDescription,
-      packShortDescription
-    );
+      packageCoverDescription,
+      packageShortDescription,
+      maximumParticipants,
+    ]);
+    setFd(true);
   };
 
-  const [packName, setPackName] = useState("");
-  const [packSubtitle, setPackSubtitle] = useState("");
-  const [packCoverDescription, setPackCoverDescription] = useState("");
-  const [packShortDescription, setPackShortDescription] = useState("");
+  useEffect(() => {
+    if (fd) {
+      alert(
+        "Save Details: " +
+          "\n" +
+          packageName +
+          "\n" +
+          packSubtitle +
+          "\n" +
+          packageCoverDescription +
+          "\n" +
+          packageShortDescription +
+          "\n" +
+          maximumParticipants
+      );
+      console.log(basicDetails);
+      onSaveDetails(basicDetails);
+    }
+  }, [basicDetails]);
+
+  const [images, setImages] = useState(prevImages);
+  const [fi, setFi] = useState(false);
+
+  const saveImages = (e) => {
+    e.preventDefault();
+    setImages([packageImage, coverImage]);
+    setFi(true);
+  };
+
+  useEffect(() => {
+    if (fi) {
+      console.log(images);
+      onSaveImages(images);
+    }
+  });
+
+  const [packageName, setPackageName] = useState(basicDetails[0]);
+  const [packageShortDescription, setPackShort] = useState(basicDetails[3]);
+  const [packageCoverDescription, setPackCover] = useState(basicDetails[2]);
+
+  const [packSubtitle, setPackSubtitle] = useState(basicDetails[1]);
+  const [maximumParticipants, setMaximumParticipants] = useState(
+    basicDetails[4]
+  );
 
   const reader = new FileReader();
 
   const [count, setCount] = useState(1);
-  const [packageImage, setPackageImage] = useState("");
-  const [coverImage, setCoverImage] = useState([[count, ""]]);
-
-  console.log(packageImage);
-  console.log(coverImage);
+  const [packageImage, setPackageImage] = useState(images[0]);
+  const [coverImage, setCoverImage] = useState(images[1]);
 
   // const addCoverImage = (selectedFile) => {
   //   console.log(value);
@@ -112,35 +158,22 @@ const PackDetails = () => {
               width="100%"
               gap={2}
             >
-              <Box
-                display="flex"
-                sx={{
-                  flexDirection: "column",
-                  alignItems: "flex-start",
-                }}
-                width="100%"
-                gap={1}
-              >
+              <Box className="w-full flex flex-col items-start" gap={0.5}>
                 <Typography variant="body2">Package Name</Typography>
                 <TextField
+                  multiline
                   fullWidth
-                  value={packName}
-                  onChange={(e) => setPackName(e.target.value)}
+                  value={packageName}
+                  onChange={(e) => setPackageName(e.target.value)}
                   placeholder="Sri Lanka Culture & Nature"
                   size="small"
                 />
               </Box>
-              <Box
-                display="flex"
-                sx={{
-                  flexDirection: "column",
-                  alignItems: "flex-start",
-                }}
-                width="100%"
-                gap={1}
-              >
+
+              <Box className="w-full flex flex-col items-start" gap={0.5}>
                 <Typography variant="body2">Package Subtitle</Typography>
                 <TextField
+                  multiline
                   fullWidth
                   value={packSubtitle}
                   onChange={(e) => setPackSubtitle(e.target.value)}
@@ -149,22 +182,14 @@ const PackDetails = () => {
                 />
               </Box>
 
-              <Box
-                display="flex"
-                sx={{
-                  flexDirection: "column",
-                  alignItems: "flex-start",
-                }}
-                width="100%"
-                gap={1}
-              >
+              <Box className="w-full flex flex-col items-start" gap={0.5}>
                 <Typography variant="body2">Cover Description</Typography>
 
                 <TextField
                   multiline
-                  value={packCoverDescription}
-                  onChange={(e) => setPackCoverDescription(e.target.value)}
-                  rows={2}
+                  value={packageCoverDescription}
+                  onChange={(e) => setPackCover(e.target.value)}
+                  minRows={2}
                   type="text"
                   size="small"
                   helperText="Will be shown in the package lists"
@@ -173,27 +198,38 @@ const PackDetails = () => {
                 />
               </Box>
 
-              <Box
-                display="flex"
-                sx={{
-                  flexDirection: "column",
-                  alignItems: "flex-start",
-                }}
-                width="100%"
-                gap={1}
-              >
+              <Box className="w-full flex flex-col items-start" gap={0.5}>
                 <Typography variant="body2">Short Description</Typography>
 
                 <TextField
                   multiline
-                  value={packShortDescription}
-                  onChange={(e) => setPackShortDescription(e.target.value)}
-                  rows={3}
+                  value={packageShortDescription}
+                  onChange={(e) => setPackShort(e.target.value)}
+                  minRows={3}
                   type="text"
                   size="small"
                   helperText="Will be shown in the package details page"
                   fullWidth
-                  placeholder="Cover Description Our comprehensive 9-day Sri Lanka tour will show you the highlights of our island, tell you the history ..."
+                  placeholder="Our comprehensive 9-day Sri Lanka tour will show you the highlights of our island, tell you the history ..."
+                />
+              </Box>
+
+              <Box
+                className="w-full flex flex-row"
+                sx={{
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                }}
+                gap={0.5}
+              >
+                <Typography variant="body2">Maximum Participants :</Typography>
+                <TextField
+                  sx={{ width: "150px" }}
+                  type="number"
+                  value={maximumParticipants}
+                  onChange={(e) => setMaximumParticipants(e.target.value)}
+                  placeholder="12"
+                  size="small"
                 />
               </Box>
 
@@ -204,10 +240,11 @@ const PackDetails = () => {
                 // onClick={saveDetails}
                 disabled={
                   !(
-                    packName &&
+                    packageName &&
                     packSubtitle &&
-                    packShortDescription &&
-                    packCoverDescription
+                    packageShortDescription &&
+                    packageCoverDescription &&
+                    maximumParticipants
                   )
                 }
                 aria-label="save package details"
@@ -335,7 +372,7 @@ const PackDetails = () => {
         />
 
         <Box
-          minHeight="290px"
+          minHeight="330px"
           width="100%"
           sx={
             {
@@ -425,34 +462,36 @@ const PackDetails = () => {
                     }}
                   />
                 </Box>
-                <Button size="small" color="error">
-                  <DeleteIcon
-                    size="small"
-                    onClick={(event) => {
-                      event.preventDefault();
-                      setCoverImage((prevCoverImage) =>
-                        prevCoverImage.filter(
-                          (itemTe) => itemTe.at(0) != item.at(0)
-                        )
-                      );
-                    }}
-                  />
+                <Button
+                  size="small"
+                  color="error"
+                  onClick={(event) => {
+                    event.preventDefault();
+                    setCoverImage((prevCoverImage) =>
+                      prevCoverImage.filter(
+                        (itemTe) => itemTe.at(0) != item.at(0)
+                      )
+                    );
+                  }}
+                >
+                  <DeleteIcon size="small" />
                 </Button>
               </Box>
             ))}
 
-            <Button variant="contained" color="primary">
-              <AddIcon
-                onClick={(e) => {
-                  setCount(count + 1);
-                  e.preventDefault();
-                  setCoverImage((prevCoverImage) => [
-                    ...prevCoverImage,
-                    [count + 1, ""],
-                  ]);
-                  setCount(count + 1);
-                }}
-              />
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={(e) => {
+                setCount(count + 1);
+                setCoverImage((prevCoverImage) => [
+                  ...prevCoverImage,
+                  [count + 1, ""],
+                ]);
+                setCount(count + 1);
+              }}
+            >
+              <AddIcon />
             </Button>
           </Box>
         </Box>
@@ -461,9 +500,7 @@ const PackDetails = () => {
           <Button
             variant="contained"
             fullWidth
-            onClick={() => {
-              alert("\npackage image count: ", coverImage.length);
-            }}
+            onClick={saveImages}
             aria-label="save image details"
             disabled={!packageImage}
           >
