@@ -25,6 +25,7 @@ import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import PermanentDrawerTop from "./components/TopDrawer";
 import { Festivals } from "./pages/Festival.jsx";
+import { AERoundTrips } from "./components/tripComponents/PackDetails/AddEditRoundtrips.jsx";
 
 function App() {
   const [count, setCount] = useState(0);
@@ -35,7 +36,6 @@ function App() {
   };
 
   function Front(props) {
-    /*props does not need to be props */
     return (
       <Box
         sx={{
@@ -86,6 +86,17 @@ function App() {
               <RequireAuth>
                 <Front route="/round-trips" in="RoundTrips">
                   <RoundTrips />
+                </Front>
+              </RequireAuth>
+            }
+          ></Route>
+          <Route
+            path="/round-trips/add-round-trips"
+            exact
+            element={
+              <RequireAuth>
+                <Front route="/round-trips/add-round-trips" in="RoundTrips">
+                  <AERoundTrips />
                 </Front>
               </RequireAuth>
             }

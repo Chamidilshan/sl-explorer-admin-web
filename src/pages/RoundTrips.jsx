@@ -10,39 +10,63 @@ import {
   ToggleButton,
   IconButton,
   Button,
+  TableContainer,
+  Paper,
+  Table,
+  TableHead,
+  TableRow,
+  TableCell,
+  TableBody,
 } from "@mui/material";
 import PermanentDrawerTop from "../components/TopDrawer";
-import { PackDetails } from "../components/TripComponents/PackDetails/PackDetails";
+import { PackDetails } from "../components/tripComponents/PackDetails/PackDetailsPage";
 import KeyboardDoubleArrowLeftIcon from "@mui/icons-material/KeyboardDoubleArrowLeft";
 import KeyboardDoubleArrowRightIcon from "@mui/icons-material/KeyboardDoubleArrowRight";
 import { Itinerary } from "../components/tripComponents/PackDetails/Itinerary";
 import { Hotel } from "../components/tripComponents/PackDetails/Hotel";
+import { Prices } from "../components/tripComponents/PackDetails/Prices";
+import { Key } from "@mui/icons-material";
+import { Link, Navigate, Route, json, useNavigate } from "react-router-dom";
+import {
+  getDownloadURL,
+  ref,
+  uploadBytes,
+  uploadString,
+} from "firebase/storage";
+import { imageDb } from "../../config";
+import { v4 } from "uuid";
+import { RoundTripServices } from "../services/RoundTripService";
+import { AERoundTrips } from "../components/tripComponents/PackDetails/AddEditRoundtrips";
 
 export const RoundTrips = () => {
-  const totalPages = 2;
-  const [currentPage, setCurrentPage] = useState(1);
-  const [packName, setPackName] = useState("");
-  const [packSubtitle, setPackSubtitle] = useState("");
-  const [packCoverDescription, setPackCoverDescription] = useState("");
-  const [packShortDescription, setPackShortDescription] = useState("");
+  const [roundTrips, setRoundTrips] = useState([]); //array of objects? || object?
+  const [loading, setLoading] = useState(false);
 
-  console.log("currentPage is: ", currentPage);
+  useState(async () => {
+    var resp = await RoundTripServices.getRoundtrips();
+    setRoundTrips(resp);
+  }, []);
 
-  const toggleButtonHandler = (event, newPage) => {
-    setCurrentPage(newPage);
-  };
+  const navigate = useNavigate();
+
+  // <Route
 
   return (
     <Box
       display="flex"
       sx={{
         flexFlow: "column nowrap",
-        width: "100%",
-        height: "100%",
         justifyContent: "space-between",
+        minHeight: "90vh",
+        width: "80%",
       }}
       gap={2}
     >
+      {loading && (
+        <Box>
+          <Typography variant="h1">loading...</Typography>
+        </Box>
+      )}
       <Box sx={{ display: "flex" }}>
         <Typography>Dashboard / Round Trips</Typography>
       </Box>
@@ -51,14 +75,48 @@ export const RoundTrips = () => {
         sx={{
           width: "100%",
           height: "100%",
+          overflowX: "scroll",
           display: "flex",
           flexFlow: "row wrap",
         }}
         // bgcolor="secondary.main"
       >
-        <PackDetails />
-        <Itinerary />
-        <Hotel />
+        <TableContainer component={Paper} overflowX="scroll">
+          <Table stickyHeader>
+            <TableHead>
+              <TableRow>
+                <TableCell>Name</TableCell>
+                <TableCell>Title</TableCell>
+                <TableCell>Subtitle</TableCell>
+                <TableCell>Total Seats</TableCell>
+                <TableCell>Itineraries</TableCell>
+                <TableCell>Hotels</TableCell>
+                <TableCell>Prices</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {roundTrips.map((item, index) => {
+                return (
+                  <TableRow key={index}>
+                    <TableCell>{item.packageName}</TableCell>
+                    <TableCell>{item.packageTitle}</TableCell>
+                    <TableCell>{item.packageSubTitle}</TableCell>
+                    <TableCell>{item.packageTotalSeats}</TableCell>
+                    <TableCell>
+                      <Button variant="text">See Itineraries</Button>
+                    </TableCell>
+                    <TableCell>
+                      <Button variant="text">See Hotels</Button>
+                    </TableCell>
+                    <TableCell>
+                      <Button variant="text">See Prices</Button>
+                    </TableCell>
+                  </TableRow>
+                );
+              })}
+            </TableBody>
+          </Table>
+        </TableContainer>
       </Box>
 
       <Box
@@ -67,32 +125,19 @@ export const RoundTrips = () => {
         }}
       >
         <Button
-          disabled={currentPage == 1}
-          onClick={() => setCurrentPage(currentPage - 1)}
-        >
-          <KeyboardDoubleArrowLeftIcon />
-        </Button>
-        <ToggleButtonGroup
-          size="small"
-          value={currentPage}
-          onChange={toggleButtonHandler}
+          width={10}
+          variant="contained"
           color="primary"
-          exclusive
+          // startIcon={<add}
+          onClick={() => {
+            navigate("/round-trips/add-round-trips");
+          }}
         >
-          <ToggleButton value={1} aria-label="page 1">
-            <Typography variant="body2">&nbsp; 1 &nbsp;</Typography>
-          </ToggleButton>
-          <ToggleButton value={2} aria-label="page 2">
-            <Typography variant="body2">&nbsp; 2 &nbsp;</Typography>
-          </ToggleButton>
-        </ToggleButtonGroup>
-        <Button
-          disabled={currentPage == totalPages}
-          onClick={() => setCurrentPage(currentPage + 1)}
-        >
-          <KeyboardDoubleArrowRightIcon />
+          <Typography variant="subtitle2">Add New</Typography>
         </Button>
       </Box>
+      <Box pt={25}></Box>
+      <AERoundTrips />
     </Box>
   );
 };

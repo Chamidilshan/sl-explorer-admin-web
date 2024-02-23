@@ -1,43 +1,106 @@
 import * as React from "react";
-import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
-import Typography from "@mui/material/Typography";
-import Modal from "@mui/material/Modal";
-import { Container, Divider, Paper, TextField } from "@mui/material";
 import { useState } from "react";
+import {
+  Checkbox,
+  Container,
+  Divider,
+  FormControlLabel,
+  Paper,
+  TextField,
+  Button,
+  Box,
+  Modal,
+  Typography,
+} from "@mui/material";
+import CloseIcon from "@mui/icons-material/Close";
 
-const style = {
-  position: "absolute",
-  top: "50%",
-  left: "50%",
-  transform: "translate(-50%, -50%)",
-  width: "50%",
-  bgcolor: "background.paper",
-  borderRadius: "10px",
-};
+export function ItineraryModal({
+  onClose,
+  onSave,
+  onSaveExisting,
+  data,
+  isEditing,
+}) {
+  const [dayNumber, setDayNumber] = useState(isEditing ? data[0] : "");
+  const [dayName, setDayName] = useState(isEditing ? data[1] : "");
+  const [location1, setLocation1] = useState(isEditing ? data[2] : "");
+  const [location2, setLocation2] = useState(isEditing ? data[3] : "");
+  const [location3, setLocation3] = useState(isEditing ? data[4] : "");
+  const [location4, setLocation4] = useState(isEditing ? data[5] : "");
+  const [description, setDescription] = useState(isEditing ? data[6] : "");
+  const [option, setOption] = useState(isEditing ? data[7] : false);
+  const [optional, setOptional] = useState(isEditing ? data[8] : "");
+  const [optionPrice, setOptionPrice] = useState(isEditing ? data[9] : "");
 
-const saveDetails = () => {
-  alert(
-    "Save Details: ",
-    packName,
-    packSubtitle,
-    packCoverDescription,
-    packShortDescription
-  );
-};
+  const firstRef = React.useRef(null);
 
-export function ItineraryModal() {
-  const [packName, setPackName] = useState("");
-  const [packSubtitle, setPackSubtitle] = useState("");
-  const [packCoverDescription, setPackCoverDescription] = useState("");
-  const [packShortDescription, setPackShortDescription] = useState("");
+  const [final, setFinal] = useState([]);
+
+  React.useEffect(() => {
+    if (final.indexOf("submitted") != -1) {
+      if (
+        confirm(
+          "Confirm Itinerary\n" +
+            final[0] +
+            "\n" +
+            final[1] +
+            "\n" +
+            final[2] +
+            "\n" +
+            final[3] +
+            "\n" +
+            final[4] +
+            "\n" +
+            final[5] +
+            "\n" +
+            final[6] +
+            "\n" +
+            final[7] +
+            "\n" +
+            final[8] +
+            "\n" +
+            final[9] +
+            "\n"
+        )
+      ) {
+        isEditing ? onSave(final) : onSaveExisting(final);
+        onClose();
+      }
+    }
+  }, [final]);
+
+  const send = () => {
+    var variab = [
+      dayNumber,
+      dayName,
+      location1,
+      location2,
+      location3,
+      location4,
+      description,
+      option,
+      optional,
+      optionPrice,
+    ];
+    console.log(variab);
+    console.log(final);
+  };
 
   return (
-    <Box sx={style}>
-      <Box pt={2} pl={4} pb={1}>
-        <Typography variant="subtitle2" sx={{ fontWeight: "550" }}>
+    <>
+      <Box
+        pt={1}
+        pl={4}
+        pr={4}
+        pb={1}
+        className="flex flex-row justify-between align-center"
+      >
+        <Typography pt={1} variant="subtitle2" sx={{ fontWeight: "550" }}>
           Add Itinerary
         </Typography>
+        <Button size="small" variant="outlined" onClick={onClose} color="error">
+          <CloseIcon />
+        </Button>
       </Box>
 
       <Divider
@@ -46,180 +109,207 @@ export function ItineraryModal() {
           bgcolor: "primary",
         }}
       />
-
-      <Box
-        p={2}
-        display="flex"
-        sx={{
-          flexFlow: "row wrap",
-          alignItems: "flex-start",
-          justifyContent: "space-between",
-          p: 4,
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          var variab = [
+            dayNumber,
+            dayName,
+            location1,
+            location2,
+            location3,
+            location4,
+            description,
+            option,
+            optional,
+            optionPrice,
+            "submitted",
+          ];
+          setFinal(variab);
         }}
-        width="100%"
-        gap={2}
       >
         <Box
+          p={2}
+          display="flex"
           sx={{
-            flex: "display",
-            flexDirection: "column",
+            flexFlow: "row wrap",
             alignItems: "flex-start",
-            width: "45%",
-            minWidth: "250px",
-          }}
-          gap={1}
-        >
-          <Typography variant="body2">Day</Typography>
-          <TextField
-            fullWidth
-            value={packName}
-            onChange={(e) => setPackName(e.target.value)}
-            placeholder="Day 01"
-            size="small"
-          />
-        </Box>
-
-        <Box
-          sx={{
-            flex: "display",
-            flexDirection: "column",
-            alignItems: "flex-start",
-            width: "45%",
-            minWidth: "250px",
-          }}
-          gap={1}
-        >
-          <Typography variant="body2">Day Name</Typography>
-          <TextField
-            fullWidth
-            value={packSubtitle}
-            onChange={(e) => setPackSubtitle(e.target.value)}
-            placeholder="Thursday"
-            size="small"
-          />
-        </Box>
-
-        <Box
-          sx={{
-            flex: "display",
-            flexDirection: "column",
-            alignItems: "flex-start",
-            width: "45%",
-            minWidth: "250px",
-          }}
-          gap={1}
-        >
-          <Typography variant="body2">Location 1</Typography>
-          <TextField
-            fullWidth
-            value={packSubtitle}
-            onChange={(e) => setPackSubtitle(e.target.value)}
-            placeholder="Hambantota"
-            size="small"
-          />
-        </Box>
-
-        <Box
-          sx={{
-            flex: "display",
-            flexDirection: "column",
-            alignItems: "flex-start",
-            width: "45%",
-            minWidth: "250px",
-          }}
-          gap={1}
-        >
-          <Typography variant="body2">Location 2</Typography>
-          <TextField
-            fullWidth
-            value={packSubtitle}
-            onChange={(e) => setPackSubtitle(e.target.value)}
-            placeholder="Tangalle"
-            size="small"
-          />
-        </Box>
-
-        <Box
-          sx={{
-            flex: "display",
-            flexDirection: "column",
-            alignItems: "flex-start",
-            width: "45%",
-            minWidth: "250px",
-          }}
-          gap={1}
-        >
-          <Typography variant="body2">Location 3</Typography>
-          <TextField
-            fullWidth
-            value={packSubtitle}
-            onChange={(e) => setPackSubtitle(e.target.value)}
-            placeholder="Kirinda"
-            size="small"
-          />
-        </Box>
-
-        <Box
-          sx={{
-            flex: "display",
-            flexDirection: "column",
-            alignItems: "flex-start",
-            width: "45%",
-            minWidth: "250px",
-          }}
-          gap={1}
-        >
-          <Typography variant="body2">Location 4</Typography>
-          <TextField
-            fullWidth
-            value={packSubtitle}
-            onChange={(e) => setPackSubtitle(e.target.value)}
-            placeholder="Matara"
-            size="small"
-          />
-        </Box>
-
-        <Box
-          sx={{
-            flex: "display",
-            flexDirection: "column",
-            alignItems: "flex-start",
+            justifyContent: "space-between",
+            p: 4,
             width: "100%",
-            minWidth: "250px",
           }}
-          gap={1}
+          gap={2}
         >
-          <Typography variant="body2">Day Description</Typography>
+          <Box className=" flex flex-col" sx={{ width: "45%" }} gap={1}>
+            <Typography variant="body2">Day Number</Typography>
+            <TextField
+              type="number"
+              fullWidth
+              ref={firstRef}
+              value={dayNumber}
+              onChange={(e) => setDayNumber(e.target.value)}
+              placeholder="3"
+              size="small"
+            />
+          </Box>
 
-          <TextField
-            multiline
-            value={packCoverDescription}
-            onChange={(e) => setPackCoverDescription(e.target.value)}
-            rows={2}
-            type="text"
-            size="small"
+          <Box className=" flex flex-col" sx={{ width: "45%" }} gap={1}>
+            <Typography variant="body2">Day Name & Title</Typography>
+            <TextField
+              fullWidth
+              value={dayName}
+              onChange={(e) => setDayName(e.target.value)}
+              placeholder="Thursday - Arrival"
+              size="small"
+            />
+          </Box>
+
+          <Box className=" flex flex-col" sx={{ width: "45%" }} gap={1}>
+            <Typography variant="body2">Location 1</Typography>
+            <TextField
+              fullWidth
+              value={location1}
+              onChange={(e) => {
+                setLocation1(e.target.value);
+              }}
+              placeholder="Hambantota"
+              size="small"
+            />
+          </Box>
+
+          <Box className=" flex flex-col" sx={{ width: "45%" }} gap={1}>
+            <Typography variant="body2">Location 2</Typography>
+            <TextField
+              fullWidth
+              value={location2}
+              onChange={(e) => {
+                setLocation2(e.target.value);
+              }}
+              placeholder="Tangalle"
+              size="small"
+            />
+          </Box>
+
+          <Box
+            sx={{
+              flex: "display",
+              flexDirection: "column",
+              alignItems: "flex-start",
+              width: "45%",
+              minWidth: "250px",
+            }}
+            gap={1}
+          >
+            <Typography variant="body2">Location 3</Typography>
+            <TextField
+              fullWidth
+              value={location3}
+              onChange={(e) => {
+                setLocation3(e.target.value);
+              }}
+              placeholder="Kirinda"
+              size="small"
+            />
+          </Box>
+
+          <Box className=" flex flex-col" sx={{ width: "45%" }} gap={1}>
+            <Typography variant="body2">Location 4</Typography>
+            <TextField
+              fullWidth
+              value={location4}
+              onChange={(e) => {
+                setLocation4(e.target.value);
+              }}
+              placeholder="Matara"
+              size="small"
+            />
+          </Box>
+
+          <Box className="w-full flex flex-col" gap={1}>
+            <Typography variant="body2">Day Description</Typography>
+
+            <TextField
+              multiline
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              minRows={2}
+              type="text"
+              size="small"
+              placeholder="Trip begins from ..."
+            />
+          </Box>
+
+          <Box className="w-full">
+            <FormControlLabel
+              label="Option"
+              control={
+                <Checkbox
+                  checked={option}
+                  onChange={(e) => {
+                    setOption(e.target.checked);
+                  }}
+                />
+              }
+            />
+          </Box>
+
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              width: "45%",
+              minWidth: "200px",
+            }}
+            gap={1}
+          >
+            <Typography variant="body2">Option Description</Typography>
+
+            <TextField
+              disabled={!option}
+              multiline
+              value={optional}
+              onChange={(e) => setOptional(e.target.value)}
+              type="text"
+              size="small"
+              fullWidth
+              placeholder="Beach bath in hambantota in the end"
+            />
+          </Box>
+
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "flex-start",
+              width: "45%",
+              minWidth: "200px",
+            }}
+            gap={1}
+          >
+            <Typography variant="body2">Option Price</Typography>
+
+            <TextField
+              disabled={!option}
+              multiline
+              value={optionPrice}
+              onChange={(e) => setOptionPrice(e.target.value)}
+              type="number"
+              size="small"
+              fullWidth
+              placeholder="49"
+            />
+          </Box>
+
+          <Button
+            variant="contained"
             fullWidth
-            placeholder="Sri Lanka, the pearl of the Indian Ocean, is rich in beautiful sights  ..."
-          />
+            type="submit"
+            aria-label="save package details"
+          >
+            Add
+          </Button>
         </Box>
-
-        <Button
-          variant="contained"
-          fullWidth
-          onClick={saveDetails}
-          disabled={
-            !(
-              packName &&
-              packSubtitle &&
-              packShortDescription &&
-              packCoverDescription
-            )
-          }
-          aria-label="save package details"
-        >
-          Save
-        </Button>
-      </Box>
-    </Box>
+      </form>
+    </>
   );
 }
