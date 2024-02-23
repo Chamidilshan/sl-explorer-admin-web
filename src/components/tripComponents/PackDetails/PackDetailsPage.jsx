@@ -71,6 +71,7 @@ export const PackDetails = ({
   const saveImages = (e) => {
     e.preventDefault();
     setImages([packageImage, coverImage]);
+    alert("Images have been saved successfully!");
     setFi(true);
   };
 
@@ -502,7 +503,7 @@ export const PackDetails = ({
             fullWidth
             onClick={saveImages}
             aria-label="save image details"
-            disabled={!packageImage}
+            disabled={packageImage == ""}
           >
             Save
           </Button>
