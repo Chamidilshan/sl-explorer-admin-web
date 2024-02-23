@@ -14,7 +14,19 @@ export const RoundTripServices = {
       return response.data;
     } catch (e) {
       console.log(e);
-      toast.error("Something went wrong", e.message);
+      toast.error("Something went wrong..!/n" + e.message);
+      throw error;
+    }
+  },
+
+  async getRoundtrips() {
+    try {
+      const response = await api.get("/api/v1/roundtrips");
+      console.log(response);
+      toast.success("All packages has been loaded..!");
+      return response.data;
+    } catch (error) {
+      toast.error("Something went wrong..!\n" + error.message);
       throw error;
     }
   },

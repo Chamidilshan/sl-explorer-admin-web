@@ -10,6 +10,13 @@ import {
   ToggleButton,
   IconButton,
   Button,
+  TableContainer,
+  Paper,
+  Table,
+  TableHead,
+  TableRow,
+  TableCell,
+  TableBody,
 } from "@mui/material";
 import PermanentDrawerTop from "../components/TopDrawer";
 import { PackDetails } from "../components/tripComponents/PackDetails/PackDetailsPage";
@@ -19,7 +26,7 @@ import { Itinerary } from "../components/tripComponents/PackDetails/Itinerary";
 import { Hotel } from "../components/tripComponents/PackDetails/Hotel";
 import { Prices } from "../components/tripComponents/PackDetails/Prices";
 import { Key } from "@mui/icons-material";
-import { json } from "react-router-dom";
+import { Link, Navigate, Route, json, useNavigate } from "react-router-dom";
 import {
   getDownloadURL,
   ref,
@@ -29,129 +36,20 @@ import {
 import { imageDb } from "../../config";
 import { v4 } from "uuid";
 import { RoundTripServices } from "../services/RoundTripService";
+import { AERoundTrips } from "../components/tripComponents/PackDetails/AddEditRoundtrips";
 
 export const RoundTrips = () => {
-  const pages = ["PackDetails", "Itinerary", "Hotels", "Prices"];
-  const [currentPage, setCurrentPage] = useState(1);
-
-  const [packDetails, setPackDetails] = useState(["", "", "", "", 0]); //finished
-  const [images, setImages] = useState(["", [[1, ""]]]); //finished
-  const [itinerary, setItinerary] = useState([[""]]);
-  const [hotels, setHotels] = useState([[""]]);
-  const [prices, setPrices] = useState(["", "", "", "", "", ""]);
-
-  const [packageCoverImage, setPackageCoverImage] = useState(""); //firestore saved url
-  const [packageImageLinks, setPackageImageLinks] = useState([""]); //firestore saved urls
-
-  const extractImages = async () => {
-    try {
-      var ref = await uploadImage(images[0]);
-      setPackageCoverImage(ref);
-
-      const packageImageArray = await Promise.all(
-        images[1].map(async (image) => {
-          var url = await uploadImage(image[1]);
-          return url;
-        })
-      );
-
-      setPackageImageLinks(packageImageArray);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  const uploadImage = async (image) => {
-    if (image) {
-      const imgRef = ref(imageDb, `roundtripImages/${v4()}`);
-      try {
-        const snapshot = await uploadString(imgRef, image, "data_url");
-        const url = await getDownloadURL(snapshot.ref);
-        console.log("Image Uploaded, URL :", url);
-        return url;
-      } catch (error) {
-        console.log(error);
-        throw error;
-      }
-    }
-  };
-
-  const jsonObject = {};
-  const makeJson = async () => {
-    jsonObject["packageName"] = packDetails[0];
-    jsonObject["packageShortDescription"] = packDetails[3];
-    jsonObject["packageCoverDescription"] = packDetails[2];
-    jsonObject["packageCoverImage"] = packageCoverImage;
-    jsonObject["packageImageLinks"] = packageImageLinks;
-    jsonObject["packageTitle"] = packDetails[0];
-    jsonObject["packageSubTitle"] = packDetails[1];
-    jsonObject["packageTotalSeats"] = packDetails[4];
-    jsonObject["itenary"] = itinerary.map((item, index) => {
-      if (index == 0) return;
-      else {
-        return {
-          dayNumber: item[0],
-          dayName: item[1],
-          location: [item[2], item[3], item[4], item[5]],
-          description: item[6],
-          optionalDescription: item[8],
-        };
-      }
-    });
-    jsonObject["hotels"] = hotels.map((item, index) => {
-      if (index == 0) return;
-      else {
-        return {
-          hotel: item[0],
-          hotelRoomDesc: item[1],
-          hotelLocationDesc: item[2],
-        };
-      }
-    });
-    jsonObject["prices"] = {
-      group: {
-        single: prices[0],
-        double: prices[1],
-        triple: prices[2],
-      },
-      private: {
-        single: prices[3],
-        double: prices[4],
-        triple: prices[5],
-      },
-    };
-  };
-
+  const [roundTrips, setRoundTrips] = useState([]); //array of objects? || object?
   const [loading, setLoading] = useState(false);
-  const submit = async () => {
-    const newTrip = {
-      packDetails,
-      images,
-      itinerary,
-      hotels,
-      prices,
-    };
-    setLoading(true);
-    try {
-      await extractImages(); //automaticaly update and extract
-      await makeJson();
-      await RoundTripServices.createRoundTrip(
-        JSON.stringify(jsonObject, null, 2)
-      );
-    } catch (error) {
-      console.log(error);
-    } finally {
-      setLoading(false);
-    }
-    console.log(JSON.stringify(jsonObject, null, 2));
 
-    // console.log(JSON.stringify(newTrip, null, 2));
-    // console.log(newTrip);
-  };
+  useState(async () => {
+    var resp = await RoundTripServices.getRoundtrips();
+    setRoundTrips(resp);
+  }, []);
 
-  const toggleButtonHandler = (event, newPage) => {
-    setCurrentPage(newPage);
-  };
+  const navigate = useNavigate();
+
+  // <Route
 
   return (
     <Box
@@ -160,9 +58,9 @@ export const RoundTrips = () => {
         flexFlow: "column nowrap",
         justifyContent: "space-between",
         minHeight: "90vh",
+        width: "80%",
       }}
       gap={2}
-      className="w-full"
     >
       {loading && (
         <Box>
@@ -177,37 +75,48 @@ export const RoundTrips = () => {
         sx={{
           width: "100%",
           height: "100%",
+          overflowX: "scroll",
           display: "flex",
           flexFlow: "row wrap",
         }}
         // bgcolor="secondary.main"
       >
-        {currentPage == 1 && (
-          <PackDetails
-            onSaveDetails={(data) => setPackDetails(data)}
-            onSaveImages={(imgs) => setImages(imgs)}
-            prevImages={images}
-            prevDetails={packDetails}
-          />
-        )}
-        {currentPage == 2 && (
-          <Itinerary
-            onSaveItinerary={(data) => setItinerary(data)}
-            prevItinerary={itinerary}
-          />
-        )}
-        {currentPage == 3 && (
-          <Hotel
-            onSaveItinerary={(data) => setHotels(data)}
-            prevItinerary={hotels}
-          />
-        )}
-        {currentPage == 4 && (
-          <Prices
-            onSaveDetails={(data) => setPrices(data)}
-            prevDetails={prices}
-          />
-        )}
+        <TableContainer component={Paper} overflowX="scroll">
+          <Table stickyHeader>
+            <TableHead>
+              <TableRow>
+                <TableCell>Name</TableCell>
+                <TableCell>Title</TableCell>
+                <TableCell>Subtitle</TableCell>
+                <TableCell>Total Seats</TableCell>
+                <TableCell>Itineraries</TableCell>
+                <TableCell>Hotels</TableCell>
+                <TableCell>Prices</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {roundTrips.map((item, index) => {
+                return (
+                  <TableRow key={index}>
+                    <TableCell>{item.packageName}</TableCell>
+                    <TableCell>{item.packageTitle}</TableCell>
+                    <TableCell>{item.packageSubTitle}</TableCell>
+                    <TableCell>{item.packageTotalSeats}</TableCell>
+                    <TableCell>
+                      <Button variant="text">See_itineraries</Button>
+                    </TableCell>
+                    <TableCell>
+                      <Button variant="text">See-hotels</Button>
+                    </TableCell>
+                    <TableCell>
+                      <Button variant="text">See_prices</Button>
+                    </TableCell>
+                  </TableRow>
+                );
+              })}
+            </TableBody>
+          </Table>
+        </TableContainer>
       </Box>
 
       <Box
@@ -216,54 +125,18 @@ export const RoundTrips = () => {
         }}
       >
         <Button
-          disabled={currentPage == 1}
-          onClick={() => setCurrentPage(currentPage - 1)}
-        >
-          <KeyboardDoubleArrowLeftIcon />
-        </Button>
-        <ToggleButtonGroup
-          size="small"
-          value={currentPage}
-          onChange={toggleButtonHandler}
-          color="primary"
-          exclusive
-        >
-          {pages.map((page, index) => {
-            return (
-              <ToggleButton
-                key={page}
-                value={index + 1}
-                onClick={() => setCurrentPage(index + 1)}
-              >
-                <Typography variant="body2">
-                  &nbsp; {index + 1} &nbsp;
-                </Typography>
-              </ToggleButton>
-            );
-          })}
-        </ToggleButtonGroup>
-        <Button
-          disabled={currentPage == pages.length}
-          onClick={() => setCurrentPage(currentPage + 1)}
-        >
-          <KeyboardDoubleArrowRightIcon />
-        </Button>
-      </Box>
-
-      <Box
-        sx={{
-          width: "100%",
-        }}
-      >
-        <Button
+          width={10}
           variant="contained"
-          color="error"
-          onClick={submit}
-          disabled={!(prices && hotels && itinerary && images && packDetails)}
+          color="primary"
+          // startIcon={<add}
+          onClick={() => {
+            navigate("/round-trips/add-round-trips");
+          }}
         >
-          <Typography variant="subtitle2">Submit</Typography>
+          <Typography variant="subtitle2">Add New</Typography>
         </Button>
       </Box>
+      <AERoundTrips />
     </Box>
   );
 };
