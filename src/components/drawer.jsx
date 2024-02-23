@@ -11,6 +11,7 @@ import DashboardIcon from "@mui/icons-material/Dashboard";
 import DirectionsBoatIcon from "@mui/icons-material/DirectionsBoat";
 import MailIcon from "@mui/icons-material/Mail";
 import {
+  CelebrationOutlined,
   JoinLeft,
   JoinRight,
   Message,
@@ -65,6 +66,7 @@ export default function PermanentDrawerLeft(props) {
           { route: "/round-trips", text: "Round Trips", icon: <JoinLeft /> },
           { route: "/day-trips", text: "Day Trips", icon: <JoinRight /> },
           { route: "/hotels", text: "Hotels", icon: <Weekend /> },
+          { route: "/festivals", text: "Festivals & Events", icon: <CelebrationOutlined /> },
           {
             route: "/notification-campaign",
             text: "Notification Campaign",
