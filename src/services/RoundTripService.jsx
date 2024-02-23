@@ -15,7 +15,7 @@ export const RoundTripServices = {
     } catch (e) {
       console.log(e);
       toast.error("Something went wrong..!/n" + e.message);
-      throw error;
+      throw e;
     }
   },
 

@@ -11,8 +11,20 @@ import {
   Box,
   Modal,
   Typography,
+  MenuItem,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
+import HotelService from "../../../services/HotelService";
+
+// React.useEffect(async () => {
+//   try {
+//     const data = await HotelService.getHotels();
+//     console.log("Hotels data:", data.data);
+//     setHotelsList(data.data);
+//   } catch (error) {
+//     console.log("Error fetching hotels:", error);
+//   }
+// }, []);
 
 export function HotelModal({ onClose, onSave }) {
   const [dayNumber, setDayNumber] = useState("");
@@ -26,9 +38,21 @@ export function HotelModal({ onClose, onSave }) {
   const [optional, setOptional] = useState("");
   const [optionPrice, setOptionPrice] = useState("");
 
+  const [hotelsList, setHotelsList] = useState([]);
+
   const firstRef = React.useRef(null);
 
   const [final, setFinal] = useState([]);
+
+  useState(async () => {
+    try {
+      const data = await await HotelService.getHotels();
+      setHotelsList(data.data);
+      console.log("Hotels data:", data.data);
+    } catch (error) {
+      console.log("Error fetching hotels:", error);
+    }
+  }, []);
 
   React.useEffect(() => {
     if (final.indexOf("submitted") != -1) {
@@ -137,14 +161,24 @@ export function HotelModal({ onClose, onSave }) {
           <Box className=" flex flex-col" sx={{ width: "45%" }} gap={1}>
             <Typography variant="body2">Hotel</Typography>
             <TextField
+              select
               fullWidth
               ref={firstRef}
               value={dayNumber}
-              onChange={(e) => setDayNumber(e.target.value)}
+              onChange={(e) => {
+                console.log("Hotel selected:", e.target.value);
+                setDayNumber(e.target.value);
+              }}
               placeholder="- select -"
-              helperText="Id must match an existing hotel"
+              label="--select Hotel--"
               size="small"
-            />
+            >
+              {hotelsList.map((hotel) => (
+                <MenuItem key={hotel._id} value={hotel._id}>
+                  {hotel.hotelName}
+                </MenuItem>
+              ))}
+            </TextField>
           </Box>
 
           <Box className=" flex flex-col" sx={{ width: "45%" }} gap={1}>

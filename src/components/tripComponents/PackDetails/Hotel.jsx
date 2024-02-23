@@ -65,7 +65,7 @@ export const Hotel = ({ onSaveItinerary, prevItinerary }) => {
       >
         <Box
           sx={{
-            height: "80%",
+            height: "60vh",
             width: "100%",
             display: "flex",
             flexDirection: "column",
@@ -146,7 +146,12 @@ export const Hotel = ({ onSaveItinerary, prevItinerary }) => {
             <Button
               startIcon={<SaveIcon />}
               variant="contained"
-              onClick={onSaveItinerary(itinerary)}
+              disabled={itinerary.length === 0}
+              onClick={() => {
+                alert("Itineraries Saved!");
+                console.log(itinerary);
+                onSaveItinerary(itinerary);
+              }}
             >
               <Typography variant="subtitle2">Save Hotels</Typography>
             </Button>
