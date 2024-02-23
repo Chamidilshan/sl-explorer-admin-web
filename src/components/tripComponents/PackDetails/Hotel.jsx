@@ -112,11 +112,13 @@ export const Hotel = ({ onSaveItinerary, prevItinerary }) => {
                             startIcon={<DeleteOutlineIcon />}
                             variant="contained"
                             color="error"
-                            onClick={() => {
-                              setItinerary((prevItinerary) => {
-                                return prevItinerary.filter(
+                            onClick={async () => {
+                              await setItinerary((prevItinerary) => {
+                                const newItinerary = prevItinerary.filter(
                                   (item, i) => i !== index
                                 );
+                                console.log(newItinerary);
+                                return newItinerary;
                               });
                             }}
                           >
@@ -144,7 +146,7 @@ export const Hotel = ({ onSaveItinerary, prevItinerary }) => {
             <Button
               startIcon={<SaveIcon />}
               variant="contained"
-              onClick={onSaveItinerary.bind(this, itinerary)}
+              onClick={onSaveItinerary(itinerary)}
             >
               <Typography variant="subtitle2">Save Hotels</Typography>
             </Button>

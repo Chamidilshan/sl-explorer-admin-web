@@ -14,17 +14,23 @@ import {
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 
-export function ItineraryModal({ onClose, onSave }) {
-  const [dayNumber, setDayNumber] = useState("");
-  const [dayName, setDayName] = useState("");
-  const [location1, setLocation1] = useState("");
-  const [location2, setLocation2] = useState("");
-  const [location3, setLocation3] = useState("");
-  const [location4, setLocation4] = useState("");
-  const [description, setDescription] = useState("");
-  const [option, setOption] = useState(false);
-  const [optional, setOptional] = useState("");
-  const [optionPrice, setOptionPrice] = useState("");
+export function ItineraryModal({
+  onClose,
+  onSave,
+  onSaveExisting,
+  data,
+  isEditing,
+}) {
+  const [dayNumber, setDayNumber] = useState(isEditing ? data[0] : "");
+  const [dayName, setDayName] = useState(isEditing ? data[1] : "");
+  const [location1, setLocation1] = useState(isEditing ? data[2] : "");
+  const [location2, setLocation2] = useState(isEditing ? data[3] : "");
+  const [location3, setLocation3] = useState(isEditing ? data[4] : "");
+  const [location4, setLocation4] = useState(isEditing ? data[5] : "");
+  const [description, setDescription] = useState(isEditing ? data[6] : "");
+  const [option, setOption] = useState(isEditing ? data[7] : false);
+  const [optional, setOptional] = useState(isEditing ? data[8] : "");
+  const [optionPrice, setOptionPrice] = useState(isEditing ? data[9] : "");
 
   const firstRef = React.useRef(null);
 
@@ -57,7 +63,7 @@ export function ItineraryModal({ onClose, onSave }) {
             "\n"
         )
       ) {
-        onSave(final);
+        isEditing ? onSave(final) : onSaveExisting(final);
         onClose();
       }
     }
@@ -252,7 +258,7 @@ export function ItineraryModal({ onClose, onSave }) {
               display: "flex",
               flexDirection: "column",
               width: "45%",
-              minWidth: "250px",
+              minWidth: "200px",
             }}
             gap={1}
           >
@@ -276,7 +282,7 @@ export function ItineraryModal({ onClose, onSave }) {
               flexDirection: "column",
               alignItems: "flex-start",
               width: "45%",
-              minWidth: "250px",
+              minWidth: "200px",
             }}
             gap={1}
           >
