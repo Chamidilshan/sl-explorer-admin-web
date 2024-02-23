@@ -180,7 +180,6 @@ export const Festivals = () => {
         setImgUrl(festival.body.festivalImage);
       }
       {
-        // toast.error('Hotel not found');
         console.error("Festival/Event not found");
       }
     } catch (error) {
@@ -302,10 +301,10 @@ export const Festivals = () => {
                         <TableCell
                           style={{
                             fontSize: "16px",
-                            minWidth: "350px", // Set a minimum width
+                            minWidth: "350px",
                             maxWidth: "600px",
-                            wordWrap: "break-word", // Allow the text to wrap
-                            whiteSpace: "normal", // Prevent text from being truncated
+                            wordWrap: "break-word", 
+                            whiteSpace: "normal",
                           }}
                         >
                           {festival.festivalDescription}
