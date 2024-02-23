@@ -10,7 +10,6 @@ ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <ChatContextProvider> 
       <App />
-      </ChatContextProvider>
     </AuthContextProvider>
   </React.StrictMode>,
 )

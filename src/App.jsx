@@ -24,6 +24,7 @@ import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import PermanentDrawerTop from "./components/TopDrawer";
+import { Festivals } from "./pages/Festival.jsx";
 
 function App() {
   const [count, setCount] = useState(0);
@@ -107,6 +108,17 @@ function App() {
               <RequireAuth>
                 <Front route="/hotels" in="Hotels">
                   <Hotels />
+                </Front>
+              </RequireAuth>
+            }
+          ></Route>
+          <Route
+            path="/festivals"
+            exact
+            element={
+              <RequireAuth>
+                <Front route="/festivals" in="Festivals & Events">
+                  <Festivals/>
                 </Front>
               </RequireAuth>
             }
