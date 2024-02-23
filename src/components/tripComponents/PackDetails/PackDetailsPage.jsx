@@ -24,7 +24,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import AddIcon from "@mui/icons-material/Add";
 import { Form, useSubmit } from "react-router-dom";
 
-const PackDetails = ({
+export const PackDetails = ({
   onSaveDetails,
   onSaveImages,
   prevImages,
@@ -511,5 +511,3 @@ const PackDetails = ({
     </Box>
   );
 };
-
-export { PackDetails };

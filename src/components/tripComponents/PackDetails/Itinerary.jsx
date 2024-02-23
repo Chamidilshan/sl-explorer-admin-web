@@ -23,8 +23,26 @@ import SaveIcon from "@mui/icons-material/Save";
 
 export const Itinerary = ({ onSaveItinerary, prevItinerary }) => {
   const [itinerary, setItinerary] = useState(prevItinerary);
+  const [dataToEdit, setDataToEdit] = useState([]);
+  const [isEditing, setIsEditing] = useState(false);
+  const [editingIndex, setEditingIndex] = useState(0);
+
+  // const deleteItinerary = async (index) => {
+  //   await setItinerary((prevItinerary) => {
+  //     const newItinerary = prevItinerary.filter((item, i) => i !== index);
+  //     console.log(newItinerary);
+  //     return newItinerary;
+  //   });
+  // };
 
   const handleSave = (data) => {
+    setItinerary((prevItinerary) => {
+      return [...prevItinerary, data];
+    });
+  };
+
+  const handleSaveExisting = (data) => {
+    //get data and editingIndex state -> save data at the index
     setItinerary((prevItinerary) => {
       return [...prevItinerary, data];
     });
@@ -39,6 +57,8 @@ export const Itinerary = ({ onSaveItinerary, prevItinerary }) => {
       return;
     }
     setOpen(false);
+    setDataToEdit();
+    setIsEditing(false);
   };
 
   const style = {
@@ -104,7 +124,12 @@ export const Itinerary = ({ onSaveItinerary, prevItinerary }) => {
                             startIcon={<EditNoteIcon />}
                             variant="contained"
                             color="primary"
-                            onClick={() => {
+                            onClick={async () => {
+                              console.log(itinerary[index]);
+                              await setDataToEdit(itinerary[index]);
+                              await setIsEditing(true);
+                              await setEditingIndex(index);
+                              console.log(dataToEdit);
                               setOpen(true);
                             }}
                           >
@@ -114,11 +139,12 @@ export const Itinerary = ({ onSaveItinerary, prevItinerary }) => {
                             startIcon={<DeleteOutlineIcon />}
                             variant="contained"
                             color="error"
-                            onClick={() => {
-                              setItinerary((prevItinerary) => {
-                                return prevItinerary.filter(
+                            onClick={async () => {
+                              await setItinerary((prevItinerary) => {
+                                const newItinerary = prevItinerary.filter(
                                   (item, i) => i !== index
                                 );
+                                return newItinerary;
                               });
                               console.log(itinerary);
                             }}
@@ -147,7 +173,7 @@ export const Itinerary = ({ onSaveItinerary, prevItinerary }) => {
             <Button
               startIcon={<SaveIcon />}
               variant="contained"
-              onClick={onSaveItinerary.bind(this, itinerary)}
+              onClick={onSaveItinerary(itinerary)}
             >
               <Typography variant="subtitle2">Save Itinery</Typography>
             </Button>
@@ -163,7 +189,13 @@ export const Itinerary = ({ onSaveItinerary, prevItinerary }) => {
         // ref={modalRef}
       >
         <Box sx={style}>
-          <ItineraryModal onSave={handleSave} onClose={handleClose} />
+          <ItineraryModal
+            onSave={handleSave}
+            onClose={handleClose}
+            data={dataToEdit}
+            isEditing={isEditing}
+            onSaveExisting={handleSaveExisting}
+          />
         </Box>
       </Modal>
     </>
