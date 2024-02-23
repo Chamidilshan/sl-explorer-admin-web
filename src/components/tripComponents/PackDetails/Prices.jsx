@@ -32,6 +32,7 @@ export const Prices = ({ onSaveDetails, prevDetails }) => {
     e.preventDefault();
     setBasicDetails([gs, gd, gt, ps, pd, pt]);
     setFd(true);
+    alert("Price details saved");
   };
 
   useEffect(() => {

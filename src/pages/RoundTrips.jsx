@@ -37,14 +37,20 @@ import { imageDb } from "../../config";
 import { v4 } from "uuid";
 import { RoundTripServices } from "../services/RoundTripService";
 import { AERoundTrips } from "../components/tripComponents/PackDetails/AddEditRoundtrips";
+import { toast } from "react-toastify";
 
 export const RoundTrips = () => {
   const [roundTrips, setRoundTrips] = useState([]); //array of objects? || object?
   const [loading, setLoading] = useState(false);
 
   useState(async () => {
-    var resp = await RoundTripServices.getRoundtrips();
-    setRoundTrips(resp);
+    try {
+      var resp = await RoundTripServices.getRoundtrips();
+      setRoundTrips(resp);
+    } catch (e) {
+      toast.error("Error fetching round trips: ", e.message);
+      console.log(e);
+    }
   }, []);
 
   const navigate = useNavigate();
@@ -81,10 +87,10 @@ export const RoundTrips = () => {
         }}
         // bgcolor="secondary.main"
       >
-        <TableContainer component={Paper} overflowX="scroll">
+        <TableContainer component={Paper}>
           <Table stickyHeader>
             <TableHead>
-              <TableRow>
+              <TableRow sx={{ backgroundColor: "red", fontWeight: "600" }}>
                 <TableCell>Name</TableCell>
                 <TableCell>Title</TableCell>
                 <TableCell>Subtitle</TableCell>

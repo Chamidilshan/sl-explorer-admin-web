@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import PermanentDrawerLeft from "../../drawer";
 import {
   Container,
@@ -36,17 +36,31 @@ export const AERoundTrips = () => {
 
   const [packDetails, setPackDetails] = useState(["", "", "", "", 0]); //finished
   const [images, setImages] = useState(["", [[1, ""]]]); //finished
-  const [itinerary1, setItinerary1] = useState([[""]]);
-  const [hotels, setHotels] = useState([[""]]);
+  const [itinerary1, setItinerary1] = useState([]);
+  const [hotels, setHotels] = useState([]);
   const [prices, setPrices] = useState(["", "", "", "", "", ""]);
 
-  const [packageCoverImage, setPackageCoverImage] = useState(""); //firestore saved url
+  const [packageImage, setPackageImage] = useState(""); //firestore saved url
   const [packageImageLinks, setPackageImageLinks] = useState([""]); //firestore saved urls
+
+  const [jsonReady, setJsonReady] = useState(false);
+
+  useEffect(() => {
+    console.log(packageImageLinks == "", packageImage == "");
+    if (packageImageLinks == "" || packageImage == "") {
+      setJsonReady(false);
+    } else {
+      setJsonReady(true);
+      makeJson();
+      console.log(JSON.stringify(jsonObject, null, 2));
+      RoundTripServices.createRoundTrip(JSON.stringify(jsonObject, null, 2));
+    }
+  }, [packageImageLinks, packageImage]);
 
   const extractImages = async () => {
     try {
       var ref = await uploadImage(images[0]);
-      setPackageCoverImage(ref);
+      setPackageImage(ref);
 
       const packageImageArray = await Promise.all(
         images[1].map(async (image) => {
@@ -81,7 +95,7 @@ export const AERoundTrips = () => {
     jsonObject["packageName"] = packDetails[0];
     jsonObject["packageShortDescription"] = packDetails[3];
     jsonObject["packageCoverDescription"] = packDetails[2];
-    jsonObject["packageCoverImage"] = packageCoverImage;
+    jsonObject["packageCoverImage"] = packageImage;
     jsonObject["packageImageLinks"] = packageImageLinks;
     jsonObject["packageTitle"] = packDetails[0];
     jsonObject["packageSubTitle"] = packDetails[1];
@@ -122,17 +136,13 @@ export const AERoundTrips = () => {
       const newTrip = {
         packDetails,
         images,
-        itinerary,
+        itinerary1,
         hotels,
         prices,
       };
       setLoading(true);
       try {
         await extractImages(); //automaticaly update and extract
-        await makeJson();
-        await RoundTripServices.createRoundTrip(
-          JSON.stringify(jsonObject, null, 2)
-        );
       } catch (error) {
         console.log(error);
       } finally {
@@ -157,6 +167,7 @@ export const AERoundTrips = () => {
         flexFlow: "column nowrap",
         justifyContent: "space-between",
         minHeight: "90vh",
+        height: "auto",
       }}
       gap={2}
       className="w-full"
@@ -173,7 +184,6 @@ export const AERoundTrips = () => {
       <Box
         sx={{
           width: "100%",
-          height: "100%",
           display: "flex",
           flexFlow: "row wrap",
         }}
@@ -222,7 +232,7 @@ export const AERoundTrips = () => {
         >
           <KeyboardDoubleArrowLeftIcon />
         </Button>
-        <ToggleButtonGroup
+        <ButtonGroup
           size="small"
           value={currentPage}
           onChange={toggleButtonHandler}
@@ -231,7 +241,8 @@ export const AERoundTrips = () => {
         >
           {pages.map((page, index) => {
             return (
-              <ToggleButton
+              <Button
+                variant={currentPage == index + 1 ? "contained" : "outlined"}
                 key={page}
                 value={index + 1}
                 onClick={() => setCurrentPage(index + 1)}
@@ -239,10 +250,10 @@ export const AERoundTrips = () => {
                 <Typography variant="body2">
                   &nbsp; {index + 1} &nbsp;
                 </Typography>
-              </ToggleButton>
+              </Button>
             );
           })}
-        </ToggleButtonGroup>
+        </ButtonGroup>
         <Button
           disabled={currentPage == pages.length}
           onClick={() => setCurrentPage(currentPage + 1)}

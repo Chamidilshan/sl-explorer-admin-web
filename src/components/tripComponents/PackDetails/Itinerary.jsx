@@ -85,7 +85,7 @@ export const Itinerary = ({ onSaveItinerary, prevItinerary }) => {
       >
         <Box
           sx={{
-            height: "80%",
+            height: "60vh",
             width: "100%",
             display: "flex",
             flexDirection: "column",
@@ -139,14 +139,13 @@ export const Itinerary = ({ onSaveItinerary, prevItinerary }) => {
                             startIcon={<DeleteOutlineIcon />}
                             variant="contained"
                             color="error"
-                            onClick={async () => {
-                              await setItinerary((prevItinerary) => {
+                            onClick={() => {
+                              setItinerary((prevItinerary) => {
                                 const newItinerary = prevItinerary.filter(
                                   (item, i) => i !== index
                                 );
                                 return newItinerary;
                               });
-                              console.log(itinerary);
                             }}
                           >
                             <Typography variant="subtitle2">Delete</Typography>
@@ -173,7 +172,12 @@ export const Itinerary = ({ onSaveItinerary, prevItinerary }) => {
             <Button
               startIcon={<SaveIcon />}
               variant="contained"
-              onClick={onSaveItinerary(itinerary)}
+              disabled={itinerary.length === 0}
+              onClick={() => {
+                alert("Itineraries Saved!");
+                console.log(itinerary);
+                onSaveItinerary(itinerary);
+              }}
             >
               <Typography variant="subtitle2">Save Itinery</Typography>
             </Button>
