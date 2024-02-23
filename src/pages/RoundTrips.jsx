@@ -103,13 +103,13 @@ export const RoundTrips = () => {
                     <TableCell>{item.packageSubTitle}</TableCell>
                     <TableCell>{item.packageTotalSeats}</TableCell>
                     <TableCell>
-                      <Button variant="text">See_itineraries</Button>
+                      <Button variant="text">See Itineraries</Button>
                     </TableCell>
                     <TableCell>
-                      <Button variant="text">See-hotels</Button>
+                      <Button variant="text">See Hotels</Button>
                     </TableCell>
                     <TableCell>
-                      <Button variant="text">See_prices</Button>
+                      <Button variant="text">See Prices</Button>
                     </TableCell>
                   </TableRow>
                 );
@@ -136,6 +136,7 @@ export const RoundTrips = () => {
           <Typography variant="subtitle2">Add New</Typography>
         </Button>
       </Box>
+      <Box pt={25}></Box>
       <AERoundTrips />
     </Box>
   );
