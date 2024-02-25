@@ -26,11 +26,23 @@ export default function PermanentDrawerLeft(props) {
   const navigate = useNavigate();
   const [selectedItem, setSelectedItem] = useState(props.route ?? "/");
 
-  // console.log(props.route);
+  console.log(props.route);
+
+  const mainRouteList = [
+    "/",
+    "/cruise-ships",
+    "/round-trips",
+    "/day-trips",
+    "/hotels",
+    "/festivals",
+    "/notification-campaign",
+    "/messages",
+    "/settings",
+  ];
 
   useEffect(() => {
-    // console.log('selectedItem:', selectedItem);
-    if (selectedItem) {
+    console.log("selectedItem:", selectedItem);
+    if (mainRouteList.indexOf(selectedItem) != -1) {
       navigate(selectedItem);
     }
   }, [selectedItem, navigate]);
@@ -66,7 +78,11 @@ export default function PermanentDrawerLeft(props) {
           { route: "/round-trips", text: "Round Trips", icon: <JoinLeft /> },
           { route: "/day-trips", text: "Day Trips", icon: <JoinRight /> },
           { route: "/hotels", text: "Hotels", icon: <Weekend /> },
-          { route: "/festivals", text: "Festivals & Events", icon: <CelebrationOutlined /> },
+          {
+            route: "/festivals",
+            text: "Festivals & Events",
+            icon: <CelebrationOutlined />,
+          },
           {
             route: "/notification-campaign",
             text: "Notification Campaign",

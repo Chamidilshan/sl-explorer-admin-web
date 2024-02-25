@@ -42,6 +42,7 @@ import { toast } from "react-toastify";
 export const RoundTrips = () => {
   const [roundTrips, setRoundTrips] = useState([]); //array of objects? || object?
   const [loading, setLoading] = useState(false);
+  const [isAddingNew, setIsAddingNew] = useState(false);
 
   useState(async () => {
     try {
@@ -73,77 +74,83 @@ export const RoundTrips = () => {
           <Typography variant="h1">loading...</Typography>
         </Box>
       )}
-      <Box sx={{ display: "flex" }}>
-        <Typography>Dashboard / Round Trips</Typography>
-      </Box>
+      {!isAddingNew && (
+        <>
+          <Box sx={{ display: "flex" }}>
+            <Typography>Dashboard / Round Trips</Typography>
+          </Box>
 
-      <Box
-        sx={{
-          width: "100%",
-          height: "100%",
-          overflowX: "scroll",
-          display: "flex",
-          flexFlow: "row wrap",
-        }}
-        // bgcolor="secondary.main"
-      >
-        <TableContainer component={Paper}>
-          <Table stickyHeader>
-            <TableHead>
-              <TableRow sx={{ backgroundColor: "red", fontWeight: "600" }}>
-                <TableCell>Name</TableCell>
-                <TableCell>Title</TableCell>
-                <TableCell>Subtitle</TableCell>
-                <TableCell>Total Seats</TableCell>
-                <TableCell>Itineraries</TableCell>
-                <TableCell>Hotels</TableCell>
-                <TableCell>Prices</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {roundTrips.map((item, index) => {
-                return (
-                  <TableRow key={index}>
-                    <TableCell>{item.packageName}</TableCell>
-                    <TableCell>{item.packageTitle}</TableCell>
-                    <TableCell>{item.packageSubTitle}</TableCell>
-                    <TableCell>{item.packageTotalSeats}</TableCell>
-                    <TableCell>
-                      <Button variant="text">See Itineraries</Button>
-                    </TableCell>
-                    <TableCell>
-                      <Button variant="text">See Hotels</Button>
-                    </TableCell>
-                    <TableCell>
-                      <Button variant="text">See Prices</Button>
-                    </TableCell>
+          <Box
+            sx={{
+              width: "100%",
+              height: "100%",
+              overflowX: "scroll",
+              display: "flex",
+              flexFlow: "row wrap",
+            }}
+            // bgcolor="secondary.main"
+          >
+            <TableContainer component={Paper}>
+              <Table stickyHeader>
+                <TableHead>
+                  <TableRow sx={{ backgroundColor: "red", fontWeight: "600" }}>
+                    <TableCell>Name</TableCell>
+                    <TableCell>Title</TableCell>
+                    <TableCell>Subtitle</TableCell>
+                    <TableCell>Total Seats</TableCell>
+                    <TableCell>Itineraries</TableCell>
+                    <TableCell>Hotels</TableCell>
+                    <TableCell>Prices</TableCell>
                   </TableRow>
-                );
-              })}
-            </TableBody>
-          </Table>
-        </TableContainer>
-      </Box>
+                </TableHead>
+                <TableBody>
+                  {roundTrips.map((item, index) => {
+                    return (
+                      <TableRow key={index}>
+                        <TableCell>{item.packageName}</TableCell>
+                        <TableCell>{item.packageTitle}</TableCell>
+                        <TableCell>{item.packageSubTitle}</TableCell>
+                        <TableCell>{item.packageTotalSeats}</TableCell>
+                        <TableCell>
+                          <Button variant="text">See Itineraries</Button>
+                        </TableCell>
+                        <TableCell>
+                          <Button variant="text">See Hotels</Button>
+                        </TableCell>
+                        <TableCell>
+                          <Button variant="text">See Prices</Button>
+                        </TableCell>
+                      </TableRow>
+                    );
+                  })}
+                </TableBody>
+              </Table>
+            </TableContainer>
+          </Box>
 
-      <Box
-        sx={{
-          width: "100%",
-        }}
-      >
-        <Button
-          width={10}
-          variant="contained"
-          color="primary"
-          // startIcon={<add}
-          onClick={() => {
-            navigate("/round-trips/add-round-trips");
-          }}
-        >
-          <Typography variant="subtitle2">Add New</Typography>
-        </Button>
-      </Box>
-      <Box pt={25}></Box>
-      <AERoundTrips />
+          <Box
+            sx={{
+              width: "100%",
+            }}
+          >
+            {/* <Link to={"/round-trips/add-round-trips"}> */}
+            <Button
+              width={10}
+              variant="contained"
+              color="primary"
+              onClick={() => {
+                setIsAddingNew(true);
+              }}
+              // startIcon={<add}
+            >
+              <Typography variant="subtitle2">Add New</Typography>
+            </Button>
+            {/* </Link> */}
+          </Box>
+          <Box pt={25}></Box>
+        </>
+      )}
+      {isAddingNew && <AERoundTrips />}
     </Box>
   );
 };

@@ -19,7 +19,7 @@ import { Itinerary } from "./Itinerary";
 import { Hotel } from "./Hotel";
 import { Prices } from "./Prices";
 import { Key } from "@mui/icons-material";
-import { json } from "react-router-dom";
+import { json, useNavigate } from "react-router-dom";
 import {
   getDownloadURL,
   ref,
@@ -31,6 +31,7 @@ import { v4 } from "uuid";
 import { RoundTripServices } from "../../../services/RoundTripService";
 
 export const AERoundTrips = () => {
+  const navigate = useNavigate();
   const pages = ["PackDetails", "Itinerary", "Hotels", "Prices"];
   const [currentPage, setCurrentPage] = useState(1);
 
@@ -43,17 +44,14 @@ export const AERoundTrips = () => {
   const [packageImage, setPackageImage] = useState(""); //firestore saved url
   const [packageImageLinks, setPackageImageLinks] = useState([""]); //firestore saved urls
 
-  const [jsonReady, setJsonReady] = useState(false);
-
   useEffect(() => {
     console.log(packageImageLinks == "", packageImage == "");
     if (packageImageLinks == "" || packageImage == "") {
-      setJsonReady(false);
     } else {
-      setJsonReady(true);
       makeJson();
       console.log(JSON.stringify(jsonObject, null, 2));
       RoundTripServices.createRoundTrip(JSON.stringify(jsonObject, null, 2));
+      navigate("/round-trips");
     }
   }, [packageImageLinks, packageImage]);
 
@@ -186,6 +184,7 @@ export const AERoundTrips = () => {
           width: "100%",
           display: "flex",
           flexFlow: "row wrap",
+          justifyContent: "center",
         }}
         // bgcolor="secondary.main"
       >
@@ -222,7 +221,12 @@ export const AERoundTrips = () => {
           width: "100%",
         }}
       >
-        <Button width={10} variant="outlined" color="error">
+        <Button
+          width={10}
+          variant="outlined"
+          color="error"
+          onClick={() => navigate("/round-trips")}
+        >
           <Typography variant="subtitle2">Exit</Typography>
         </Button>
 
@@ -237,7 +241,6 @@ export const AERoundTrips = () => {
           value={currentPage}
           onChange={toggleButtonHandler}
           color="primary"
-          exclusive
         >
           {pages.map((page, index) => {
             return (

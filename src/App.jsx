@@ -80,23 +80,23 @@ function App() {
             }
           ></Route>
           <Route
-            path="/round-trips"
-            exact
-            element={
-              <RequireAuth>
-                <Front route="/round-trips" in="RoundTrips">
-                  <RoundTrips />
-                </Front>
-              </RequireAuth>
-            }
-          ></Route>
-          <Route
             path="/round-trips/add-round-trips"
             exact
             element={
               <RequireAuth>
                 <Front route="/round-trips/add-round-trips" in="RoundTrips">
                   <AERoundTrips />
+                </Front>
+              </RequireAuth>
+            }
+          />
+          <Route
+            path="/round-trips"
+            exact
+            element={
+              <RequireAuth>
+                <Front route="/round-trips" in="RoundTrips">
+                  <RoundTrips />
                 </Front>
               </RequireAuth>
             }
@@ -129,7 +129,7 @@ function App() {
             element={
               <RequireAuth>
                 <Front route="/festivals" in="Festivals & Events">
-                  <Festivals/>
+                  <Festivals />
                 </Front>
               </RequireAuth>
             }
