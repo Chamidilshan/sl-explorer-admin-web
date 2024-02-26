@@ -187,17 +187,17 @@ export const Hotels = () => {
   return (
     <>
     <div >
-    <Box sx={{ display: 'flex' }}>
+    <Box className= 'w-full' sx={{ display: 'flex' }}>
      <h1 className='text-cyan-900'>Hotels</h1>
     </Box>
      
-     <Paper sx={{margin: '1%', pl: '10%'}}>
-      <div className='flex justify-end'>
+     <Paper className='w-full'>
+      <div className='flex justify-end w-full'>
         <Button onClick={functionAdd} variant="contained" color="primary">Add New Hotel</Button>
       </div>
       <div style={{margin: '1%'}}> 
-      <TableContainer>
-        <Table style={{border: '1px solid #D4D4D4', color: '#262626'}}>
+      <TableContainer className='w-full'>
+        <Table style={{border: '1px solid #D4D4D4', color: '#262626'}} className='min-w-max'>
           <TableHead>
             <TableRow style={{backgroundColor: '#D4D4D4'}}>
             {columns.map((column) => (
