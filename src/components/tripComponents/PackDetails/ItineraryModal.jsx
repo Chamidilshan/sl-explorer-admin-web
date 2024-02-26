@@ -38,34 +38,8 @@ export function ItineraryModal({
 
   React.useEffect(() => {
     if (final.indexOf("submitted") != -1) {
-      if (
-        confirm(
-          "Confirm Itinerary\n" +
-            final[0] +
-            "\n" +
-            final[1] +
-            "\n" +
-            final[2] +
-            "\n" +
-            final[3] +
-            "\n" +
-            final[4] +
-            "\n" +
-            final[5] +
-            "\n" +
-            final[6] +
-            "\n" +
-            final[7] +
-            "\n" +
-            final[8] +
-            "\n" +
-            final[9] +
-            "\n"
-        )
-      ) {
-        isEditing ? onSave(final) : onSaveExisting(final);
-        onClose();
-      }
+      isEditing ? onSave(final) : onSaveExisting(final);
+      onClose();
     }
   }, [final]);
 
