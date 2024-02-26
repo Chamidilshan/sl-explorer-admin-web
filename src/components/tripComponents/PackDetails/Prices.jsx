@@ -23,6 +23,7 @@ import HideImageIcon from "@mui/icons-material/HideImage";
 import DeleteIcon from "@mui/icons-material/Delete";
 import AddIcon from "@mui/icons-material/Add";
 import { Form, useSubmit } from "react-router-dom";
+import { toast } from "react-toastify";
 
 export const Prices = ({ onSaveDetails, prevDetails }) => {
   const [basicDetails, setBasicDetails] = useState(prevDetails);
@@ -32,7 +33,7 @@ export const Prices = ({ onSaveDetails, prevDetails }) => {
     e.preventDefault();
     setBasicDetails([gs, gd, gt, ps, pd, pt]);
     setFd(true);
-    alert("Price details saved");
+    toast.success("Price details saved..!");
   };
 
   useEffect(() => {
@@ -174,6 +175,7 @@ export const Prices = ({ onSaveDetails, prevDetails }) => {
               type="submit"
               fullWidth
               aria-label="save package details"
+              disabled={!gs}
             >
               Save
             </Button>
