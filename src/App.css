@@ -1,30 +1,42 @@
 #root {
   max-width: 1280px;
-  height: 100vh;
   margin: 0 auto;
   padding: 2rem;
   text-align: center;
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+.loading-animation {
+  font-size: 20px;
+  border: 10px solid #f3f3f3;
+  border-top: 10px solid burlywood;
+  border-radius: 50%;
+  width: 100px;
+  height: 100px;
+  animation: spin 1s linear infinite;
 }
 
-@keyframes logo-spin {
+.loading-logo {
+  border-radius: 50%;
+  width: 100px;
+  height: 100px;
+  animation: shrink 1s linear infinite;
+}
+
+@keyframes spin {
   from {
     transform: rotate(0deg);
   }
   to {
     transform: rotate(360deg);
+  }
+}
+
+@keyframes shrink {
+  from {
+    transform: scale(1);
+  }
+  to {
+    transform: scale(0.1);
   }
 }
 

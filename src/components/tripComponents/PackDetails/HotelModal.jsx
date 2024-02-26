@@ -1,43 +1,124 @@
 import * as React from "react";
-import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
-import Typography from "@mui/material/Typography";
-import Modal from "@mui/material/Modal";
-import { Container, Divider, Paper, TextField } from "@mui/material";
 import { useState } from "react";
+import {
+  Checkbox,
+  Container,
+  Divider,
+  FormControlLabel,
+  Paper,
+  TextField,
+  Button,
+  Box,
+  Modal,
+  Typography,
+  MenuItem,
+} from "@mui/material";
+import CloseIcon from "@mui/icons-material/Close";
+import HotelService from "../../../services/HotelService";
 
-const style = {
-  position: "absolute",
-  top: "50%",
-  left: "50%",
-  transform: "translate(-50%, -50%)",
-  width: "60%",
-  bgcolor: "background.paper",
-  borderRadius: "10px",
-};
+// React.useEffect(async () => {
+//   try {
+//     const data = await HotelService.getHotels();
+//     console.log("Hotels data:", data.data);
+//     setHotelsList(data.data);
+//   } catch (error) {
+//     console.log("Error fetching hotels:", error);
+//   }
+// }, []);
 
-const saveDetails = () => {
-  alert(
-    "Save Details: ",
-    packName,
-    packSubtitle,
-    packCoverDescription,
-    packShortDescription
-  );
-};
+export function HotelModal({ onClose, onSave }) {
+  const [dayNumber, setDayNumber] = useState("");
+  const [dayName, setDayName] = useState("");
+  const [location1, setLocation1] = useState("");
+  const [location2, setLocation2] = useState("");
+  const [location3, setLocation3] = useState("");
+  const [location4, setLocation4] = useState("");
+  const [description, setDescription] = useState("");
+  const [option, setOption] = useState(false);
+  const [optional, setOptional] = useState("");
+  const [optionPrice, setOptionPrice] = useState("");
 
-export function HotelModal() {
-  const [packName, setPackName] = useState("");
-  const [packSubtitle, setPackSubtitle] = useState("");
-  const [packCoverDescription, setPackCoverDescription] = useState("");
-  const [packShortDescription, setPackShortDescription] = useState("");
+  const [hotelsList, setHotelsList] = useState([]);
+
+  const firstRef = React.useRef(null);
+
+  const [final, setFinal] = useState([]);
+
+  useState(async () => {
+    try {
+      const data = await await HotelService.getHotels();
+      setHotelsList(data.data);
+      console.log("Hotels data:", data.data);
+    } catch (error) {
+      console.log("Error fetching hotels:", error);
+    }
+  }, []);
+
+  React.useEffect(() => {
+    if (final.indexOf("submitted") != -1) {
+      if (
+        confirm(
+          "Confirm Itinerary\n" +
+            final[0] +
+            "\n" +
+            final[1] +
+            "\n" +
+            final[2] +
+            "\n" +
+            final[3] +
+            "\n" +
+            final[4] +
+            "\n" +
+            final[5] +
+            "\n" +
+            final[6] +
+            "\n" +
+            final[7] +
+            "\n" +
+            final[8] +
+            "\n" +
+            final[9] +
+            "\n"
+        )
+      ) {
+        onSave(final);
+        onClose();
+      }
+    }
+  }, [final]);
+
+  const send = () => {
+    var variab = [
+      dayNumber,
+      dayName,
+      location1,
+      location2,
+      location3,
+      location4,
+      description,
+      option,
+      optional,
+      optionPrice,
+    ];
+    console.log(variab);
+    console.log(final);
+  };
 
   return (
-    <Box sx={style}>
-      <Box pt={2} pl={4} pb={1}>
-        <Typography variant="subtitle2" sx={{ fontWeight: "550" }}>
+    <>
+      <Box
+        pt={1}
+        pl={4}
+        pr={4}
+        pb={1}
+        className="flex flex-row justify-between align-center"
+      >
+        <Typography pt={1} variant="subtitle2" sx={{ fontWeight: "550" }}>
           Add Hotel
         </Typography>
+        <Button size="small" variant="outlined" onClick={onClose} color="error">
+          <CloseIcon />
+        </Button>
       </Box>
 
       <Divider
@@ -46,126 +127,124 @@ export function HotelModal() {
           bgcolor: "primary",
         }}
       />
-
-      <Box
-        p={2}
-        display="flex"
-        sx={{
-          flexFlow: "row wrap",
-          alignItems: "flex-start",
-          justifyContent: "space-between",
-          p: 4,
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          var variab = [
+            dayNumber,
+            dayName,
+            location1,
+            location2,
+            location3,
+            location4,
+            description,
+            option,
+            optional,
+            optionPrice,
+            "submitted",
+          ];
+          setFinal(variab);
         }}
-        width="100%"
-        gap={2}
       >
         <Box
+          p={2}
+          display="flex"
           sx={{
-            flex: "display",
-            flexDirection: "column",
+            flexFlow: "row wrap",
             alignItems: "flex-start",
-            width: "45%",
-            minWidth: "250px",
-          }}
-          gap={1}
-        >
-          <Typography variant="body2">Hotel Name</Typography>
-          <TextField
-            fullWidth
-            value={packName}
-            onChange={(e) => setPackName(e.target.value)}
-            placeholder="Sri Lanka Culture & Nature"
-            size="small"
-          />
-        </Box>
-
-        <Box
-          sx={{
-            flex: "display",
-            flexDirection: "column",
-            alignItems: "flex-start",
-            width: "45%",
-            minWidth: "250px",
-          }}
-          gap={1}
-        >
-          <Typography variant="body2">Hotel Subtitle</Typography>
-          <TextField
-            fullWidth
-            value={packSubtitle}
-            onChange={(e) => setPackSubtitle(e.target.value)}
-            placeholder="9 Days/8 Nights Highlights Tour"
-            size="small"
-          />
-        </Box>
-
-        <Box
-          sx={{
-            flex: "display",
-            flexDirection: "column",
-            alignItems: "flex-start",
+            justifyContent: "space-between",
+            p: 4,
             width: "100%",
-            minWidth: "250px",
           }}
-          gap={1}
+          gap={2}
         >
-          <Typography variant="body2">Day</Typography>
+          <Box className=" flex flex-col" sx={{ width: "45%" }} gap={1}>
+            <Typography variant="body2">Hotel</Typography>
+            <TextField
+              select
+              fullWidth
+              ref={firstRef}
+              value={dayNumber}
+              onChange={(e) => {
+                console.log("Hotel selected:", e.target.value);
+                setDayNumber(e.target.value);
+              }}
+              placeholder="- select -"
+              label="--select Hotel--"
+              size="small"
+            >
+              {hotelsList.map((hotel) => (
+                <MenuItem key={hotel._id} value={hotel._id}>
+                  {hotel.hotelName}
+                </MenuItem>
+              ))}
+            </TextField>
+          </Box>
 
-          <TextField
-            multiline
-            value={packCoverDescription}
-            onChange={(e) => setPackCoverDescription(e.target.value)}
-            rows={2}
-            type="text"
-            size="small"
-            helperText="Will be shown in the package lists"
+          <Box className=" flex flex-col" sx={{ width: "45%" }} gap={1}>
+            <Typography variant="body2">Location</Typography>
+            <TextField
+              fullWidth
+              value={dayName}
+              onChange={(e) => setDayName(e.target.value)}
+              placeholder="Pinnawela"
+              size="small"
+            />
+          </Box>
+
+          <Box className="w-full flex flex-col" gap={1}>
+            <Typography variant="body2">Landmark Description</Typography>
+            <TextField
+              multiline
+              minRows={2}
+              fullWidth
+              value={location1}
+              onChange={(e) => {
+                setLocation1(e.target.value);
+              }}
+              placeholder="Located right on the Maha Oya River, .."
+              size="small"
+            />
+          </Box>
+
+          <Box className="w-full flex flex-col" gap={1}>
+            <Typography variant="body2">Hotel Description</Typography>
+            <TextField
+              fullWidth
+              multiline
+              minRows={2}
+              value={location2}
+              onChange={(e) => {
+                setLocation2(e.target.value);
+              }}
+              placeholder="Restaurant, bar/lounge, and rooftop terrace, ..."
+              size="small"
+            />
+          </Box>
+
+          <Box className="w-full flex flex-col" gap={1}>
+            <Typography variant="body2">Rooms Description</Typography>
+            <TextField
+              fullWidth
+              value={location3}
+              onChange={(e) => {
+                setLocation3(e.target.value);
+              }}
+              placeholder="20 spacious rooms with balconies or patios ..."
+              size="small"
+            />
+          </Box>
+
+          <Button
+            variant="contained"
             fullWidth
-            placeholder="Sri Lanka, the pearl of the Indian Ocean, is rich in beautiful sights  ..."
-          />
+            type="submit"
+            aria-label="save package details"
+          >
+            Add
+          </Button>
         </Box>
-
-        <Box
-          sx={{
-            flex: "display",
-            flexDirection: "column",
-            alignItems: "flex-start",
-            width: "100%",
-            minWidth: "250px",
-          }}
-          gap={1}
-        >
-          <Typography variant="body2">Short Description</Typography>
-
-          <TextField
-            multiline
-            value={packShortDescription}
-            onChange={(e) => setPackShortDescription(e.target.value)}
-            rows={3}
-            type="text"
-            size="small"
-            helperText="Will be shown in the package details page"
-            fullWidth
-            placeholder="Cover Description Our comprehensive 9-day Sri Lanka tour will show you the highlights of our island, tell you the history ..."
-          />
-        </Box>
-
-        <Button
-          variant="contained"
-          fullWidth
-          onClick={saveDetails}
-          disabled={
-            !(
-              packName &&
-              packSubtitle &&
-              packShortDescription &&
-              packCoverDescription
-            )
-          }
-          aria-label="save package details"
-        >
-          Save
-        </Button>
-      </Box>
-    </Box>
+      </form>
+    </>
   );
 }
