@@ -21,11 +21,10 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { AuthContext } from "./contexts/AuthContext.jsx";
 import Box from "@mui/material/Box";
-import Toolbar from "@mui/material/Toolbar";
-import Typography from "@mui/material/Typography";
-import PermanentDrawerTop from "./components/TopDrawer";
 import { Festivals } from "./pages/Festival.jsx";
-import { AERoundTrips } from "./components/tripComponents/PackDetails/AddEditRoundtrips.jsx";
+import { AddRoundTrips } from "./components/tripComponents/PackDetails/AddRoundtrips";
+import EditRoundTrips from "./components/tripComponents/PackDetails/EditRoundTrips.jsx";
+import { AddDayTrips } from "./components/dayTripComponents/AddDayTrips.jsx";
 
 function App() {
   const [count, setCount] = useState(0);
@@ -41,6 +40,7 @@ function App() {
         sx={{
           display: "flex",
           height: "100%",
+          pt: 5,
         }}
       >
         {/* <PermanentDrawerTop /> */}
@@ -67,7 +67,7 @@ function App() {
                 </Front>
               </RequireAuth>
             }
-          ></Route>
+          />
           <Route
             path="/cruise-ships"
             exact
@@ -78,14 +78,28 @@ function App() {
                 </Front>
               </RequireAuth>
             }
-          ></Route>
+          />
+          <Route
+            path="/round-trips/edit-round-trips/:tripId"
+            exact
+            element={
+              <RequireAuth>
+                <Front
+                  route="/round-trips/edit-round-trips/:tripId"
+                  in="RoundTrips"
+                >
+                  <EditRoundTrips />
+                </Front>
+              </RequireAuth>
+            }
+          />
           <Route
             path="/round-trips/add-round-trips"
             exact
             element={
               <RequireAuth>
                 <Front route="/round-trips/add-round-trips" in="RoundTrips">
-                  <AERoundTrips />
+                  <AddRoundTrips />
                 </Front>
               </RequireAuth>
             }
@@ -100,7 +114,32 @@ function App() {
                 </Front>
               </RequireAuth>
             }
-          ></Route>
+          />
+          <Route
+            path="/round-trips/edit-day-trips/:tripId"
+            exact
+            element={
+              <RequireAuth>
+                <Front
+                  route="/round-trips/edit-day-trips/:tripId"
+                  in="DayTrips"
+                >
+                  <DayTrips />
+                </Front>
+              </RequireAuth>
+            }
+          />
+          <Route
+            path="/day-trips/add-day-trips"
+            exact
+            element={
+              <RequireAuth>
+                <Front route="/day-trips/add-day-trips" in="DayTrips">
+                  <AddDayTrips />
+                </Front>
+              </RequireAuth>
+            }
+          />
           <Route
             path="/day-trips"
             exact
@@ -111,7 +150,7 @@ function App() {
                 </Front>
               </RequireAuth>
             }
-          ></Route>
+          />
           <Route
             path="/hotels"
             exact
@@ -122,7 +161,7 @@ function App() {
                 </Front>
               </RequireAuth>
             }
-          ></Route>
+          />
           <Route
             path="/festivals"
             exact
@@ -133,18 +172,21 @@ function App() {
                 </Front>
               </RequireAuth>
             }
-          ></Route>
+          />
           <Route
             path="/notification-campaign"
             exact
             element={
               <RequireAuth>
-                <Front route="/notification-campaign" in="NotificationCampaign">
+                <Front
+                  route="/notification-campaign"
+                  in="Notification Campaign"
+                >
                   <NotificationCampaign />
                 </Front>
               </RequireAuth>
             }
-          ></Route>
+          />
           <Route
             path="/messages"
             exact
@@ -155,7 +197,7 @@ function App() {
                 </Front>
               </RequireAuth>
             }
-          ></Route>
+          />
           <Route
             path="/settings"
             exact
@@ -166,7 +208,7 @@ function App() {
                 </Front>
               </RequireAuth>
             }
-          ></Route>
+          />
         </Routes>
       </BrowserRouter>
       <ToastContainer position="top-right"></ToastContainer>

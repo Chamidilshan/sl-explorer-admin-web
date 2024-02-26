@@ -1,41 +1,34 @@
 import React, { useEffect, useState } from "react";
-import PermanentDrawerLeft from "../../drawer";
 import {
-  Container,
   Typography,
-  Toolbar,
   Box,
   ButtonGroup,
-  ToggleButtonGroup,
-  ToggleButton,
-  IconButton,
   Button,
+  Breadcrumbs,
 } from "@mui/material";
-import PermanentDrawerTop from "../../TopDrawer";
-import { PackDetails } from "./PackDetailsPage";
+import { PackDetails } from "../tripComponents/PackDetails/PackDetailsPage.jsx";
 import KeyboardDoubleArrowLeftIcon from "@mui/icons-material/KeyboardDoubleArrowLeft";
 import KeyboardDoubleArrowRightIcon from "@mui/icons-material/KeyboardDoubleArrowRight";
-import { Itinerary } from "./Itinerary";
-import { Hotel } from "./Hotel";
-import { Prices } from "./Prices";
-import { Key } from "@mui/icons-material";
-import { json, useNavigate } from "react-router-dom";
+import { Itinerary } from "../tripComponents/PackDetails/Itinerary";
+import { Hotel } from "../tripComponents/PackDetails/Hotel";
+import { Prices } from "../tripComponents/PackDetails/Prices";
+import { Link } from "react-router-dom";
 import {
   getDownloadURL,
   ref,
   uploadBytes,
   uploadString,
 } from "firebase/storage";
-import { imageDb } from "../../../../config";
 import { v4 } from "uuid";
-import { RoundTripServices } from "../../../services/RoundTripService";
+import NavigateNextIcon from "@mui/icons-material/NavigateNext";
+import { imageDb } from "../../../config.js";
+import { RoundTripServices } from "../../services/RoundTripService.jsx";
 
-export const AERoundTrips = () => {
-  const navigate = useNavigate();
+export const AddDayTrips = () => {
   const pages = ["PackDetails", "Itinerary", "Hotels", "Prices"];
   const [currentPage, setCurrentPage] = useState(1);
 
-  const [packDetails, setPackDetails] = useState(["", "", "", "", 0]); //finished
+  const [packDetails, setPackDetails] = useState(["", "", "", "", 0, ""]); //finished
   const [images, setImages] = useState(["", [[1, ""]]]); //finished
   const [itinerary1, setItinerary1] = useState([]);
   const [hotels, setHotels] = useState([]);
@@ -46,12 +39,11 @@ export const AERoundTrips = () => {
 
   useEffect(() => {
     console.log(packageImageLinks == "", packageImage == "");
-    if (packageImageLinks == "" || packageImage == "") {
-    } else {
+    if (packageImageLinks != "" && packageImage != "") {
       makeJson();
       console.log(JSON.stringify(jsonObject, null, 2));
       RoundTripServices.createRoundTrip(JSON.stringify(jsonObject, null, 2));
-      navigate("/round-trips");
+      navigate("/day-trips");
     }
   }, [packageImageLinks, packageImage]);
 
@@ -75,7 +67,7 @@ export const AERoundTrips = () => {
 
   const uploadImage = async (image) => {
     if (image) {
-      const imgRef = ref(imageDb, `roundtripImages/${v4()}`);
+      const imgRef = ref(imageDb, `daytripImages/${v4()}`);
       try {
         const snapshot = await uploadString(imgRef, image, "data_url");
         const url = await getDownloadURL(snapshot.ref);
@@ -95,7 +87,7 @@ export const AERoundTrips = () => {
     jsonObject["packageCoverDescription"] = packDetails[2];
     jsonObject["packageCoverImage"] = packageImage;
     jsonObject["packageImageLinks"] = packageImageLinks;
-    jsonObject["packageTitle"] = packDetails[0];
+    jsonObject["packageTitle"] = packDetails[5];
     jsonObject["packageSubTitle"] = packDetails[1];
     jsonObject["packageTotalSeats"] = packDetails[4];
     jsonObject["itenary"] = itinerary1.map((item, index) => {
@@ -164,71 +156,84 @@ export const AERoundTrips = () => {
       sx={{
         flexFlow: "column nowrap",
         justifyContent: "space-between",
-        minHeight: "90vh",
+        minHeight: "85vh",
         height: "auto",
       }}
       gap={2}
       className="w-full"
     >
-      {loading && (
-        <Box>
-          <Typography variant="h1">loading...</Typography>
+      <Box sx={{ display: "flex" }}>
+        <Breadcrumbs aria-label="Bread crumbs" separator={<NavigateNextIcon />}>
+          <Link to="/">Dashboard</Link>
+          <Link to="/day-trips">Day Trips</Link>
+          <Typography color="text.primary">Add Day Trip</Typography>
+        </Breadcrumbs>
+      </Box>
+      {loading ? (
+        <Modal open={true}>
+          <div className="w-full h-full flex justify-center items-center">
+            <div className="loading-animation" />
+            <Typography variant="subtitle2" mt={2}>
+              Uploading Images...
+            </Typography>
+            <Typography variant="body2" mt={2}>
+              This might take some time according to the image size.
+            </Typography>
+            <Typography variant="body2" mt={2}>
+              size and quality both are crucial to provide better user
+              experience.{" "}
+            </Typography>
+          </div>
+        </Modal>
+      ) : (
+        <Box
+          sx={{
+            width: "100%",
+            display: "flex",
+            flexFlow: "row wrap",
+            justifyContent: "center",
+          }}
+          // bgcolor="secondary.main"
+        >
+          {currentPage == 1 && (
+            <PackDetails
+              onSaveDetails={(data) => setPackDetails(data)}
+              onSaveImages={(imgs) => setImages(imgs)}
+              prevImages={images}
+              prevDetails={packDetails}
+            />
+          )}
+          {currentPage == 2 && (
+            <Itinerary
+              onSaveItinerary={(data) => setItinerary1(data)}
+              prevItinerary={itinerary1}
+            />
+          )}
+          {currentPage == 3 && (
+            <Hotel
+              onSaveItinerary={(data) => setHotels(data)}
+              prevItinerary={hotels}
+            />
+          )}
+          {currentPage == 4 && (
+            <Prices
+              onSaveDetails={(data) => setPrices(data)}
+              prevDetails={prices}
+            />
+          )}
         </Box>
       )}
-      <Box sx={{ display: "flex" }}>
-        <Typography>Dashboard / Round_Trips / Add-Edit_Round_Trips</Typography>
-      </Box>
-
-      <Box
-        sx={{
-          width: "100%",
-          display: "flex",
-          flexFlow: "row wrap",
-          justifyContent: "center",
-        }}
-        // bgcolor="secondary.main"
-      >
-        {currentPage == 1 && (
-          <PackDetails
-            onSaveDetails={(data) => setPackDetails(data)}
-            onSaveImages={(imgs) => setImages(imgs)}
-            prevImages={images}
-            prevDetails={packDetails}
-          />
-        )}
-        {currentPage == 2 && (
-          <Itinerary
-            onSaveItinerary={(data) => setItinerary1(data)}
-            prevItinerary={itinerary1}
-          />
-        )}
-        {currentPage == 3 && (
-          <Hotel
-            onSaveItinerary={(data) => setHotels(data)}
-            prevItinerary={hotels}
-          />
-        )}
-        {currentPage == 4 && (
-          <Prices
-            onSaveDetails={(data) => setPrices(data)}
-            prevDetails={prices}
-          />
-        )}
-      </Box>
 
       <Box
         sx={{
           width: "100%",
         }}
       >
-        <Button
-          width={10}
-          variant="outlined"
-          color="error"
-          onClick={() => navigate("/round-trips")}
-        >
-          <Typography variant="subtitle2">Exit</Typography>
-        </Button>
+        <Link to={"/day-trips"}>
+          <Button width={10} variant="outlined" color="error">
+            <Typography variant="subtitle2">Exit</Typography>
+          </Button>
+        </Link>
 
         <Button
           disabled={currentPage == 1}

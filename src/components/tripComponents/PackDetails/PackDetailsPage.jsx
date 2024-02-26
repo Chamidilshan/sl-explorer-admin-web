@@ -23,6 +23,7 @@ import HideImageIcon from "@mui/icons-material/HideImage";
 import DeleteIcon from "@mui/icons-material/Delete";
 import AddIcon from "@mui/icons-material/Add";
 import { Form, useSubmit } from "react-router-dom";
+import { toast } from "react-toastify";
 
 export const PackDetails = ({
   onSaveDetails,
@@ -41,37 +42,28 @@ export const PackDetails = ({
       packageCoverDescription,
       packageShortDescription,
       maximumParticipants,
+      packTitle,
     ]);
     setFd(true);
   };
 
   useEffect(() => {
     if (fd) {
-      alert(
-        "Save Details: " +
-          "\n" +
-          packageName +
-          "\n" +
-          packSubtitle +
-          "\n" +
-          packageCoverDescription +
-          "\n" +
-          packageShortDescription +
-          "\n" +
-          maximumParticipants
-      );
+      toast.success("Details Saved..!");
       console.log(basicDetails);
       onSaveDetails(basicDetails);
     }
   }, [basicDetails]);
 
   const [images, setImages] = useState(prevImages);
+
+  console.log(images);
   const [fi, setFi] = useState(false);
 
   const saveImages = (e) => {
     e.preventDefault();
     setImages([packageImage, coverImage]);
-    alert("Images have been saved successfully!");
+    toast.success("Images have been saved successfully..!");
     setFi(true);
   };
 
@@ -86,6 +78,7 @@ export const PackDetails = ({
   const [packageShortDescription, setPackShort] = useState(basicDetails[3]);
   const [packageCoverDescription, setPackCover] = useState(basicDetails[2]);
 
+  const [packTitle, setPackTitle] = useState(basicDetails[5]);
   const [packSubtitle, setPackSubtitle] = useState(basicDetails[1]);
   const [maximumParticipants, setMaximumParticipants] = useState(
     basicDetails[4]
@@ -172,13 +165,25 @@ export const PackDetails = ({
               </Box>
 
               <Box className="w-full flex flex-col items-start" gap={0.5}>
+                <Typography variant="body2">Package Title</Typography>
+                <TextField
+                  multiline
+                  fullWidth
+                  value={packTitle}
+                  onChange={(e) => setPackTitle(e.target.value)}
+                  placeholder="9 Days"
+                  size="small"
+                />
+              </Box>
+
+              <Box className="w-full flex flex-col items-start" gap={0.5}>
                 <Typography variant="body2">Package Subtitle</Typography>
                 <TextField
                   multiline
                   fullWidth
                   value={packSubtitle}
                   onChange={(e) => setPackSubtitle(e.target.value)}
-                  placeholder="9 Days/8 Nights Highlights Tour"
+                  placeholder="8 Nights"
                   size="small"
                 />
               </Box>
@@ -314,7 +319,7 @@ export const PackDetails = ({
               <CardMedia
                 component="img"
                 src={
-                  packageImage != "" ? packageImage : "src/assets/addImage.png"
+                  packageImage ? packageImage : "../../src/assets/addImage.png"
                 }
                 alt="cover image"
                 sx={{ width: "100%", height: "100%", fit: "cover" }}
@@ -372,15 +377,7 @@ export const PackDetails = ({
           }}
         />
 
-        <Box
-          minHeight="330px"
-          width="100%"
-          sx={
-            {
-              // overflowY: "scroll",
-            }
-          }
-        >
+        <Box minHeight="410px" width="100%">
           <Box
             width="100%"
             height="100%"
@@ -419,7 +416,7 @@ export const PackDetails = ({
                   <CardMedia
                     component="img"
                     src={
-                      item.at(1) != "" ? item.at(1) : "src/assets/addImage.png"
+                      item.at(1) ? item.at(1) : "../../src/assets/addImage.png"
                     }
                     alt="cover image"
                     sx={{ width: "100%", height: "100%", fit: "cover" }}

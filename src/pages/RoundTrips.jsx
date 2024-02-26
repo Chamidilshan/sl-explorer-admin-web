@@ -1,43 +1,14 @@
 import React, { useState } from "react";
-import PermanentDrawerLeft from "../components/drawer";
-import {
-  Container,
-  Typography,
-  Toolbar,
-  Box,
-  ButtonGroup,
-  ToggleButtonGroup,
-  ToggleButton,
-  IconButton,
-  Button,
-  TableContainer,
-  Paper,
-  Table,
-  TableHead,
-  TableRow,
-  TableCell,
-  TableBody,
-} from "@mui/material";
-import PermanentDrawerTop from "../components/TopDrawer";
-import { PackDetails } from "../components/tripComponents/PackDetails/PackDetailsPage";
-import KeyboardDoubleArrowLeftIcon from "@mui/icons-material/KeyboardDoubleArrowLeft";
-import KeyboardDoubleArrowRightIcon from "@mui/icons-material/KeyboardDoubleArrowRight";
-import { Itinerary } from "../components/tripComponents/PackDetails/Itinerary";
-import { Hotel } from "../components/tripComponents/PackDetails/Hotel";
-import { Prices } from "../components/tripComponents/PackDetails/Prices";
-import { Key } from "@mui/icons-material";
+import { Typography, Box, Button, Breadcrumbs } from "@mui/material";
 import { Link, Navigate, Route, json, useNavigate } from "react-router-dom";
-import {
-  getDownloadURL,
-  ref,
-  uploadBytes,
-  uploadString,
-} from "firebase/storage";
-import { imageDb } from "../../config";
-import { v4 } from "uuid";
 import { RoundTripServices } from "../services/RoundTripService";
-import { AERoundTrips } from "../components/tripComponents/PackDetails/AddEditRoundtrips";
 import { toast } from "react-toastify";
+import { DataGrid } from "@mui/x-data-grid";
+import NavigateNextIcon from "@mui/icons-material/NavigateNext";
+import EditNoteIcon from "@mui/icons-material/EditNote";
+import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
+import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
+import ArrowDropUpIcon from "@mui/icons-material/ArrowDropUp";
 
 export const RoundTrips = () => {
   const [roundTrips, setRoundTrips] = useState([]); //array of objects? || object?
@@ -46,17 +17,89 @@ export const RoundTrips = () => {
 
   useState(async () => {
     try {
+      setLoading(true);
       var resp = await RoundTripServices.getRoundtrips();
       setRoundTrips(resp);
     } catch (e) {
       toast.error("Error fetching round trips: ", e.message);
       console.log(e);
+    } finally {
+      setLoading(false);
     }
   }, []);
 
   const navigate = useNavigate();
 
-  // <Route
+  const columns = [
+    { field: "packageName", headerName: "Package Name", width: 200 },
+    { field: "packageTitle", headerName: "Title", width: 150 },
+    {
+      field: "packageSubTitle",
+      headerName: "Subtitle",
+      width: 150,
+    },
+    {
+      field: "packageTotalSeats",
+      headerName: "Total Seats",
+      width: 50,
+      type: "number",
+    },
+    // {
+    //   field: "packageShortDescription",
+    //   headerName: "Short Description",
+    //   width: 250,
+    // },
+    // {
+    //   field: "packageCoverDescription",
+    //   headerName: "Cover Description",
+    //   width: 250,
+    // },
+    {
+      field: "actions",
+      headerName: "Actions",
+      width: 400,
+      renderCell: (params) => (
+        <Box className="flex flex-row justify-between align-center gap-2">
+          <Box className="flex flex-column justify-between align-center gap-2">
+            <Button size="small" variant="outlined">
+              <ArrowDropUpIcon sx={{ fontSize: "large" }} />
+            </Button>
+            <Button size="small" variant="outlined">
+              <ArrowDropDownIcon sx={{ fontSize: "large" }} />
+            </Button>
+          </Box>
+          <Link to={`/round-trips/edit-round-trips/${params.row._id}`}>
+            <Button
+              startIcon={<EditNoteIcon />}
+              variant="contained"
+              color="primary"
+            >
+              <Typography variant="subtitle2">Edit</Typography>
+            </Button>
+          </Link>
+          <Button
+            startIcon={<DeleteOutlineIcon />}
+            variant="contained"
+            color="error"
+            onClick={() => {
+              if (confirm("Are you sure you want to delete this round trip?")) {
+                roundTrips.filter((item, i) => i !== index);
+                //need to call the delete function here
+              }
+              // setItinerary((prevItinerary) => {
+              //   const newItinerary = prevItinerary.filter(
+              //     (item, i) => i !== index
+              //   );
+              //   return newItinerary;
+              // });
+            }}
+          >
+            <Typography variant="subtitle2">Delete</Typography>
+          </Button>
+        </Box>
+      ),
+    },
+  ];
 
   return (
     <Box
@@ -64,33 +107,47 @@ export const RoundTrips = () => {
       sx={{
         flexFlow: "column nowrap",
         justifyContent: "space-between",
-        minHeight: "90vh",
+        minHeight: "85vh",
         width: "80%",
       }}
       gap={2}
     >
-      {loading && (
-        <Box>
-          <Typography variant="h1">loading...</Typography>
-        </Box>
-      )}
-      {!isAddingNew && (
-        <>
-          <Box sx={{ display: "flex" }}>
-            <Typography>Dashboard / Round Trips</Typography>
-          </Box>
-
-          <Box
-            sx={{
-              width: "100%",
-              height: "100%",
-              overflowX: "scroll",
-              display: "flex",
-              flexFlow: "row wrap",
+      <Box sx={{ display: "flex" }}>
+        <Breadcrumbs aria-label="bread crumps" separator={<NavigateNextIcon />}>
+          <Link underline="hover" color="inherit" to="/">
+            Dashboard
+          </Link>
+          <Typography color={"textPrimary"}>Round Trips</Typography>
+        </Breadcrumbs>
+      </Box>
+      <Box
+        sx={{
+          width: "100%",
+          height: "100%",
+          display: "flex",
+          flexFlow: "row wrap",
+        }}
+        // bgcolor="secondary.main"
+      >
+        {loading ? (
+          <div className="w-full h-full flex justify-center items-center">
+            <div className="loading-animation" />
+          </div>
+        ) : (
+          <DataGrid
+            getRowId={(row) => row._id}
+            rows={roundTrips}
+            columns={columns}
+            initialState={{
+              pagination: {
+                paginationModel: { page: 0, pageSize: 5 },
+              },
             }}
-            // bgcolor="secondary.main"
-          >
-            <TableContainer component={Paper}>
+            pageSizeOptions={[5, 10, 25, 50]}
+            // checkboxSelection
+          />
+        )}
+        {/* <TableContainer component={Paper}>
               <Table stickyHeader>
                 <TableHead>
                   <TableRow sx={{ backgroundColor: "red", fontWeight: "600" }}>
@@ -125,32 +182,21 @@ export const RoundTrips = () => {
                   })}
                 </TableBody>
               </Table>
-            </TableContainer>
-          </Box>
+            </TableContainer> */}
+      </Box>
 
-          <Box
-            sx={{
-              width: "100%",
-            }}
+      <Box className="w-full flex justify-end">
+        <Link to={"/round-trips/add-round-trips"}>
+          <Button
+            width={10}
+            variant="contained"
+            color="primary"
+            // startIcon={<add}
           >
-            {/* <Link to={"/round-trips/add-round-trips"}> */}
-            <Button
-              width={10}
-              variant="contained"
-              color="primary"
-              onClick={() => {
-                setIsAddingNew(true);
-              }}
-              // startIcon={<add}
-            >
-              <Typography variant="subtitle2">Add New</Typography>
-            </Button>
-            {/* </Link> */}
-          </Box>
-          <Box pt={25}></Box>
-        </>
-      )}
-      {isAddingNew && <AERoundTrips />}
+            <Typography variant="subtitle2">Add New</Typography>
+          </Button>
+        </Link>
+      </Box>
     </Box>
   );
 };

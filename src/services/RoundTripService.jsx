@@ -23,7 +23,19 @@ export const RoundTripServices = {
     try {
       const response = await api.get("/api/v1/roundtrips");
       console.log(response);
-      toast.success("All packages has been loaded..!");
+      // toast.success("All packages have been loaded..!");
+      return response.data;
+    } catch (error) {
+      toast.error("Something went wrong..!\n" + error.message);
+      throw error;
+    }
+  },
+
+  async getRoundtripById(tripId) {
+    try {
+      const response = await api.get(`/api/v1/roundtrips/${tripId}`);
+      console.log(response);
+      toast.success("Package has been loaded..!");
       return response.data;
     } catch (error) {
       toast.error("Something went wrong..!\n" + error.message);
