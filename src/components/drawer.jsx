@@ -20,7 +20,15 @@ import {
   Settings,
   Weekend,
 } from "@mui/icons-material";
-import { AppBar, IconButton, Typography } from "@mui/material";
+import {
+  AppBar,
+  Box,
+  Divider,
+  IconButton,
+  Typography,
+  Button,
+} from "@mui/material";
+import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 
 const drawerWidth = 240;
 
@@ -68,11 +76,46 @@ export default function PermanentDrawerLeft(props) {
             <img src="../../src/assets/logo.png" width={80} height={50} />
           </Toolbar>
           <Toolbar
-            style={{ width: "40%" }}
+            style={{ width: "40%", gap: "10px" }}
             className="flex justify-end align-end"
           >
+            {/* <Divider
+              sx={{
+                height: "100%",
+                width: "0.5px",
+                bgcolor: "#ccc",
+                ml: "5px",
+                mr: "5px",
+              }}
+            /> */}
+            <Button
+              size="large"
+              variant="outlined"
+              sx={{ borderRadius: "100px" }}
+            >
+              <CalendarMonthIcon
+                style={{
+                  fontSize: "large",
+                  color: "black",
+                  margin: "3px",
+                }}
+              />
+            </Button>
+            {/* <Divider
+              sx={{
+                height: "100%",
+                width: "0.5px",
+                bgcolor: "#ccc",
+                ml: "5px",
+                mr: "5px",
+              }}
+            /> */}
             <Link to="/messages">
-              <IconButton size="large">
+              <Button
+                size="large"
+                variant="outlined"
+                sx={{ borderRadius: "100px" }}
+              >
                 <ChatIcon
                   style={{
                     fontSize: "large",
@@ -80,18 +123,33 @@ export default function PermanentDrawerLeft(props) {
                     margin: "3px",
                   }}
                 />
-              </IconButton>
+              </Button>
             </Link>
-
-            <Typography variant="body2" color="black">
-              Claudia
-            </Typography>
-            <img
-              src="../../src/assets/addImage.png"
-              width={60}
-              height={60}
-              style={{ borderRadius: "50%" }}
-            />
+            {/* <Divider
+              sx={{
+                height: "100%",
+                width: "0.5px",
+                bgcolor: "#ccc",
+                ml: "5px",
+                mr: "5px",
+              }}
+            /> */}
+            <Button variant="outlined" sx={{ borderRadius: "100px" }}>
+              <div className="flex flex-row items-end">
+                <img
+                  src="../../src/assets/profile.avif"
+                  style={{
+                    borderRadius: "50%",
+                    objectFit: "cover",
+                    width: "40px",
+                    height: "40px",
+                  }}
+                />
+                <Typography variant="subtitle2" color="black" ml={1}>
+                  Claudia
+                </Typography>
+              </div>
+            </Button>
           </Toolbar>
         </div>
       </AppBar>

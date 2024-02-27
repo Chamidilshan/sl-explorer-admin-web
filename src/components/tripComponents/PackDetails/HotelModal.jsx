@@ -129,6 +129,7 @@ export function HotelModal({
             <Box className=" flex flex-col" sx={{ width: "45%" }} gap={1}>
               <Typography variant="body2">Hotel</Typography>
               <TextField
+                required
                 select
                 fullWidth
                 ref={firstRef}
@@ -152,6 +153,7 @@ export function HotelModal({
             <Box className=" flex flex-col" sx={{ width: "45%" }} gap={1}>
               <Typography variant="body2">Location</Typography>
               <TextField
+                required
                 fullWidth
                 value={dayName}
                 onChange={(e) => setDayName(e.target.value)}
@@ -164,7 +166,7 @@ export function HotelModal({
               <Typography variant="body2">Landmark Description</Typography>
               <TextField
                 multiline
-                rows={3}
+                rows={2}
                 fullWidth
                 value={location1}
                 onChange={(e) => {
@@ -180,7 +182,7 @@ export function HotelModal({
               <TextField
                 fullWidth
                 multiline
-                rows={3}
+                rows={2}
                 value={location2}
                 onChange={(e) => {
                   setLocation2(e.target.value);
@@ -194,6 +196,8 @@ export function HotelModal({
               <Typography variant="body2">Rooms Description</Typography>
               <TextField
                 fullWidth
+                multiline
+                rows={2}
                 value={location3}
                 onChange={(e) => {
                   setLocation3(e.target.value);
