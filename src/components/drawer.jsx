@@ -107,11 +107,15 @@ export default function PermanentDrawerLeft(props) {
         variant="permanent"
         anchor="left"
       >
-        <Toolbar>
+        <Toolbar
+          sx={{
+            backgroundColor: "#FFA412",
+          }}
+        >
           <div className="w-full flex justify-center">
             <h3
               style={{
-                color: "#EEA412",
+                color: "#FFF",
                 fontWeight: "bolder",
               }}
             >
