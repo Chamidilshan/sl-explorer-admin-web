@@ -117,6 +117,7 @@ export function ItineraryModal({
           <Box className=" flex flex-col" sx={{ width: "45%" }} gap={1}>
             <Typography variant="body2">Day Number</Typography>
             <TextField
+              required
               type="number"
               fullWidth
               ref={firstRef}
@@ -130,6 +131,7 @@ export function ItineraryModal({
           <Box className=" flex flex-col" sx={{ width: "45%" }} gap={1}>
             <Typography variant="body2">Day Name & Title</Typography>
             <TextField
+              required
               fullWidth
               value={dayName}
               onChange={(e) => setDayName(e.target.value)}
@@ -141,6 +143,7 @@ export function ItineraryModal({
           <Box className=" flex flex-col" sx={{ width: "45%" }} gap={1}>
             <Typography variant="body2">Location 1</Typography>
             <TextField
+              required
               fullWidth
               value={location1}
               onChange={(e) => {
@@ -164,16 +167,7 @@ export function ItineraryModal({
             />
           </Box>
 
-          <Box
-            sx={{
-              flex: "display",
-              flexDirection: "column",
-              alignItems: "flex-start",
-              width: "45%",
-              minWidth: "250px",
-            }}
-            gap={1}
-          >
+          <Box className=" flex flex-col" sx={{ width: "45%" }} gap={1}>
             <Typography variant="body2">Location 3</Typography>
             <TextField
               fullWidth
@@ -203,11 +197,11 @@ export function ItineraryModal({
             <Typography variant="body2">Day Description</Typography>
 
             <TextField
+              required
               multiline
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              minRows={2}
-              maxRows={4}
+              rows={3}
               type="text"
               size="small"
               placeholder="Trip begins from ..."
@@ -241,7 +235,6 @@ export function ItineraryModal({
 
             <TextField
               disabled={!option}
-              multiline
               value={optional}
               onChange={(e) => setOptional(e.target.value)}
               type="text"
@@ -265,7 +258,6 @@ export function ItineraryModal({
 
             <TextField
               disabled={!option}
-              multiline
               value={optionPrice}
               onChange={(e) => setOptionPrice(e.target.value)}
               type="number"

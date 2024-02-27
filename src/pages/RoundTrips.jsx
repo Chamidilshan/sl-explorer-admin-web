@@ -81,17 +81,23 @@ export const RoundTrips = () => {
             startIcon={<DeleteOutlineIcon />}
             variant="contained"
             color="error"
-            onClick={() => {
+            onClick={async () => {
               if (confirm("Are you sure you want to delete this round trip?")) {
-                roundTrips.filter((item, i) => i !== index);
-                //need to call the delete function here
+                try {
+                  var resp = await RoundTripServices.deleteRoundTrip(
+                    params.row._id
+                  );
+                  if (resp) {
+                    setRoundTrips(
+                      roundTrips.filter(
+                        (item, i) => item._id !== params.row._id
+                      )
+                    );
+                  }
+                } catch (error) {
+                  console.log(error);
+                }
               }
-              // setItinerary((prevItinerary) => {
-              //   const newItinerary = prevItinerary.filter(
-              //     (item, i) => i !== index
-              //   );
-              //   return newItinerary;
-              // });
             }}
           >
             <Typography variant="subtitle2">Delete</Typography>

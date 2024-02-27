@@ -37,6 +37,20 @@ export const RoundTripServices = {
     }
   },
 
+  async deleteRoundTrip(tripId) {
+    try {
+      const response = await api.delete(`/api/v1/roundTrips/${tripId}`);
+      console.log(response);
+      toast.success("Package has been deleted successfully");
+      return true;
+    } catch (e) {
+      console.log(e);
+      toast.error("Something went wrong..!/n" + e.message);
+      return false;
+      throw e;
+    }
+  },
+
   async getRoundtrips() {
     try {
       const response = await api.get("/api/v1/roundtrips");
