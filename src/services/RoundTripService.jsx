@@ -11,6 +11,24 @@ export const RoundTripServices = {
       });
       console.log(response);
       toast.success("Package has been added successfully");
+      alert("Package Created\nCheck and then Please go back..!");
+      return response.data;
+    } catch (e) {
+      console.log(e);
+      toast.error("Something went wrong..!/n" + e.message);
+      throw e;
+    }
+  },
+
+  async updateRoundTrip(trip) {
+    try {
+      const response = await api.put("/api/v1/roundTrips", trip, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      console.log(response);
+      toast.success("Package has been updated successfully");
       return response.data;
     } catch (e) {
       console.log(e);

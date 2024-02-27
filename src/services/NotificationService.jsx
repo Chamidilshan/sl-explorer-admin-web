@@ -1,4 +1,5 @@
 import { toast } from "react-toastify";
+import axios from 'axios';
 
 const NotificationService = {
 
@@ -42,8 +43,40 @@ const NotificationService = {
       toast.error('Error sending notification');
     }
   },
+
+  async sendOrderConfirmationNotification(fcmToken){
+
+    const serverKey = import.meta.env.VITE_REACT_APP_FIREBASE_SERVER_HEADER_KEY;
+
+
+    try{
+ 
+      const notificationPayload = {
+        title: 'Hey, your order has been confirmed!',
+        body: 'Thanks for your order. Your journey is about to begin!',
+      };
+
+ 
+      const requestBody = {
+        to: fcmToken,
+        notification: notificationPayload
+      };
+
+      const response = await axios.post('https://fcm.googleapis.com/fcm/send', requestBody, {
+      headers: {
+        'Authorization': `key=${serverKey}`,
+        'Content-Type': 'application/json'
+      },
+    });
+    
+    console.log('Notification sent successfully:', response.data);
+
+    }catch(e){
+      console.error('Error sending notification:', e);
+    }
+  }
   
 
 }
 
-export default NotificationService;
+export default NotificationService; 

@@ -6,6 +6,7 @@ import {
   ButtonGroup,
   Button,
   Breadcrumbs,
+  Modal,
 } from "@mui/material";
 import { PackDetails } from "./PackDetailsPage";
 import KeyboardDoubleArrowLeftIcon from "@mui/icons-material/KeyboardDoubleArrowLeft";
@@ -13,7 +14,7 @@ import KeyboardDoubleArrowRightIcon from "@mui/icons-material/KeyboardDoubleArro
 import { Itinerary } from "./Itinerary";
 import { Hotel } from "./Hotel";
 import { Prices } from "./Prices";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {
   getDownloadURL,
   ref,
@@ -38,13 +39,18 @@ export const AddRoundTrips = () => {
   const [packageImage, setPackageImage] = useState(""); //firestore saved url
   const [packageImageLinks, setPackageImageLinks] = useState([""]); //firestore saved urls
 
+  const navigate = useNavigate();
   useEffect(() => {
     console.log(packageImageLinks == "", packageImage == "");
     if (packageImageLinks != "" && packageImage != "") {
-      makeJson();
-      console.log(JSON.stringify(jsonObject, null, 2));
-      RoundTripServices.createRoundTrip(JSON.stringify(jsonObject, null, 2));
-      navigate("/round-trips");
+      try {
+        makeJson();
+        console.log(JSON.stringify(jsonObject, null, 2));
+        RoundTripServices.createRoundTrip(JSON.stringify(jsonObject, null, 2));
+        // navigate("/round-trips");
+      } catch (e) {
+        console.log(e);
+      }
     }
   }, [packageImageLinks, packageImage]);
 
@@ -172,7 +178,7 @@ export const AddRoundTrips = () => {
       </Box>
       {loading ? (
         <Modal open={true}>
-          <div className="w-full h-full flex justify-center items-center">
+          <div className="w-full h-full flex flex-col justify-center items-center">
             <div className="loading-animation" />
             <Typography variant="subtitle2" mt={2}>
               Uploading Images...
