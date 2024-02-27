@@ -116,14 +116,11 @@ function App() {
             }
           />
           <Route
-            path="/round-trips/edit-day-trips/:tripId"
+            path="/day-trips/edit-day-trips/:tripId"
             exact
             element={
               <RequireAuth>
-                <Front
-                  route="/round-trips/edit-day-trips/:tripId"
-                  in="DayTrips"
-                >
+                <Front route="/day-trips/edit-day-trips/:tripId" in="DayTrips">
                   <DayTrips />
                 </Front>
               </RequireAuth>

@@ -38,7 +38,7 @@ export function ItineraryModal({
 
   React.useEffect(() => {
     if (final.indexOf("submitted") != -1) {
-      isEditing ? onSave(final) : onSaveExisting(final);
+      !isEditing ? onSave(final) : onSaveExisting(final);
       onClose();
     }
   }, [final]);
@@ -207,6 +207,7 @@ export function ItineraryModal({
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               minRows={2}
+              maxRows={4}
               type="text"
               size="small"
               placeholder="Trip begins from ..."
