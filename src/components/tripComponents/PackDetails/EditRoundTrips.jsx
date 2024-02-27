@@ -126,15 +126,29 @@ const EditRoundTrips = () => {
     }
   }, [packageImageLinks, packageImage]);
 
+  function isURL(str) {
+    const urlPattern = /^(https?|ftp):\/\/[^\s/$.?#].[^\s]*$/;
+    return urlPattern.test(str);
+  }
   const extractImages = async () => {
     try {
-      var ref = await uploadImage(images[0]);
-      setPackageImage(ref);
+      if (!isURL(images[0])) {
+        var ref = await uploadImage(images[0]);
+        setPackageImage(ref);
+      } else {
+        setPackageImage(images[0]);
+      }
 
       const packageImageArray = await Promise.all(
         images[1].map(async (image) => {
-          var url = await uploadImage(image[1]);
-          return url;
+          var ref;
+          if (!isURL(image[1])) {
+            ref = await uploadImage(image[1]);
+          } else {
+            ref = image[1];
+          }
+          // var url = await uploadImage(image[1]);
+          return ref;
         })
       );
       setPackageImageLinks(packageImageArray);
