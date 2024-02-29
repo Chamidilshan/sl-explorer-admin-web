@@ -220,7 +220,7 @@ export const AddDayTrips = () => {
   const jsonObject = {};
   const makeJson = async () => {
     jsonObject["packageCategoryName"] = packDetails[0];
-    jsonObject["packageCategoryImage"] = "https::/unspalsh.com/nature.jpg";
+    jsonObject["packageCategoryImage"] = "https://unspalsh.com/nature.jpg";
     jsonObject["packageName"] = packDetails[1];
     jsonObject["packageShortDescription"] = packDetails[2];
     jsonObject["packageCoverDescription"] = packDetails[3];
