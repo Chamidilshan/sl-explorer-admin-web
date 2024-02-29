@@ -121,7 +121,7 @@ function App() {
             element={
               <RequireAuth>
                 <Front route="/day-trips/edit-day-trips/:tripId" in="DayTrips">
-                  <DayTrips />
+                  <AddDayTrips />
                 </Front>
               </RequireAuth>
             }

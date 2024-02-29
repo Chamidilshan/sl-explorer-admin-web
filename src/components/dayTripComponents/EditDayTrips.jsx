@@ -14,7 +14,7 @@ import KeyboardDoubleArrowRightIcon from "@mui/icons-material/KeyboardDoubleArro
 import { Itinerary } from "./Itinerary";
 import { Hotel } from "./Hotel";
 import { Prices } from "./Prices";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import {
   getDownloadURL,
   ref,
@@ -25,12 +25,88 @@ import { imageDb } from "../../../../config";
 import { v4 } from "uuid";
 import { RoundTripServices } from "../../../services/RoundTripService";
 import NavigateNextIcon from "@mui/icons-material/NavigateNext";
+import { toast } from "react-toastify";
 
-export const AddRoundTrips = () => {
+const EditRoundTrips = () => {
+  // const { match } = this.props;
+  const { tripId } = useParams();
+  const [isLoading, setIsLoading] = useState(false);
+  const [dataToEdit, setDataToEdit] = useState({});
+
+  useState(async () => {
+    try {
+      setIsLoading(true);
+      var resp = await RoundTripServices.getRoundtripById(tripId);
+      console.log("response is", resp);
+      setDataToEdit(resp);
+      setPackDetails([
+        resp.packageName,
+        resp.packageSubTitle,
+        resp.packageCoverDescription,
+        resp.packageShortDescription,
+        resp.packageTotalSeats,
+        resp.packageTitle,
+      ]);
+
+      setImages([
+        resp.packageCoverImage,
+
+        resp.packageImageLinks.map((item, index) => {
+          return [index + 1, item];
+        }),
+      ]);
+
+      setItinerary1(
+        resp.itenary.map((item) => {
+          return [
+            item.dayNumber,
+            item.dayName,
+            item.location[0] ?? "",
+            item.location[1] ?? "",
+            item.location[2] ?? "",
+            item.location[3] ?? "",
+            item.description,
+            item.optionalDescription != "",
+            0,
+          ];
+        })
+      );
+
+      setHotels(
+        resp.hotels.map((item) => {
+          return [
+            item.hotel._id,
+            item.hotel.hotelDistrict,
+            item.hotelLocationDesc,
+            "",
+            item.hotelRoomDesc,
+          ];
+        })
+      );
+
+      setPrices([
+        resp.prices.group.single,
+        resp.prices.group.double,
+        resp.prices.group.triple,
+        resp.prices.private.single,
+        resp.prices.private.double,
+        resp.prices.private.triple,
+      ]);
+      setLoading(false);
+    } catch (e) {
+      toast.error("Something went wrong..!\nRefresh Again");
+      console.log(e);
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
+
   const pages = ["PackDetails", "Itinerary", "Hotels", "Prices"];
   const [currentPage, setCurrentPage] = useState(1);
 
   const [packDetails, setPackDetails] = useState(["", "", "", "", 0, ""]); //finished
+
+  //   console.log("package details:", packDetails);
   const [images, setImages] = useState(["", [[1, ""]]]); //finished
   const [itinerary1, setItinerary1] = useState([]);
   const [hotels, setHotels] = useState([]);
@@ -39,36 +115,42 @@ export const AddRoundTrips = () => {
   const [packageImage, setPackageImage] = useState(""); //firestore saved url
   const [packageImageLinks, setPackageImageLinks] = useState([""]); //firestore saved urls
 
-  const navigate = useNavigate();
   useEffect(() => {
     console.log(packageImageLinks == "", packageImage == "");
     if (packageImageLinks != "" && packageImage != "") {
-      try {
-        makeJson();
-        console.log(JSON.stringify(jsonObject, null, 2));
-        RoundTripServices.createRoundTrip(JSON.stringify(jsonObject, null, 2));
-        alert("Package has been created..!\n<< Check the go back <<");
-        setPackageImage("");
-        setPackageImageLinks([""]);
-        // navigate("/round-trips");
-      } catch (e) {
-        console.log(e);
-      }
+      makeJson();
+      console.log(JSON.stringify(jsonObject, null, 2));
+      RoundTripServices.updateRoundTrip(JSON.stringify(jsonObject, null, 2));
+      alert("Updated successfully..!\nPlease go back");
+      // navigate("/round-trips");
     }
   }, [packageImageLinks, packageImage]);
 
+  function isURL(str) {
+    const urlPattern = /^(https?|ftp):\/\/[^\s/$.?#].[^\s]*$/;
+    return urlPattern.test(str);
+  }
   const extractImages = async () => {
     try {
-      var ref = await uploadImage(images[0]);
-      setPackageImage(ref);
+      if (!isURL(images[0])) {
+        var ref = await uploadImage(images[0]);
+        setPackageImage(ref);
+      } else {
+        setPackageImage(images[0]);
+      }
 
       const packageImageArray = await Promise.all(
         images[1].map(async (image) => {
-          var url = await uploadImage(image[1]);
-          return url;
+          var ref;
+          if (!isURL(image[1])) {
+            ref = await uploadImage(image[1]);
+          } else {
+            ref = image[1];
+          }
+          // var url = await uploadImage(image[1]);
+          return ref;
         })
       );
-
       setPackageImageLinks(packageImageArray);
     } catch (error) {
       console.log(error);
@@ -92,6 +174,7 @@ export const AddRoundTrips = () => {
 
   const jsonObject = {};
   const makeJson = async () => {
+    jsonObject["id"] = tripId;
     jsonObject["packageName"] = packDetails[0];
     jsonObject["packageShortDescription"] = packDetails[3];
     jsonObject["packageCoverDescription"] = packDetails[2];
@@ -131,8 +214,9 @@ export const AddRoundTrips = () => {
   };
 
   const [loading, setLoading] = useState(false);
-  const submit = async () => {
-    if (confirm("Do you really want to publish the pack?")) {
+
+  const update = async () => {
+    if (confirm("Do you really want to update the pack?")) {
       const newTrip = {
         packDetails,
         images,
@@ -176,7 +260,9 @@ export const AddRoundTrips = () => {
         <Breadcrumbs aria-label="Bread crumbs" separator={<NavigateNextIcon />}>
           <Link to="/">Dashboard</Link>
           <Link to="/round-trips">Round Trips</Link>
-          <Typography color="text.primary">Add Round Trip</Typography>
+          <Typography color="text.primary">
+            Edit Round Trip - {tripId}
+          </Typography>
         </Breadcrumbs>
       </Box>
       {loading ? (
@@ -205,32 +291,52 @@ export const AddRoundTrips = () => {
           }}
           // bgcolor="secondary.main"
         >
-          {currentPage == 1 && (
-            <PackDetails
-              onSaveDetails={(data) => setPackDetails(data)}
-              onSaveImages={(imgs) => setImages(imgs)}
-              prevImages={images}
-              prevDetails={packDetails}
-            />
-          )}
-          {currentPage == 2 && (
-            <Itinerary
-              onSaveItinerary={(data) => setItinerary1(data)}
-              prevItinerary={itinerary1}
-            />
-          )}
-          {currentPage == 3 && (
-            <Hotel
-              onSaveItinerary={(data) => setHotels(data)}
-              prevItinerary={hotels}
-            />
-          )}
-          {currentPage == 4 && (
-            <Prices
-              onSaveDetails={(data) => setPrices(data)}
-              prevDetails={prices}
-            />
-          )}
+          {currentPage == 1 &&
+            (isLoading ? (
+              <div className="w-full h-full flex justify-center items-center">
+                <div className="loading-animation" />
+              </div>
+            ) : (
+              <PackDetails
+                onSaveDetails={(data) => setPackDetails(data)}
+                onSaveImages={(imgs) => setImages(imgs)}
+                prevImages={images}
+                prevDetails={packDetails}
+              />
+            ))}
+          {currentPage == 2 &&
+            (isLoading ? (
+              <div className="w-full h-full flex justify-center items-center">
+                <div className="loading-animation" />
+              </div>
+            ) : (
+              <Itinerary
+                onSaveItinerary={(data) => setItinerary1(data)}
+                prevItinerary={itinerary1}
+              />
+            ))}
+          {currentPage == 3 &&
+            (isLoading ? (
+              <div className="w-full h-full flex justify-center items-center">
+                <div className="loading-animation" />
+              </div>
+            ) : (
+              <Hotel
+                onSaveItinerary={(data) => setHotels(data)}
+                prevItinerary={hotels}
+              />
+            ))}
+          {currentPage == 4 &&
+            (isLoading ? (
+              <div className="w-full h-full flex justify-center items-center">
+                <div className="loading-animation" />
+              </div>
+            ) : (
+              <Prices
+                onSaveDetails={(data) => setPrices(data)}
+                prevDetails={prices}
+              />
+            ))}
         </Box>
       )}
 
@@ -282,12 +388,14 @@ export const AddRoundTrips = () => {
           width={10}
           variant="contained"
           color="primary"
-          onClick={submit}
+          onClick={update}
           disabled={!(prices && hotels && itinerary1 && images && packDetails)}
         >
-          <Typography variant="subtitle2">{"Publish"}</Typography>
+          <Typography variant="subtitle2">Update</Typography>
         </Button>
       </Box>
     </Box>
   );
 };
+
+export default EditRoundTrips;
