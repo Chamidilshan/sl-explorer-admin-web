@@ -220,8 +220,7 @@ export const AddDayTrips = () => {
   const jsonObject = {};
   const makeJson = async () => {
     jsonObject["packageCategoryName"] = packDetails[0];
-    jsonObject["packageCategoryImage"] =
-      "https://firebasestorage.googleapis.com/v0/b/sl-explorer.appspot.com/o/daytripImages%2F71d75cae-4ec6-4c57-9344-fbef4c0e2c9c?alt=media&token=2000ca1e-490b-48df-9607-abdb0fc678e2";
+    jsonObject["packageCategoryImage"] = "https::/unspalsh.com/nature.jpg";
     jsonObject["packageName"] = packDetails[1];
     jsonObject["packageShortDescription"] = packDetails[2];
     jsonObject["packageCoverDescription"] = packDetails[3];
