@@ -22,7 +22,7 @@ export const RoundTripServices = {
 
   async updateRoundTrip(trip) {
     try {
-      const response = await api.put("/api/v1/roundTrips", trip, {
+      const response = await api.put(`/api/v1/roundTrips/${trip.id}`, trip, {
         headers: {
           "Content-Type": "application/json",
         },

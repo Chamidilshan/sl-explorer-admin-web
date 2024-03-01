@@ -47,6 +47,9 @@ export const AddRoundTrips = () => {
         makeJson();
         console.log(JSON.stringify(jsonObject, null, 2));
         RoundTripServices.createRoundTrip(JSON.stringify(jsonObject, null, 2));
+        alert("Package has been created..!\n<< Check the go back <<");
+        setPackageImage("");
+        setPackageImageLinks([""]);
         // navigate("/round-trips");
       } catch (e) {
         console.log(e);

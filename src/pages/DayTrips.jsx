@@ -1,26 +1,6 @@
 import React, { useState } from "react";
-import PermanentDrawerLeft from "../components/drawer";
-import {
-  Container,
-  Typography,
-  Toolbar,
-  Box,
-  ButtonGroup,
-  ToggleButtonGroup,
-  ToggleButton,
-  IconButton,
-  Button,
-  TableContainer,
-  Paper,
-  Table,
-  TableHead,
-  TableRow,
-  TableCell,
-  TableBody,
-  Modal,
-  Breadcrumbs,
-} from "@mui/material";
-import { Link, Navigate, Route, json, useNavigate } from "react-router-dom";
+import { Typography, Box, Button, Breadcrumbs } from "@mui/material";
+import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import { DayTripServices } from "../services/DayTripServices";
 import { DataGrid } from "@mui/x-data-grid";
@@ -30,74 +10,79 @@ import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import ArrowDropUpIcon from "@mui/icons-material/ArrowDropUp";
 
-const columns = [
-  { field: "packageCategoryName", headerName: "Category Name", width: 150 },
-  { field: "packageName", headerName: "Package Name", width: 150 },
-  { field: "packageDays", headerName: "Days", width: 80, type: "number" },
-  { field: "price", headerName: "Price", width: 120, type: "number" },
-  // {
-  //   field: "packageShortDescription",
-  //   headerName: "Short Description",
-  //   width: 250,
-  // },
-  // {
-  //   field: "packageCoverDescription",
-  //   headerName: "Cover Description",
-  //   width: 250,
-  // },
-  { field: "packageTitle", headerName: "Package Title", width: 150 },
-  { field: "packageSubTitle", headerName: "Package Subtitle", width: 150 },
-  {
-    field: "actions",
-    headerName: "Actions",
-    width: 400,
-    renderCell: (params) => (
-      <Box className="flex flex-row justify-between align-center gap-2">
-        <Button size="small" variant="outlined">
-          <ArrowDropUpIcon sx={{ fontSize: "large" }} />
-        </Button>
-        <Button size="small" variant="outlined">
-          <ArrowDropDownIcon sx={{ fontSize: "large" }} />
-        </Button>
-        <Link to={`/day-trips/edit-day-trips/${params.row._id}`}>
-          <Button
-            startIcon={<EditNoteIcon />}
-            variant="contained"
-            color="primary"
-          >
-            <Typography variant="subtitle2">Edit</Typography>
-          </Button>
-        </Link>
-        <Button
-          startIcon={<DeleteOutlineIcon />}
-          variant="contained"
-          color="error"
-          onClick={() => {
-            if (confirm("Are you sure you want to delete this round trip?")) {
-              roundTrips.filter((item, i) => i !== index);
-              //need to call the delete function here
-            }
-            // setItinerary((prevItinerary) => {
-            //   const newItinerary = prevItinerary.filter(
-            //     (item, i) => i !== index
-            //   );
-            //   return newItinerary;
-            // });
-          }}
-        >
-          <Typography variant="subtitle2">Delete</Typography>
-        </Button>
-      </Box>
-    ),
-  },
-];
-
 export const DayTrips = () => {
   const [roundTrips, setRoundTrips] = useState([]); //array of objects? || object?
   const [loading, setLoading] = useState(false);
-  const [isAddingNew, setIsAddingNew] = useState(false);
 
-  console.log("roundTrips:", roundTrips);
+  const columns = [
+    { field: "packageCategoryName", headerName: "Category Name", width: 150 },
+    { field: "packageName", headerName: "Package Name", width: 150 },
+    { field: "packageDays", headerName: "Days", width: 80, type: "number" },
+    { field: "price", headerName: "Price", width: 120, type: "number" },
+    // {
+    //   field: "packageShortDescription",
+    //   headerName: "Short Description",
+    //   width: 250,
+    // },
+    // {
+    //   field: "packageCoverDescription",
+    //   headerName: "Cover Description",
+    //   width: 250,
+    // },
+    { field: "packageTitle", headerName: "Package Title", width: 150 },
+    { field: "packageSubTitle", headerName: "Package Subtitle", width: 150 },
+    {
+      field: "actions",
+      headerName: "Actions",
+      width: 400,
+      renderCell: (params) => (
+        <Box className="flex flex-row justify-between align-center gap-2">
+          <Button size="small" variant="outlined">
+            <ArrowDropUpIcon sx={{ fontSize: "large" }} />
+          </Button>
+          <Button size="small" variant="outlined">
+            <ArrowDropDownIcon sx={{ fontSize: "large" }} />
+          </Button>
+          <Link to={`/day-trips/edit-day-trips/${params.row._id}`}>
+            <Button
+              startIcon={<EditNoteIcon />}
+              variant="contained"
+              color="primary"
+            >
+              <Typography variant="subtitle2">Edit</Typography>
+            </Button>
+          </Link>
+          <Button
+            startIcon={<DeleteOutlineIcon />}
+            variant="contained"
+            color="error"
+            onClick={async () => {
+              if (confirm("Are you sure you want to delete this day trip?")) {
+                console.log(params.row._id);
+                var resp = await DayTripServices.deleteDayTrip(params.row._id);
+                if (resp) {
+                  setRoundTrips(
+                    roundTrips.filter((item, i) => item._id !== params.row._id)
+                  );
+                }
+                // need to call the delete function here
+              }
+              // setItinerary((prevItinerary) => {
+              //   const newItinerary = prevItinerary.filter(
+              //     (item, i) => i !== index
+              //   );
+              //   return newItinerary;
+              // });
+            }}
+          >
+            <Typography variant="subtitle2">Delete</Typography>
+          </Button>
+        </Box>
+      ),
+    },
+  ];
+
+  console.log("Day trips:", roundTrips);
 
   useState(async () => {
     try {
@@ -214,9 +199,9 @@ export const DayTrips = () => {
             width={10}
             variant="contained"
             color="primary"
-            onClick={() => {
-              setIsAddingNew(true);
-            }}
+            // onClick={() => {
+            //   setIsAddingNew(true);
+            // }}
             // startIcon={<add}
           >
             <Typography variant="subtitle2">Add New</Typography>
