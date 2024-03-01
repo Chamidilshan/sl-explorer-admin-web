@@ -102,7 +102,7 @@ export const AddDayTrips = () => {
 
   useEffect(() => {
     // console.log(packageImageLinks, packageImage);
-    if (packageImageLinks[images[1].length - 1] != "" && packageImage != "") {
+    if (packageImageLinks != "" && packageImage != "") {
       try {
         console.log(packDetails[6]);
         makeJson();
