@@ -121,7 +121,7 @@ const EditRoundTrips = () => {
       makeJson();
       console.log(JSON.stringify(jsonObject, null, 2));
       RoundTripServices.updateRoundTrip(JSON.stringify(jsonObject, null, 2));
-      alert("Updated successfully..!\nPlease go back");
+      // alert("Updated successfully..!\nPlease go back");
       // navigate("/round-trips");
     }
   }, [packageImageLinks, packageImage]);
