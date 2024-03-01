@@ -12,6 +12,7 @@ import {
   FormControlLabel,
   Checkbox,
   Modal,
+  Alert,
 } from "@mui/material";
 import { Link, useParams } from "react-router-dom";
 import { getDownloadURL, ref, uploadString } from "firebase/storage";
@@ -99,6 +100,7 @@ export const AddDayTrips = () => {
 
   const [packageImage, setPackageImage] = useState(""); //firestore saved url
   const [packageImageLinks, setPackageImageLinks] = useState([""]); //firestore saved urls
+  // const [coverImage, setCoverImage] = useState(""); //firestore saved url
 
   useEffect(() => {
     // console.log(packageImageLinks, packageImage);
@@ -429,6 +431,7 @@ export const PackDetails = ({
   const [count, setCount] = useState(1);
   const [packageImage, setPackageImage] = useState(prevImages[0]);
   const [coverImage, setCoverImage] = useState(prevImages[1]);
+  const [categoryImage, setCategoryImage] = useState();
 
   const [detailsSuccess, setDetailsSuccess] = useState(false);
   const [pricesSuccess, setPricesSuccess] = useState(false);
@@ -1094,6 +1097,104 @@ export const PackDetails = ({
             </Box>
           </Box>
 
+          <Divider
+            sx={{
+              width: "100%",
+              bgcolor: `${imagesSuccess ? "green" : "primary"}`,
+            }}
+          />
+          <Box className="w-full flex flex-row justify-between" p={1}>
+            <Typography variant="subtitle2">Category Image</Typography>
+            {imagesSuccess && <CheckCircleIcon color="success" flex={1} />}
+          </Box>
+          <Divider
+            sx={{
+              width: "100%",
+              bgcolor: `${imagesSuccess ? "green" : "primary"}`,
+            }}
+          />
+
+          <Box
+            width="100%"
+            p={1}
+            gap={1}
+            sx={{
+              display: "flex",
+              flexFlow: "row nowrap",
+              justifyContent: "space-around",
+            }}
+          >
+            <Box
+              // ref={imageRef}
+              width="100%"
+              p={1}
+              gap={1}
+              sx={{
+                width: "100%",
+                overflowX: "hidden",
+                display: "flex",
+                flexFlow: "row nowrap",
+                justifyContent: "space-around",
+              }}
+            >
+              <Box
+                sx={{
+                  height: "90px",
+                  width: "150px",
+                  bgcolor: "grey.100",
+                  borderRadius: "6px",
+                  overflow: "hidden",
+                }}
+              >
+                <CardMedia
+                  component="img"
+                  src={
+                    categoryImage
+                      ? categoryImage
+                      : "../../src/assets/addImage.png"
+                  }
+                  alt="category image"
+                  sx={{ width: "100%", height: "100%", fit: "cover" }}
+                />
+              </Box>
+
+              <Box
+                sx={{
+                  display: "flex",
+                  flexFlow: "column nowrap",
+                  alignItems: "flex-start",
+                  justifyContent: "center",
+                  width: "210px",
+                  height: "100%",
+                  overflowX: "hidden",
+                }}
+              >
+                {/* <CustomDropzone onFileDrop={(selectedFile) => {}} /> */}
+                <Typography
+                  sx={{
+                    fontSize: "10pt",
+                    width: "100%",
+                    height: "100%",
+                    border: "2px dashed grey",
+                    borderRadius: "6px",
+                    p: "20px",
+                  }}
+                >
+                  Category images can not be edited here..!
+                </Typography>
+              </Box>
+              <Button size="small" color="error" disabled>
+                <DeleteIcon
+                  size="small"
+                  onClick={() => {
+                    var thisId = item.at(0);
+                    setCategoryImage();
+                  }}
+                />
+              </Button>
+            </Box>
+          </Box>
+
           <Box p={2} width="100%">
             <Button
               variant="contained"
@@ -1214,7 +1315,7 @@ export const PackDetails = ({
           <Box className="w-full flex flex-row justify-start" gap={2}>
             <Box className=" flex flex-col w-full items-start">
               <Box className="w-full flex flex-row justify-between" p={1}>
-                <Typography variant="subtitle2">Services</Typography>
+                <Typography variant="subtitle2">Included Services</Typography>
                 {servicesSuccess && (
                   <CheckCircleIcon color="success" flex={1} />
                 )}
@@ -1266,6 +1367,67 @@ export const PackDetails = ({
                     Add
                   </Button>
                 </Box>
+                {/* 
+                <Divider
+                  sx={{
+                    width: "100%",
+                    bgcolor: servicesSuccess ? "green" : "primary",
+                  }}
+                />
+                <Box className="w-full flex flex-row justify-between" p={1}>
+                  <Typography variant="subtitle2">
+                    Not Included Services
+                  </Typography>
+                  {servicesSuccess && (
+                    <CheckCircleIcon color="success" flex={1} />
+                  )}
+                </Box>
+                <Divider
+                  sx={{
+                    width: "100%",
+                    bgcolor: servicesSuccess ? "green" : "primary",
+                  }}
+                />
+
+                {services.map((item, index) => (
+                  <Box p="8px 16px" className="w-full" key={index}>
+                    <TextField
+                      required
+                      fullWidth
+                      value={services[index]}
+                      onChange={(e) => {
+                        const prev = [...services];
+                        prev[index] = e.target.value;
+                        setServices(prev);
+                      }}
+                      placeholder="Type the service"
+                      size="small"
+                    />
+                  </Box>
+                ))}
+                <Box className="w-full flex justify-between" p={2}>
+                  <Button
+                    variant="outlined"
+                    startIcon={<DeleteIcon />}
+                    color="error"
+                    onClick={(e) => {
+                      var prev = [...services];
+                      prev = prev.filter(
+                        (previous, index) => index != services.length - 1
+                      );
+                      setServices(prev);
+                    }}
+                  >
+                    Delete Last
+                  </Button>
+                  <Button
+                    variant="contained"
+                    startIcon={<AddIcon />}
+                    onClick={() => setServices((prev) => [...prev, ""])}
+                  >
+                    Add
+                  </Button>
+                </Box> */}
                 <Box className="w-full" p={2}>
                   <Button type="submit" variant="contained" fullWidth>
                     Save
