@@ -27,12 +27,16 @@ import {
   IconButton,
   Typography,
   Button,
+  Hidden,
 } from "@mui/material";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
+import MenuIcon from "@mui/icons-material/Menu";
+import CloseIcon from "@mui/icons-material/Close";
 
 const drawerWidth = 240;
 
 export default function PermanentDrawerLeft(props) {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const navigate = useNavigate();
   const [selectedItem, setSelectedItem] = useState(props.route ?? "/");
 
@@ -71,9 +75,34 @@ export default function PermanentDrawerLeft(props) {
         anchor="top"
       >
         <div className="w-full flex justify-between">
-          <Toolbar style={{ width: "40%" }}></Toolbar>
+          <Toolbar style={{ width: "40%" }}>
+            <Hidden smUp>
+              {!isMenuOpen && (
+                <MenuIcon
+                  size="large"
+                  sx={{ color: "black" }}
+                  onClick={() => {
+                    setIsMenuOpen(!isMenuOpen);
+                  }}
+                />
+              )}
+              {isMenuOpen && (
+                <CloseIcon
+                  size="large"
+                  sx={{ color: "black" }}
+                  onClick={() => {
+                    setIsMenuOpen(!isMenuOpen);
+                  }}
+                />
+              )}
+            </Hidden>
+          </Toolbar>
           <Toolbar>
-            <img src="../../src/assets/logo.png" width={80} height={50} />
+            <img
+              src="https://firebasestorage.googleapis.com/v0/b/sl-explorer.appspot.com/o/CommonImageAssets%2Flogo.png?alt=media&token=01bd5d9e-cc6d-4a31-a66d-1ba9294f7ae2"
+              width={80}
+              height={50}
+            />
           </Toolbar>
           <Toolbar
             style={{ width: "40%", gap: "10px" }}
@@ -137,7 +166,7 @@ export default function PermanentDrawerLeft(props) {
             <Button variant="outlined" sx={{ borderRadius: "100px" }}>
               <div className="flex flex-row items-end">
                 <img
-                  src="../../src/assets/profile.avif"
+                  src="https://firebasestorage.googleapis.com/v0/b/sl-explorer.appspot.com/o/CommonImageAssets%2Fprofile.avif?alt=media&token=74b10db0-852e-4286-b292-dc6ee9e13f7d"
                   style={{
                     borderRadius: "50%",
                     objectFit: "cover",
@@ -153,85 +182,173 @@ export default function PermanentDrawerLeft(props) {
           </Toolbar>
         </div>
       </AppBar>
-      <Drawer
-        sx={{
-          width: drawerWidth,
-          flexShrink: 0,
-          "& .MuiDrawer-paper": {
-            width: drawerWidth,
-            boxSizing: "border-box",
-          },
-        }}
-        variant="permanent"
-        anchor="left"
-      >
-        <Toolbar
+
+      <Hidden smUp>
+        {isMenuOpen && (
+          <Box
+            className="absolute w-full h-auto p-10 m-0"
+            sx={{ backgroundColor: "#eee", zIndex: "100" }}
+          >
+            <Toolbar>
+              <div className="w-full flex justify-center">
+                <h3
+                  style={{
+                    color: "#000",
+                    fontWeight: "bolder",
+                  }}
+                >
+                  Menu
+                </h3>
+              </div>
+            </Toolbar>
+            <List sx={{ color: "#737791" }}>
+              {[
+                { route: "/", text: "Dashboard", icon: <DashboardIcon /> },
+                {
+                  route: "/cruise-ships",
+                  text: "Cruise Ships",
+                  icon: <DirectionsBoatIcon />,
+                },
+                {
+                  route: "/round-trips",
+                  text: "Round Trips",
+                  icon: <JoinLeft />,
+                },
+                { route: "/day-trips", text: "Day Trips", icon: <JoinRight /> },
+                { route: "/hotels", text: "Hotels", icon: <Weekend /> },
+                {
+                  route: "/festivals",
+                  text: "Festivals & Events",
+                  icon: <CelebrationOutlined />,
+                },
+                {
+                  route: "/notification-campaign",
+                  text: "Notification Campaign",
+                  icon: <NotificationAdd />,
+                },
+                { route: "/messages", text: "Messages", icon: <Message /> },
+                { route: "/settings", text: "Settings", icon: <Settings /> },
+              ].map(({ route, text, icon }) => (
+                <Link to={route} key={route}>
+                  <ListItem
+                    onClick={(e) => {
+                      setIsMenuOpen(false);
+                      setSelectedItem(route);
+                    }}
+                    sx={{
+                      backgroundColor:
+                        selectedItem === route ? "#FFA412" : "inherit",
+                      "&:hover": {
+                        backgroundColor: "#FFA412",
+                      },
+                    }}
+                  >
+                    <ListItemIcon
+                      sx={{
+                        color: selectedItem === route ? "white" : "inherit",
+                      }}
+                    >
+                      {icon}
+                    </ListItemIcon>
+                    <ListItemText
+                      primary={text}
+                      sx={{
+                        color: selectedItem === route ? "white" : "inherit",
+                      }}
+                    />
+                  </ListItem>
+                </Link>
+              ))}
+            </List>
+          </Box>
+        )}
+      </Hidden>
+
+      <Hidden smDown>
+        <Drawer
           sx={{
-            backgroundColor: "#FFA412",
+            width: drawerWidth,
+            flexShrink: 0,
+            "& .MuiDrawer-paper": {
+              width: drawerWidth,
+              boxSizing: "border-box",
+            },
           }}
+          variant="permanent"
+          anchor="left"
         >
-          <div className="w-full flex justify-center">
-            <h3
-              style={{
-                color: "#FFF",
-                fontWeight: "bolder",
-              }}
-            >
-              {props.in ?? selectedItem}
-            </h3>
-          </div>
-        </Toolbar>
-        <List sx={{ color: "#737791" }}>
-          {[
-            { route: "/", text: "Dashboard", icon: <DashboardIcon /> },
-            {
-              route: "/cruise-ships",
-              text: "Cruise Ships",
-              icon: <DirectionsBoatIcon />,
-            },
-            { route: "/round-trips", text: "Round Trips", icon: <JoinLeft /> },
-            { route: "/day-trips", text: "Day Trips", icon: <JoinRight /> },
-            { route: "/hotels", text: "Hotels", icon: <Weekend /> },
-            {
-              route: "/festivals",
-              text: "Festivals & Events",
-              icon: <CelebrationOutlined />,
-            },
-            {
-              route: "/notification-campaign",
-              text: "Notification Campaign",
-              icon: <NotificationAdd />,
-            },
-            { route: "/messages", text: "Messages", icon: <Message /> },
-            { route: "/settings", text: "Settings", icon: <Settings /> },
-          ].map(({ route, text, icon }) => (
-            <Link to={route} key={route}>
-              <ListItem
-                onClick={(e) => {
-                  setSelectedItem(route);
-                }}
-                sx={{
-                  backgroundColor:
-                    selectedItem === route ? "#FFA412" : "inherit",
-                  "&:hover": {
-                    backgroundColor: "#FFA412",
-                  },
+          <Toolbar
+            sx={{
+              backgroundColor: "#FFA412",
+            }}
+          >
+            <div className="w-full flex justify-center">
+              <h3
+                style={{
+                  color: "#FFF",
+                  fontWeight: "bolder",
                 }}
               >
-                <ListItemIcon
-                  sx={{ color: selectedItem === route ? "white" : "inherit" }}
+                {props.in ?? selectedItem}
+              </h3>
+            </div>
+          </Toolbar>
+          <List sx={{ color: "#737791" }}>
+            {[
+              { route: "/", text: "Dashboard", icon: <DashboardIcon /> },
+              {
+                route: "/cruise-ships",
+                text: "Cruise Ships",
+                icon: <DirectionsBoatIcon />,
+              },
+              {
+                route: "/round-trips",
+                text: "Round Trips",
+                icon: <JoinLeft />,
+              },
+              { route: "/day-trips", text: "Day Trips", icon: <JoinRight /> },
+              { route: "/hotels", text: "Hotels", icon: <Weekend /> },
+              {
+                route: "/festivals",
+                text: "Festivals & Events",
+                icon: <CelebrationOutlined />,
+              },
+              {
+                route: "/notification-campaign",
+                text: "Notification Campaign",
+                icon: <NotificationAdd />,
+              },
+              { route: "/messages", text: "Messages", icon: <Message /> },
+              { route: "/settings", text: "Settings", icon: <Settings /> },
+            ].map(({ route, text, icon }) => (
+              <Link to={route} key={route}>
+                <ListItem
+                  onClick={(e) => {
+                    setSelectedItem(route);
+                  }}
+                  sx={{
+                    backgroundColor:
+                      selectedItem === route ? "#FFA412" : "inherit",
+                    "&:hover": {
+                      backgroundColor: "#FFA412",
+                    },
+                  }}
                 >
-                  {icon}
-                </ListItemIcon>
-                <ListItemText
-                  primary={text}
-                  sx={{ color: selectedItem === route ? "white" : "inherit" }}
-                />
-              </ListItem>
-            </Link>
-          ))}
-        </List>
-      </Drawer>
+                  <ListItemIcon
+                    sx={{ color: selectedItem === route ? "white" : "inherit" }}
+                  >
+                    {icon}
+                  </ListItemIcon>
+                  <ListItemText
+                    primary={text}
+                    sx={{ color: selectedItem === route ? "white" : "inherit" }}
+                  />
+                </ListItem>
+              </Link>
+            ))}
+          </List>
+        </Drawer>
+      </Hidden>
     </>
   );
 }

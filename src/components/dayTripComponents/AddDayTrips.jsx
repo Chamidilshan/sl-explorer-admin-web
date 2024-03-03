@@ -924,7 +924,7 @@ export const PackDetails = ({
                   src={
                     packageImage
                       ? packageImage
-                      : "../../src/assets/addImage.png"
+                      : "https://firebasestorage.googleapis.com/v0/b/sl-explorer.appspot.com/o/CommonImageAssets%2FaddImage.png?alt=media&token=af21ca00-6dfa-4f7a-a72c-2af4f5a4abd9"
                   }
                   alt="cover image"
                   sx={{ width: "100%", height: "100%", fit: "cover" }}
@@ -1021,7 +1021,11 @@ export const PackDetails = ({
                   >
                     <CardMedia
                       component="img"
-                      src={item[1] ? item[1] : "../../src/assets/addImage.png"}
+                      src={
+                        item[1]
+                          ? item[1]
+                          : "https://firebasestorage.googleapis.com/v0/b/sl-explorer.appspot.com/o/CommonImageAssets%2FaddImage.png?alt=media&token=af21ca00-6dfa-4f7a-a72c-2af4f5a4abd9"
+                      }
                       alt="cover image"
                       sx={{ width: "100%", height: "100%", fit: "cover" }}
                     />
@@ -1151,7 +1155,7 @@ export const PackDetails = ({
                   src={
                     categoryImage
                       ? categoryImage
-                      : "../../src/assets/addImage.png"
+                      : "https://firebasestorage.googleapis.com/v0/b/sl-explorer.appspot.com/o/CommonImageAssets%2FaddImage.png?alt=media&token=af21ca00-6dfa-4f7a-a72c-2af4f5a4abd9"
                   }
                   alt="category image"
                   sx={{ width: "100%", height: "100%", fit: "cover" }}
