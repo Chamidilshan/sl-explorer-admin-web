@@ -105,7 +105,7 @@ export const DayTrips = () => {
       sx={{
         flexFlow: "column nowrap",
         justifyContent: "space-between",
-        minHeight: "85vh",
+        minHeight: "80vh",
       }}
       gap={2}
     >
