@@ -32,6 +32,7 @@ import {
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import MenuIcon from "@mui/icons-material/Menu";
 import CloseIcon from "@mui/icons-material/Close";
+import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 
 const drawerWidth = 240;
 
@@ -97,6 +98,7 @@ export default function PermanentDrawerLeft(props) {
               )}
             </Hidden>
           </Toolbar>
+
           <Toolbar>
             <img
               src="https://firebasestorage.googleapis.com/v0/b/sl-explorer.appspot.com/o/CommonImageAssets%2Flogo.png?alt=media&token=01bd5d9e-cc6d-4a31-a66d-1ba9294f7ae2"
@@ -104,11 +106,13 @@ export default function PermanentDrawerLeft(props) {
               height={50}
             />
           </Toolbar>
+
           <Toolbar
             style={{ width: "40%", gap: "10px" }}
             className="flex justify-end align-end"
           >
-            {/* <Divider
+            <Hidden smDown>
+              {/* <Divider
               sx={{
                 height: "100%",
                 width: "0.5px",
@@ -117,35 +121,12 @@ export default function PermanentDrawerLeft(props) {
                 mr: "5px",
               }}
             /> */}
-            <Button
-              size="large"
-              variant="outlined"
-              sx={{ borderRadius: "100px" }}
-            >
-              <CalendarMonthIcon
-                style={{
-                  fontSize: "large",
-                  color: "black",
-                  margin: "3px",
-                }}
-              />
-            </Button>
-            {/* <Divider
-              sx={{
-                height: "100%",
-                width: "0.5px",
-                bgcolor: "#ccc",
-                ml: "5px",
-                mr: "5px",
-              }}
-            /> */}
-            <Link to="/messages">
               <Button
                 size="large"
                 variant="outlined"
                 sx={{ borderRadius: "100px" }}
               >
-                <ChatIcon
+                <CalendarMonthIcon
                   style={{
                     fontSize: "large",
                     color: "black",
@@ -153,8 +134,7 @@ export default function PermanentDrawerLeft(props) {
                   }}
                 />
               </Button>
-            </Link>
-            {/* <Divider
+              {/* <Divider
               sx={{
                 height: "100%",
                 width: "0.5px",
@@ -163,20 +143,43 @@ export default function PermanentDrawerLeft(props) {
                 mr: "5px",
               }}
             /> */}
+              <Link to="/messages">
+                <Button
+                  size="large"
+                  variant="outlined"
+                  sx={{ borderRadius: "100px" }}
+                >
+                  <ChatIcon
+                    style={{
+                      fontSize: "large",
+                      color: "black",
+                      margin: "3px",
+                    }}
+                  />
+                </Button>
+              </Link>
+              {/* <Divider
+              sx={{
+                height: "100%",
+                width: "0.5px",
+                bgcolor: "#ccc",
+                ml: "5px",
+                mr: "5px",
+              }}
+            /> */}
+            </Hidden>
             <Button variant="outlined" sx={{ borderRadius: "100px" }}>
-              <div className="flex flex-row items-end">
+              <div className="flex flex-row items-center ">
                 <img
                   src="https://firebasestorage.googleapis.com/v0/b/sl-explorer.appspot.com/o/CommonImageAssets%2Fprofile.avif?alt=media&token=74b10db0-852e-4286-b292-dc6ee9e13f7d"
                   style={{
                     borderRadius: "50%",
                     objectFit: "cover",
-                    width: "40px",
-                    height: "40px",
+                    width: "30px",
+                    height: "30px",
                   }}
                 />
-                <Typography variant="subtitle2" color="black" ml={1}>
-                  Claudia
-                </Typography>
+                <ArrowDropDownIcon />
               </div>
             </Button>
           </Toolbar>
@@ -186,8 +189,13 @@ export default function PermanentDrawerLeft(props) {
       <Hidden smUp>
         {isMenuOpen && (
           <Box
-            className="absolute w-full h-auto p-10 m-0"
-            sx={{ backgroundColor: "#eee", zIndex: "100" }}
+            className="absolute p-10 m-0"
+            sx={{
+              backgroundColor: "#eee",
+              zIndex: "100",
+              width: `calc(100% - 62px)`,
+              height: `calc(100% - 94px)`,
+            }}
           >
             <Toolbar>
               <div className="w-full flex justify-center">
