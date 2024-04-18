@@ -17,6 +17,7 @@ import {
   JoinRight,
   Message,
   NotificationAdd,
+  SearchOffOutlined,
   Settings,
   Weekend,
 } from "@mui/icons-material";
@@ -29,6 +30,8 @@ import {
   Button,
 } from "@mui/material";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
+import { TiGlobeOutline } from "react-icons/ti";
+import { RiGlobalFill } from "react-icons/ri";
 
 const drawerWidth = 240;
 
@@ -45,6 +48,7 @@ export default function PermanentDrawerLeft(props) {
     "/day-trips",
     "/hotels",
     "/festivals",
+    "/a_z",
     "/notification-campaign",
     "/messages",
     "/settings",
@@ -196,6 +200,11 @@ export default function PermanentDrawerLeft(props) {
               route: "/festivals",
               text: "Festivals & Events",
               icon: <CelebrationOutlined />,
+            },
+            {
+              route: "/a_z",
+              text: "Sri Lanka A-Z",
+              icon: <RiGlobalFill />,
             },
             {
               route: "/notification-campaign",
