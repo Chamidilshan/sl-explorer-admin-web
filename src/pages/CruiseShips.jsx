@@ -8,7 +8,7 @@ export const CruiseShips = () => {
   return (
     <>
       <Box sx={{ display: "flex" }}>
-        <h1 className="text-cyan-900">Cruise Ships</h1>
+        
       </Box>
     </>
   );
