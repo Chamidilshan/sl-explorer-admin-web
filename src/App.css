@@ -8,7 +8,7 @@
 .loading-animation {
   font-size: 20px;
   border: 10px solid #f3f3f3;
-  border-top: 10px solid burlywood;
+  border-top: 10px solid /*burlywood*/ #ffa412;
   border-radius: 50%;
   width: 100px;
   height: 100px;

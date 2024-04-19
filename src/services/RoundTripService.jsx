@@ -11,10 +11,42 @@ export const RoundTripServices = {
       });
       console.log(response);
       toast.success("Package has been added successfully");
+      alert("Package Created\nCheck and then Please go back..!");
       return response.data;
     } catch (e) {
       console.log(e);
       toast.error("Something went wrong..!/n" + e.message);
+      throw e;
+    }
+  },
+
+  async updateRoundTrip(trip) {
+    try {
+      const response = await api.put(`/api/v1/roundTrips/${trip.id}`, trip, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      console.log(response);
+      toast.success("Package has been updated successfully");
+      return response.data;
+    } catch (e) {
+      console.log(e);
+      toast.error("Something went wrong..!/n" + e.message);
+      throw e;
+    }
+  },
+
+  async deleteRoundTrip(tripId) {
+    try {
+      const response = await api.delete(`/api/v1/roundTrips/${tripId}`);
+      console.log(response);
+      toast.success("Package has been deleted successfully");
+      return true;
+    } catch (e) {
+      console.log(e);
+      toast.error("Something went wrong..!/n" + e.message);
+      return false;
       throw e;
     }
   },

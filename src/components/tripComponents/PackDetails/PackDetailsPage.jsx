@@ -155,7 +155,6 @@ export const PackDetails = ({
               <Box className="w-full flex flex-col items-start" gap={0.5}>
                 <Typography variant="body2">Package Name</Typography>
                 <TextField
-                  multiline
                   fullWidth
                   value={packageName}
                   onChange={(e) => setPackageName(e.target.value)}
@@ -167,7 +166,6 @@ export const PackDetails = ({
               <Box className="w-full flex flex-col items-start" gap={0.5}>
                 <Typography variant="body2">Package Title</Typography>
                 <TextField
-                  multiline
                   fullWidth
                   value={packTitle}
                   onChange={(e) => setPackTitle(e.target.value)}
@@ -179,7 +177,6 @@ export const PackDetails = ({
               <Box className="w-full flex flex-col items-start" gap={0.5}>
                 <Typography variant="body2">Package Subtitle</Typography>
                 <TextField
-                  multiline
                   fullWidth
                   value={packSubtitle}
                   onChange={(e) => setPackSubtitle(e.target.value)}
@@ -192,13 +189,13 @@ export const PackDetails = ({
                 <Typography variant="body2">Cover Description</Typography>
 
                 <TextField
+                  rows={3}
                   multiline
                   value={packageCoverDescription}
                   onChange={(e) => setPackCover(e.target.value)}
-                  minRows={2}
                   type="text"
                   size="small"
-                  helperText="Will be shown in the package lists"
+                  helperText="Will be shown in the package listing pages"
                   fullWidth
                   placeholder="Sri Lanka, the pearl of the Indian Ocean, is rich in beautiful sights  ..."
                 />
@@ -209,12 +206,12 @@ export const PackDetails = ({
 
                 <TextField
                   multiline
+                  rows={3}
                   value={packageShortDescription}
                   onChange={(e) => setPackShort(e.target.value)}
-                  minRows={3}
                   type="text"
                   size="small"
-                  helperText="Will be shown in the package details page"
+                  helperText="Will be shown in the package's details page"
                   fullWidth
                   placeholder="Our comprehensive 9-day Sri Lanka tour will show you the highlights of our island, tell you the history ..."
                 />
@@ -319,7 +316,9 @@ export const PackDetails = ({
               <CardMedia
                 component="img"
                 src={
-                  packageImage ? packageImage : "../../src/assets/addImage.png"
+                  packageImage
+                    ? packageImage
+                    : "https://firebasestorage.googleapis.com/v0/b/sl-explorer.appspot.com/o/CommonImageAssets%2FaddImage.png?alt=media&token=af21ca00-6dfa-4f7a-a72c-2af4f5a4abd9"
                 }
                 alt="cover image"
                 sx={{ width: "100%", height: "100%", fit: "cover" }}
@@ -377,7 +376,7 @@ export const PackDetails = ({
           }}
         />
 
-        <Box minHeight="410px" width="100%">
+        <Box minHeight="430px" width="100%">
           <Box
             width="100%"
             height="100%"
@@ -416,7 +415,9 @@ export const PackDetails = ({
                   <CardMedia
                     component="img"
                     src={
-                      item.at(1) ? item.at(1) : "../../src/assets/addImage.png"
+                      item.at(1)
+                        ? item.at(1)
+                        : "https://firebasestorage.googleapis.com/v0/b/sl-explorer.appspot.com/o/CommonImageAssets%2FaddImage.png?alt=media&token=af21ca00-6dfa-4f7a-a72c-2af4f5a4abd9"
                     }
                     alt="cover image"
                     sx={{ width: "100%", height: "100%", fit: "cover" }}

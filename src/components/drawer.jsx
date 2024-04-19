@@ -20,11 +20,24 @@ import {
   Settings,
   Weekend,
 } from "@mui/icons-material";
-import { AppBar, IconButton, Typography } from "@mui/material";
+import {
+  AppBar,
+  Box,
+  Divider,
+  IconButton,
+  Typography,
+  Button,
+  Hidden,
+} from "@mui/material";
+import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
+import MenuIcon from "@mui/icons-material/Menu";
+import CloseIcon from "@mui/icons-material/Close";
+import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 
 const drawerWidth = 240;
 
 export default function PermanentDrawerLeft(props) {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const navigate = useNavigate();
   const [selectedItem, setSelectedItem] = useState(props.route ?? "/");
 
@@ -63,113 +76,287 @@ export default function PermanentDrawerLeft(props) {
         anchor="top"
       >
         <div className="w-full flex justify-between">
-          <Toolbar style={{ width: "40%" }}></Toolbar>
-          <Toolbar>
-            <img src="../../src/assets/logo.png" width={80} height={50} />
+          <Toolbar style={{ width: "40%" }}>
+            <Hidden smUp>
+              {!isMenuOpen && (
+                <MenuIcon
+                  size="large"
+                  sx={{ color: "black" }}
+                  onClick={() => {
+                    setIsMenuOpen(!isMenuOpen);
+                  }}
+                />
+              )}
+              {isMenuOpen && (
+                <CloseIcon
+                  size="large"
+                  sx={{ color: "black" }}
+                  onClick={() => {
+                    setIsMenuOpen(!isMenuOpen);
+                  }}
+                />
+              )}
+            </Hidden>
           </Toolbar>
+
+          <Toolbar>
+            <img
+              src="https://firebasestorage.googleapis.com/v0/b/sl-explorer.appspot.com/o/CommonImageAssets%2Flogo.png?alt=media&token=01bd5d9e-cc6d-4a31-a66d-1ba9294f7ae2"
+              width={80}
+              height={50}
+            />
+          </Toolbar>
+
           <Toolbar
-            style={{ width: "40%" }}
+            style={{ width: "40%", gap: "10px" }}
             className="flex justify-end align-end"
           >
-            <Link to="/messages">
-              <IconButton size="large">
-                <ChatIcon
+            <Hidden smDown>
+              {/* <Divider
+              sx={{
+                height: "100%",
+                width: "0.5px",
+                bgcolor: "#ccc",
+                ml: "5px",
+                mr: "5px",
+              }}
+            /> */}
+              <Button
+                size="large"
+                variant="outlined"
+                sx={{ borderRadius: "100px" }}
+              >
+                <CalendarMonthIcon
                   style={{
                     fontSize: "large",
                     color: "black",
                     margin: "3px",
                   }}
                 />
-              </IconButton>
-            </Link>
-
-            <Typography variant="body2" color="black">
-              Claudia
-            </Typography>
-            <img
-              src="../../src/assets/addImage.png"
-              width={60}
-              height={60}
-              style={{ borderRadius: "50%" }}
-            />
+              </Button>
+              {/* <Divider
+              sx={{
+                height: "100%",
+                width: "0.5px",
+                bgcolor: "#ccc",
+                ml: "5px",
+                mr: "5px",
+              }}
+            /> */}
+              <Link to="/messages">
+                <Button
+                  size="large"
+                  variant="outlined"
+                  sx={{ borderRadius: "100px" }}
+                >
+                  <ChatIcon
+                    style={{
+                      fontSize: "large",
+                      color: "black",
+                      margin: "3px",
+                    }}
+                  />
+                </Button>
+              </Link>
+              {/* <Divider
+              sx={{
+                height: "100%",
+                width: "0.5px",
+                bgcolor: "#ccc",
+                ml: "5px",
+                mr: "5px",
+              }}
+            /> */}
+            </Hidden>
+            <Button variant="outlined" sx={{ borderRadius: "100px" }}>
+              <div className="flex flex-row items-center ">
+                <img
+                  src="https://firebasestorage.googleapis.com/v0/b/sl-explorer.appspot.com/o/CommonImageAssets%2Fprofile.avif?alt=media&token=74b10db0-852e-4286-b292-dc6ee9e13f7d"
+                  style={{
+                    borderRadius: "50%",
+                    objectFit: "cover",
+                    width: "30px",
+                    height: "30px",
+                  }}
+                />
+                <ArrowDropDownIcon />
+              </div>
+            </Button>
           </Toolbar>
         </div>
       </AppBar>
-      <Drawer
-        sx={{
-          width: drawerWidth,
-          flexShrink: 0,
-          "& .MuiDrawer-paper": {
+
+      <Hidden smUp>
+        {isMenuOpen && (
+          <Box
+            className="absolute p-10 m-0"
+            sx={{
+              backgroundColor: "#eee",
+              zIndex: "100",
+              width: `calc(100% - 62px)`,
+              height: `calc(100% - 94px)`,
+            }}
+          >
+            <Toolbar>
+              <div className="w-full flex justify-center">
+                <h3
+                  style={{
+                    color: "#000",
+                    fontWeight: "bolder",
+                  }}
+                >
+                  Menu
+                </h3>
+              </div>
+            </Toolbar>
+            <List sx={{ color: "#737791" }}>
+              {[
+                { route: "/", text: "Dashboard", icon: <DashboardIcon /> },
+                {
+                  route: "/cruise-ships",
+                  text: "Cruise Ships",
+                  icon: <DirectionsBoatIcon />,
+                },
+                {
+                  route: "/round-trips",
+                  text: "Round Trips",
+                  icon: <JoinLeft />,
+                },
+                { route: "/day-trips", text: "Day Trips", icon: <JoinRight /> },
+                { route: "/hotels", text: "Hotels", icon: <Weekend /> },
+                {
+                  route: "/festivals",
+                  text: "Festivals & Events",
+                  icon: <CelebrationOutlined />,
+                },
+                {
+                  route: "/notification-campaign",
+                  text: "Notification Campaign",
+                  icon: <NotificationAdd />,
+                },
+                { route: "/messages", text: "Messages", icon: <Message /> },
+                { route: "/settings", text: "Settings", icon: <Settings /> },
+              ].map(({ route, text, icon }) => (
+                <Link to={route} key={route}>
+                  <ListItem
+                    onClick={(e) => {
+                      setIsMenuOpen(false);
+                      setSelectedItem(route);
+                    }}
+                    sx={{
+                      backgroundColor:
+                        selectedItem === route ? "#FFA412" : "inherit",
+                      "&:hover": {
+                        backgroundColor: "#FFA412",
+                      },
+                    }}
+                  >
+                    <ListItemIcon
+                      sx={{
+                        color: selectedItem === route ? "white" : "inherit",
+                      }}
+                    >
+                      {icon}
+                    </ListItemIcon>
+                    <ListItemText
+                      primary={text}
+                      sx={{
+                        color: selectedItem === route ? "white" : "inherit",
+                      }}
+                    />
+                  </ListItem>
+                </Link>
+              ))}
+            </List>
+          </Box>
+        )}
+      </Hidden>
+
+      <Hidden smDown>
+        <Drawer
+          sx={{
             width: drawerWidth,
-            boxSizing: "border-box",
-          },
-        }}
-        variant="permanent"
-        anchor="left"
-      >
-        <Toolbar>
-          <div className="w-full flex justify-center">
-            <h3
-              style={{
-                color: "#EEA412",
-                fontWeight: "bolder",
-              }}
-            >
-              {props.in ?? selectedItem}
-            </h3>
-          </div>
-        </Toolbar>
-        <List sx={{ color: "#737791" }}>
-          {[
-            { route: "/", text: "Dashboard", icon: <DashboardIcon /> },
-            {
-              route: "/cruise-ships",
-              text: "Cruise Ships",
-              icon: <DirectionsBoatIcon />,
+            flexShrink: 0,
+            "& .MuiDrawer-paper": {
+              width: drawerWidth,
+              boxSizing: "border-box",
             },
-            { route: "/round-trips", text: "Round Trips", icon: <JoinLeft /> },
-            { route: "/day-trips", text: "Day Trips", icon: <JoinRight /> },
-            { route: "/hotels", text: "Hotels", icon: <Weekend /> },
-            {
-              route: "/festivals",
-              text: "Festivals & Events",
-              icon: <CelebrationOutlined />,
-            },
-            {
-              route: "/notification-campaign",
-              text: "Notification Campaign",
-              icon: <NotificationAdd />,
-            },
-            { route: "/messages", text: "Messages", icon: <Message /> },
-            { route: "/settings", text: "Settings", icon: <Settings /> },
-          ].map(({ route, text, icon }) => (
-            <Link to={route} key={route}>
-              <ListItem
-                onClick={(e) => {
-                  setSelectedItem(route);
-                }}
-                sx={{
-                  backgroundColor:
-                    selectedItem === route ? "#FFA412" : "inherit",
-                  "&:hover": {
-                    backgroundColor: "#FFA412",
-                  },
+          }}
+          variant="permanent"
+          anchor="left"
+        >
+          <Toolbar
+            sx={{
+              backgroundColor: "#FFA412",
+            }}
+          >
+            <div className="w-full flex justify-center">
+              <h3
+                style={{
+                  color: "#FFF",
+                  fontWeight: "bolder",
                 }}
               >
-                <ListItemIcon
-                  sx={{ color: selectedItem === route ? "white" : "inherit" }}
+                {props.in ?? selectedItem}
+              </h3>
+            </div>
+          </Toolbar>
+          <List sx={{ color: "#737791" }}>
+            {[
+              { route: "/", text: "Dashboard", icon: <DashboardIcon /> },
+              {
+                route: "/cruise-ships",
+                text: "Cruise Ships",
+                icon: <DirectionsBoatIcon />,
+              },
+              {
+                route: "/round-trips",
+                text: "Round Trips",
+                icon: <JoinLeft />,
+              },
+              { route: "/day-trips", text: "Day Trips", icon: <JoinRight /> },
+              { route: "/hotels", text: "Hotels", icon: <Weekend /> },
+              {
+                route: "/festivals",
+                text: "Festivals & Events",
+                icon: <CelebrationOutlined />,
+              },
+              {
+                route: "/notification-campaign",
+                text: "Notification Campaign",
+                icon: <NotificationAdd />,
+              },
+              { route: "/messages", text: "Messages", icon: <Message /> },
+              { route: "/settings", text: "Settings", icon: <Settings /> },
+            ].map(({ route, text, icon }) => (
+              <Link to={route} key={route}>
+                <ListItem
+                  onClick={(e) => {
+                    setSelectedItem(route);
+                  }}
+                  sx={{
+                    backgroundColor:
+                      selectedItem === route ? "#FFA412" : "inherit",
+                    "&:hover": {
+                      backgroundColor: "#FFA412",
+                    },
+                  }}
                 >
-                  {icon}
-                </ListItemIcon>
-                <ListItemText
-                  primary={text}
-                  sx={{ color: selectedItem === route ? "white" : "inherit" }}
-                />
-              </ListItem>
-            </Link>
-          ))}
-        </List>
-      </Drawer>
+                  <ListItemIcon
+                    sx={{ color: selectedItem === route ? "white" : "inherit" }}
+                  >
+                    {icon}
+                  </ListItemIcon>
+                  <ListItemText
+                    primary={text}
+                    sx={{ color: selectedItem === route ? "white" : "inherit" }}
+                  />
+                </ListItem>
+              </Link>
+            ))}
+          </List>
+        </Drawer>
+      </Hidden>
     </>
   );
 }

@@ -41,10 +41,15 @@ export const Itinerary = ({ onSaveItinerary, prevItinerary }) => {
     });
   };
 
+  //this is for 1 itinerary from modal
   const handleSaveExisting = (data) => {
-    //get data and editingIndex state -> save data at the index
-    setItinerary((prevItinerary) => {
-      return [...prevItinerary, data];
+    setDataToEdit("");
+    setIsEditing(false);
+    setOpen(false);
+    setItinerary((itinerary) => {
+      var newOne = itinerary;
+      newOne[editingIndex] = data;
+      return newOne;
     });
   };
 
@@ -67,6 +72,7 @@ export const Itinerary = ({ onSaveItinerary, prevItinerary }) => {
     left: "50%",
     transform: "translate(-50%, -50%)",
     width: "50%",
+    maxHeight: "95vh",
     bgcolor: "background.paper",
     borderRadius: "10px",
   };
@@ -124,11 +130,11 @@ export const Itinerary = ({ onSaveItinerary, prevItinerary }) => {
                             startIcon={<EditNoteIcon />}
                             variant="contained"
                             color="primary"
-                            onClick={async () => {
+                            onClick={() => {
                               console.log(itinerary[index]);
-                              await setDataToEdit(itinerary[index]);
-                              await setIsEditing(true);
-                              await setEditingIndex(index);
+                              setDataToEdit(itinerary[index]);
+                              setIsEditing(true);
+                              setEditingIndex(index);
                               console.log(dataToEdit);
                               setOpen(true);
                             }}

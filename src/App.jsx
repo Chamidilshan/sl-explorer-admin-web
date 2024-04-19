@@ -37,15 +37,12 @@ function App() {
   function Front(props) {
     return (
       <Box
-        sx={{
-          display: "flex",
-          height: "100%",
-          pt: 5,
-        }}
+        className="front w-full h-full pt-12 sm:pl-60"
+        sx={{ boxSizing: "border-box" }}
       >
         {/* <PermanentDrawerTop /> */}
         <PermanentDrawerLeft in={props.in} route={props.route} />
-        {props.children}
+        <div className="w-full h-full">{props.children}</div>
       </Box>
     );
   }
@@ -116,15 +113,12 @@ function App() {
             }
           />
           <Route
-            path="/round-trips/edit-day-trips/:tripId"
+            path="/day-trips/edit-day-trips/:tripId"
             exact
             element={
               <RequireAuth>
-                <Front
-                  route="/round-trips/edit-day-trips/:tripId"
-                  in="DayTrips"
-                >
-                  <DayTrips />
+                <Front route="/day-trips/edit-day-trips/:tripId" in="DayTrips">
+                  <AddDayTrips />
                 </Front>
               </RequireAuth>
             }

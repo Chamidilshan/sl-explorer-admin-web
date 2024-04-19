@@ -6,6 +6,7 @@ import {
   ButtonGroup,
   Button,
   Breadcrumbs,
+  Modal,
 } from "@mui/material";
 import { PackDetails } from "./PackDetailsPage";
 import KeyboardDoubleArrowLeftIcon from "@mui/icons-material/KeyboardDoubleArrowLeft";
@@ -91,8 +92,9 @@ const EditRoundTrips = () => {
         resp.prices.private.double,
         resp.prices.private.triple,
       ]);
+      setLoading(false);
     } catch (e) {
-      toast.error("Something is wrong..!", e);
+      toast.error("Something went wrong..!\nRefresh Again");
       console.log(e);
     } finally {
       setIsLoading(false);
@@ -118,23 +120,37 @@ const EditRoundTrips = () => {
     if (packageImageLinks != "" && packageImage != "") {
       makeJson();
       console.log(JSON.stringify(jsonObject, null, 2));
-      RoundTripServices.createRoundTrip(JSON.stringify(jsonObject, null, 2));
-      navigate("/round-trips");
+      RoundTripServices.updateRoundTrip(JSON.stringify(jsonObject, null, 2));
+      // alert("Updated successfully..!\nPlease go back");
+      // navigate("/round-trips");
     }
   }, [packageImageLinks, packageImage]);
 
+  function isURL(str) {
+    const urlPattern = /^(https?|ftp):\/\/[^\s/$.?#].[^\s]*$/;
+    return urlPattern.test(str);
+  }
   const extractImages = async () => {
     try {
-      var ref = await uploadImage(images[0]);
-      setPackageImage(ref);
+      if (!isURL(images[0])) {
+        var ref = await uploadImage(images[0]);
+        setPackageImage(ref);
+      } else {
+        setPackageImage(images[0]);
+      }
 
       const packageImageArray = await Promise.all(
         images[1].map(async (image) => {
-          var url = await uploadImage(image[1]);
-          return url;
+          var ref;
+          if (!isURL(image[1])) {
+            ref = await uploadImage(image[1]);
+          } else {
+            ref = image[1];
+          }
+          // var url = await uploadImage(image[1]);
+          return ref;
         })
       );
-
       setPackageImageLinks(packageImageArray);
     } catch (error) {
       console.log(error);
@@ -158,6 +174,7 @@ const EditRoundTrips = () => {
 
   const jsonObject = {};
   const makeJson = async () => {
+    jsonObject["id"] = tripId;
     jsonObject["packageName"] = packDetails[0];
     jsonObject["packageShortDescription"] = packDetails[3];
     jsonObject["packageCoverDescription"] = packDetails[2];
@@ -208,13 +225,13 @@ const EditRoundTrips = () => {
         prices,
       };
       setLoading(true);
-      // try {
-      //   await extractImages(); //automaticaly update and extract
-      // } catch (error) {
-      //   console.log(error);
-      // } finally {
-      //   setLoading(false);
-      // }
+      try {
+        await extractImages(); //automaticaly update and extract
+      } catch (error) {
+        console.log(error);
+      } finally {
+        setLoading(false);
+      }
       console.log(JSON.stringify(jsonObject, null, 2));
     } else {
       alert("Submission canceled..!");
@@ -243,12 +260,14 @@ const EditRoundTrips = () => {
         <Breadcrumbs aria-label="Bread crumbs" separator={<NavigateNextIcon />}>
           <Link to="/">Dashboard</Link>
           <Link to="/round-trips">Round Trips</Link>
-          <Typography color="text.primary">Add Round Trip</Typography>
+          <Typography color="text.primary">
+            Edit Round Trip - {tripId}
+          </Typography>
         </Breadcrumbs>
       </Box>
       {loading ? (
         <Modal open={true}>
-          <div className="w-full h-full flex justify-center items-center">
+          <div className="w-full h-full flex flex-col justify-center items-center">
             <div className="loading-animation" />
             <Typography variant="subtitle2" mt={2}>
               Uploading Images...
