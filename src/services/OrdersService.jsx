@@ -35,7 +35,7 @@ const OrdersService = {
 
             const updatedStatus = {
                 orderId: orderId,
-                status: "Confirmed",
+                status: "Invoice",
             };
             const response = await api.post(`/api/v1/orders/status`, updatedStatus);
             console.log(response.status);

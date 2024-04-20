@@ -15,7 +15,7 @@ export const CruiseShips = () => {
       // {id: '_id', name: 'ID'},
       {id: 'cruiseShipDate', name: 'Date'},
       {id: 'cruiseShipName', name: 'Name'},
-      {id: 'cruiseShipPackage', name: 'Package'},
+      {id: 'cruiseShipPackage', name: 'Package'}, 
       {id: 'cruiseShipImage', name: 'Image'},
       {id: 'action', name: 'Actions'},
     ]

@@ -3,16 +3,16 @@ import { toast } from 'react-toastify';
 
 const cruiseShipService = {
 
-    async getcruiseShip(){
-        try{
-            const response = await api.get('/api/v1/cruiseShips');
-            console.log(response);
-            return response.data;
-        }catch(error){
-            console.log(error);
-            throw error;
-        }
-    },
+    // async getcruiseShip(){
+    //     try{
+    //         const response = await api.get('/api/v1/cruiseShips');
+    //         console.log(response);
+    //         return response.data;
+    //     }catch(error){
+    //         console.log(error);
+    //         throw error;
+    //     }
+    // },
 
     async createcruiseShip(cruiseShip){
         try{
