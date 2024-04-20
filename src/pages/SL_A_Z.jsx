@@ -10,7 +10,6 @@ import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { v4 } from "uuid";
 
 
-
 export const SL_A_Zs = () => {
     const columns = [
         // {id: '_id', name: 'ID'},
@@ -315,6 +314,7 @@ export const SL_A_Zs = () => {
               </DialogContent>
             </Dialog>
     
+    
             <Dialog open={deleteConfirmationOpen} onClose={cancelDelete}>
               <DialogTitle>Confirm Delete</DialogTitle>
               <DialogContent>
@@ -331,3 +331,5 @@ export const SL_A_Zs = () => {
         </>
       );
 };
+
+//A_Z
