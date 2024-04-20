@@ -316,7 +316,9 @@ export const PackDetails = ({
               <CardMedia
                 component="img"
                 src={
-                  packageImage ? packageImage : "../../src/assets/addImage.png"
+                  packageImage
+                    ? packageImage
+                    : "https://firebasestorage.googleapis.com/v0/b/sl-explorer.appspot.com/o/CommonImageAssets%2FaddImage.png?alt=media&token=af21ca00-6dfa-4f7a-a72c-2af4f5a4abd9"
                 }
                 alt="cover image"
                 sx={{ width: "100%", height: "100%", fit: "cover" }}
@@ -413,7 +415,9 @@ export const PackDetails = ({
                   <CardMedia
                     component="img"
                     src={
-                      item.at(1) ? item.at(1) : "../../src/assets/addImage.png"
+                      item.at(1)
+                        ? item.at(1)
+                        : "https://firebasestorage.googleapis.com/v0/b/sl-explorer.appspot.com/o/CommonImageAssets%2FaddImage.png?alt=media&token=af21ca00-6dfa-4f7a-a72c-2af4f5a4abd9"
                     }
                     alt="cover image"
                     sx={{ width: "100%", height: "100%", fit: "cover" }}

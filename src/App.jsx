@@ -37,15 +37,12 @@ function App() {
   function Front(props) {
     return (
       <Box
-        sx={{
-          display: "flex",
-          height: "100%",
-          pt: 5,
-        }}
+        className="front w-full h-full pt-12 sm:pl-60"
+        sx={{ boxSizing: "border-box" }}
       >
         {/* <PermanentDrawerTop /> */}
         <PermanentDrawerLeft in={props.in} route={props.route} />
-        {props.children}
+        <div className="w-full h-full">{props.children}</div>
       </Box>
     );
   }

@@ -113,8 +113,7 @@ export const RoundTrips = () => {
       sx={{
         flexFlow: "column nowrap",
         justifyContent: "space-between",
-        minHeight: "85vh",
-        width: "80%",
+        minHeight: "80vh",
       }}
       gap={2}
     >
