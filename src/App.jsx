@@ -25,6 +25,7 @@ import { Festivals } from "./pages/Festival.jsx";
 import { AddRoundTrips } from "./components/tripComponents/PackDetails/AddRoundtrips";
 import EditRoundTrips from "./components/tripComponents/PackDetails/EditRoundTrips.jsx";
 import { AddDayTrips } from "./components/dayTripComponents/AddDayTrips.jsx";
+import { SL_A_Zs } from "./pages/SL_A_Z.jsx";
 
 function App() {
   const [count, setCount] = useState(0);
@@ -163,6 +164,17 @@ function App() {
               <RequireAuth>
                 <Front route="/festivals" in="Festivals & Events">
                   <Festivals />
+                </Front>
+              </RequireAuth>
+            }
+          />
+          <Route
+            path="/a_z"
+            exact
+            element={
+              <RequireAuth>
+                <Front route="/a_z" in="Sri Lanka A-Z">
+                  <SL_A_Zs />
                 </Front>
               </RequireAuth>
             }
