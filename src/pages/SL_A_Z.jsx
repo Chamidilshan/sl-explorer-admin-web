@@ -10,6 +10,7 @@ import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { v4 } from "uuid";
 
 
+
 export const SL_A_Zs = () => {
     const columns = [
         // {id: '_id', name: 'ID'},
