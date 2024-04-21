@@ -172,8 +172,8 @@ export const CruiseShips = () => {
     async function fetchcruiseShips() {
       try {
         const data = await cruiseShipService.getcruiseShips();
-        console.log('cruiseShips data:', data.data);
-        setcruiseShips(data.data);
+        console.log('cruiseShips data:', data);
+        setcruiseShips(data);
       } catch (error) {
         console.log('Error fetching cruiseShips:', error);
       }
@@ -211,7 +211,7 @@ export const CruiseShips = () => {
               <TableRow key={cruiseShip._id} >
                 {/* <TableCell>{cruiseShip._id}</TableCell> */}
 
-                <TableCell style={{fontSize: '16px'}}>{cruiseShip.cruiseShipName}</TableCell>
+                <TableCell style={{fontSize: '16px'}}>{cruiseShip.packageName}</TableCell>
                 <TableCell style={{fontSize: '16px'}}>{cruiseShip.cruiseShipDate}</TableCell>
                 <TableCell style={{fontSize: '16px'}}>{cruiseShip.cruiseShipPackage}</TableCell>
                 <TableCell style={{fontSize: '16px'}}>

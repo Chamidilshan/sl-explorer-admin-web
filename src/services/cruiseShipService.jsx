@@ -3,7 +3,7 @@ import { toast } from 'react-toastify';
 
 const cruiseShipService = {
 
-    async getcruiseShip(){
+    async getcruiseShips(){
         try{
             const response = await api.get('/api/v1/cruiseShips');
             console.log(response);
@@ -40,17 +40,17 @@ const cruiseShipService = {
         }
     },
 
-    async getcruiseShip(cruiseShipId){
-        try{
-            const response = await api.get(`/api/v1/cruiseShips/${cruiseShipId}`);
-            console.log(response);
-            return response.data;
-        }catch(error){
-            console.log(error);
-            toast.error('Failed to fetch cruiseShip details: ', error.message);
-            throw error;
-        }
-    },
+    // async getcruiseShip(cruiseShipId){
+    //     try{
+    //         const response = await api.get(`/api/v1/cruiseShips/${cruiseShipId}`);
+    //         console.log(response);
+    //         return response.data;
+    //     }catch(error){
+    //         console.log(error);
+    //         toast.error('Failed to fetch cruiseShip details: ', error.message);
+    //         throw error;
+    //     }
+    // },
 
     async updatecruiseShip(cruiseShipId,cruiseShip){
         try{
