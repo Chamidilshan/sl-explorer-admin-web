@@ -1,5 +1,11 @@
 import React, { useState } from "react";
-import { Typography, Box, Button, Breadcrumbs } from "@mui/material";
+import {
+  Typography,
+  Box,
+  Button,
+  Breadcrumbs,
+  ButtonGroup,
+} from "@mui/material";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import { DayTripServices } from "../services/DayTripServices";
@@ -15,10 +21,18 @@ export const DayTrips = () => {
   const [loading, setLoading] = useState(false);
 
   const columns = [
+    {
+      field: "packageCoverImage",
+      headerName: "Cover Image",
+      width: 120,
+      renderCell: (params) => (
+        <img width="110" height="50" src={params.value} />
+      ),
+    },
     { field: "packageCategoryName", headerName: "Category Name", width: 150 },
     { field: "packageName", headerName: "Package Name", width: 150 },
-    { field: "packageDays", headerName: "Days", width: 80, type: "number" },
-    { field: "price", headerName: "Price", width: 120, type: "number" },
+    { field: "packageDays", headerName: "Days", width: 30, type: "number" },
+    { field: "price", headerName: "Price", width: 60, type: "number" },
     // {
     //   field: "packageShortDescription",
     //   headerName: "Short Description",
@@ -34,26 +48,43 @@ export const DayTrips = () => {
     {
       field: "actions",
       headerName: "Actions",
-      width: 400,
+      width: 250,
       renderCell: (params) => (
         <Box className="flex flex-row justify-between align-center gap-2">
-          <Button size="small" variant="outlined">
-            <ArrowDropUpIcon sx={{ fontSize: "large" }} />
-          </Button>
-          <Button size="small" variant="outlined">
-            <ArrowDropDownIcon sx={{ fontSize: "large" }} />
-          </Button>
-          <Link to={`/day-trips/edit-day-trips/${params.row._id}`}>
+          <ButtonGroup>
             <Button
-              startIcon={<EditNoteIcon />}
-              variant="contained"
-              color="primary"
+              size="small"
+              variant="outlined"
+              // onClick={async () => {
+              //   var resp = await RoundTripServices.moveUpATrip(params.row);
+              //   if (resp) {
+              //     resp = await RoundTripServices.getRoundtrips();
+              //     setRoundTrips(resp);
+              //   }
+              // }}
             >
-              <Typography variant="subtitle2">Edit</Typography>
+              <ArrowDropUpIcon sx={{ fontSize: "large" }} />
+            </Button>
+            <Button
+              size="small"
+              variant="outlined"
+              // onClick={async () => {
+              //   var resp = await RoundTripServices.moveDownATrip(params.row);
+              //   if (resp) {
+              //     resp = await RoundTripServices.getRoundtrips();
+              //     setRoundTrips(resp);
+              //   }
+              // }}
+            >
+              <ArrowDropDownIcon sx={{ fontSize: "large" }} />
+            </Button>
+          </ButtonGroup>
+          <Link to={`/day-trips/edit-day-trips/${params.row._id}`}>
+            <Button variant="contained" color="primary">
+              <EditNoteIcon fontSize="small" />
             </Button>
           </Link>
           <Button
-            startIcon={<DeleteOutlineIcon />}
             variant="contained"
             color="error"
             onClick={async () => {
@@ -67,15 +98,9 @@ export const DayTrips = () => {
                 }
                 // need to call the delete function here
               }
-              // setItinerary((prevItinerary) => {
-              //   const newItinerary = prevItinerary.filter(
-              //     (item, i) => i !== index
-              //   );
-              //   return newItinerary;
-              // });
             }}
           >
-            <Typography variant="subtitle2">Delete</Typography>
+            <DeleteOutlineIcon fontSize="small" />
           </Button>
         </Box>
       ),

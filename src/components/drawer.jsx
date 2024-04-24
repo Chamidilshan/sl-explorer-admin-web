@@ -170,20 +170,22 @@ export default function PermanentDrawerLeft(props) {
               }}
             /> */}
             </Hidden>
-            <Button variant="outlined" sx={{ borderRadius: "100px" }}>
-              <div className="flex flex-row items-center ">
-                <img
-                  src="https://firebasestorage.googleapis.com/v0/b/sl-explorer.appspot.com/o/CommonImageAssets%2Fprofile.avif?alt=media&token=74b10db0-852e-4286-b292-dc6ee9e13f7d"
-                  style={{
-                    borderRadius: "50%",
-                    objectFit: "cover",
-                    width: "30px",
-                    height: "30px",
-                  }}
-                />
-                <ArrowDropDownIcon />
-              </div>
-            </Button>
+            <Link to="/settings">
+              <Button variant="outlined" sx={{ borderRadius: "100px" }}>
+                <div className="flex flex-row items-center ">
+                  <img
+                    src="https://firebasestorage.googleapis.com/v0/b/sl-explorer.appspot.com/o/CommonImageAssets%2Fprofile.avif?alt=media&token=74b10db0-852e-4286-b292-dc6ee9e13f7d"
+                    style={{
+                      borderRadius: "50%",
+                      objectFit: "cover",
+                      width: "30px",
+                      height: "30px",
+                    }}
+                  />
+                  <ArrowDropDownIcon />
+                </div>
+              </Button>
+            </Link>
           </Toolbar>
         </div>
       </AppBar>

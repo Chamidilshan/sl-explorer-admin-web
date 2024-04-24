@@ -1,5 +1,12 @@
 import React, { useState } from "react";
-import { Typography, Box, Button, Breadcrumbs } from "@mui/material";
+import {
+  Typography,
+  Box,
+  Button,
+  Breadcrumbs,
+  Hidden,
+  ButtonGroup,
+} from "@mui/material";
 import { Link, Navigate, Route, json, useNavigate } from "react-router-dom";
 import { RoundTripServices } from "../services/RoundTripService";
 import { toast } from "react-toastify";
@@ -9,11 +16,11 @@ import EditNoteIcon from "@mui/icons-material/EditNote";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import ArrowDropUpIcon from "@mui/icons-material/ArrowDropUp";
+import { set } from "firebase/database";
 
 export const RoundTrips = () => {
   const [roundTrips, setRoundTrips] = useState([]); //array of objects? || object?
   const [loading, setLoading] = useState(false);
-  const [isAddingNew, setIsAddingNew] = useState(false);
 
   useState(async () => {
     try {
@@ -28,9 +35,15 @@ export const RoundTrips = () => {
     }
   }, []);
 
-  const navigate = useNavigate();
-
   const columns = [
+    {
+      field: "packageCoverImage",
+      headerName: "Cover Image",
+      width: 120,
+      renderCell: (params) => (
+        <img width="110" height="50" src={params.value} />
+      ),
+    },
     { field: "packageName", headerName: "Package Name", width: 200 },
     { field: "packageTitle", headerName: "Title", width: 150 },
     {
@@ -40,8 +53,8 @@ export const RoundTrips = () => {
     },
     {
       field: "packageTotalSeats",
-      headerName: "Total Seats",
-      width: 50,
+      headerName: "Max Seats",
+      width: 60,
       type: "number",
     },
     // {
@@ -57,28 +70,45 @@ export const RoundTrips = () => {
     {
       field: "actions",
       headerName: "Actions",
-      width: 400,
+      width: 240,
       renderCell: (params) => (
         <Box className="flex flex-row justify-between align-center gap-2">
-          <Box className="flex flex-column justify-between align-center gap-2">
-            <Button size="small" variant="outlined">
+          {/* <Box className="flex flex-column justify-between align-center gap-2"> */}
+          <ButtonGroup>
+            <Button
+              size="small"
+              variant="outlined"
+              onClick={async () => {
+                var resp = await RoundTripServices.moveUpATrip(params.row);
+                if (resp) {
+                  resp = await RoundTripServices.getRoundtrips();
+                  setRoundTrips(resp);
+                }
+              }}
+            >
               <ArrowDropUpIcon sx={{ fontSize: "large" }} />
             </Button>
-            <Button size="small" variant="outlined">
+            <Button
+              size="small"
+              variant="outlined"
+              onClick={async () => {
+                var resp = await RoundTripServices.moveDownATrip(params.row);
+                if (resp) {
+                  resp = await RoundTripServices.getRoundtrips();
+                  setRoundTrips(resp);
+                }
+              }}
+            >
               <ArrowDropDownIcon sx={{ fontSize: "large" }} />
             </Button>
-          </Box>
+          </ButtonGroup>
+          {/* </Box> */}
           <Link to={`/round-trips/edit-round-trips/${params.row._id}`}>
-            <Button
-              startIcon={<EditNoteIcon />}
-              variant="contained"
-              color="primary"
-            >
-              <Typography variant="subtitle2">Edit</Typography>
+            <Button variant="contained" color="primary">
+              <EditNoteIcon fontSize="small" />
             </Button>
           </Link>
           <Button
-            startIcon={<DeleteOutlineIcon />}
             variant="contained"
             color="error"
             onClick={async () => {
@@ -100,7 +130,7 @@ export const RoundTrips = () => {
               }
             }}
           >
-            <Typography variant="subtitle2">Delete</Typography>
+            <DeleteOutlineIcon fontSize="small" />
           </Button>
         </Box>
       ),
@@ -139,18 +169,36 @@ export const RoundTrips = () => {
             <div className="loading-animation" />
           </div>
         ) : (
-          <DataGrid
-            getRowId={(row) => row._id}
-            rows={roundTrips}
-            columns={columns}
-            initialState={{
-              pagination: {
-                paginationModel: { page: 0, pageSize: 5 },
-              },
-            }}
-            pageSizeOptions={[5, 10, 25, 50]}
-            // checkboxSelection
-          />
+          <>
+            <Hidden smDown>
+              <DataGrid
+                getRowId={(row) => row._id}
+                rows={roundTrips}
+                columns={columns}
+                initialState={{
+                  pagination: {
+                    paginationModel: { page: 0, pageSize: 5 },
+                  },
+                }}
+                pageSizeOptions={[5, 10, 25, 50]}
+                // checkboxSelection
+              />
+            </Hidden>
+            <Hidden smUp>
+              <DataGrid
+                getRowId={(row) => row._id}
+                rows={roundTrips}
+                columns={columns}
+                initialState={{
+                  pagination: {
+                    paginationModel: { page: 0, pageSize: 50 },
+                  },
+                }}
+                pageSizeOptions={[5, 10, 25, 50, 100]}
+                // checkboxSelection
+              />
+            </Hidden>
+          </>
         )}
         {/* <TableContainer component={Paper}>
               <Table stickyHeader>

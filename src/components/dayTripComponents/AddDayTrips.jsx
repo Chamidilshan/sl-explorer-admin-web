@@ -44,22 +44,18 @@ export const AddDayTrips = () => {
     false, //teo 7
     false, //three 8
   ]);
+
   const [images, setImages] = useState(["", [[1, ""]]]); //finished
-  const [services, setServices] = useState([""]);
+  const [services, setServices] = useState([[""], [""], [""]]);
   const [hotels, setHotels] = useState([""]);
   const [prices, setPrices] = useState([0, 0, 0]);
-  const [weekdays, setWeekdays] = useState([
-    false,
-    false,
-    false,
-    false,
-    false,
-    false,
-    false,
+  const [locations, setLocations] = useState([
+    ["", "", [false, false, false, false, false, false, false]],
   ]);
 
   const [isFetching, setIsFetching] = useState(false);
   const { tripId } = useParams();
+
   useEffect(() => {
     if (tripId != undefined) {
       setIsFetching(true);
@@ -81,15 +77,31 @@ export const AddDayTrips = () => {
             response.data.packageCoverImage,
             response.data.packageImageLinks.map((item, index) => [index, item]),
           ]);
-          setServices(response.data.services);
+          const categorizedServices = response.data.services.reduce(
+            (accumulator, current) => {
+              accumulator[current.category] =
+                accumulator[current.category] || [];
+              accumulator[current.category].push(current.name);
+              return accumulator;
+            },
+            {}
+          );
+
+          setServices(Object.values(categorizedServices));
+
+          // setServices(response.data.services);
           setHotels(response.data.hotels);
           setPrices([
             response.data.price,
             response.data.price,
             response.data.price,
           ]);
-          setWeekdays(
-            response.data.avaliableDates.map((item) => item.avaliability)
+          setLocations(
+            response.data.locations.map((location) => [
+              location.name,
+              location.prices,
+              location.avaliableDates.map((date) => date.avaliability),
+            ])
           );
         })
         .then(() => {
@@ -169,6 +181,7 @@ export const AddDayTrips = () => {
     const urlPattern = /^(https?|ftp):\/\/[^\s/$.?#].[^\s]*$/;
     return urlPattern.test(str);
   }
+
   const extractImages = async () => {
     try {
       if (!isURL(images[0])) {
@@ -210,15 +223,8 @@ export const AddDayTrips = () => {
     }
   };
 
-  const days = [
-    "Monday",
-    "Tuesday",
-    "Wednesday",
-    "Thursday",
-    "Friday",
-    "Saturday",
-    "Sunday",
-  ];
+  const days = ["Mon", "Tues", "Wed", "Thur", "Fri", "Sat", "Sun"];
+
   const jsonObject = {};
   const makeJson = async () => {
     jsonObject["packageCategoryName"] = packDetails[0];
@@ -231,10 +237,29 @@ export const AddDayTrips = () => {
     jsonObject["packageTitle"] = packDetails[4];
     jsonObject["packageSubTitle"] = packDetails[5];
     // jsonObject["packageTotalSeats"] = packDetails[4];
-    jsonObject["services"] = services;
+    jsonObject["services"] = [
+      ...services[0].map((elem) => ({
+        category: "included",
+        name: elem,
+      })),
+      ...services[1].map((elem) => ({
+        category: "not included",
+        name: elem,
+      })),
+      ...services[2].map((elem) => ({
+        category: "recommendations",
+        name: elem,
+      })),
+    ];
     jsonObject["hotels"] = hotels;
-    jsonObject["avaliableDates"] = weekdays.map((item, index) => {
-      return { dayName: days[index], avaliability: item };
+    jsonObject["locations"] = locations.map((elem, ind) => {
+      return {
+        avaliableDates: elem[2].map((item, index) => {
+          return { dayName: days[index], avaliability: item };
+        }),
+        name: elem[0],
+        prices: elem[1],
+      };
     });
     // jsonObject["price"] = prices
   };
@@ -319,13 +344,13 @@ export const AddDayTrips = () => {
               onSaveServices={(data) => setServices(data)}
               onSaveHotels={(data) => setHotels(data)}
               onSavePrices={(data) => setPrices(data)}
-              onSaveWeekdays={(data) => setWeekdays(data)}
+              onSaveWeekdays={(data) => setLocations(data)}
               prevImages={images}
               prevDetails={packDetails}
               prevServices={services}
               prevHotels={hotels}
               prevPrices={prices}
-              prevWeekdays={weekdays}
+              prevWeekdays={locations}
             />
           )}
         </Box>
@@ -484,20 +509,14 @@ export const PackDetails = ({
     onSaveServices(services);
   };
 
-  const days = [
-    "Monday",
-    "Tuesday",
-    "Wednesday",
-    "Thursday",
-    "Friday",
-    "Saturday",
-    "Sunday",
-  ];
-  const [weekdays, setWeekdays] = useState(prevWeekdays);
+  const days = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+  // const [weekdays, setWeekdays] = useState(prevWeekdays);
+
+  const [locations, setLocations] = useState(prevWeekdays);
   const saveWeekdays = (e) => {
     e.preventDefault();
     setWeekdaysSuccess(true);
-    onSaveWeekdays(weekdays);
+    onSaveWeekdays(locations);
   };
 
   return (
@@ -798,60 +817,130 @@ export const PackDetails = ({
           </Box>
         </Paper>
 
-        <Paper
-          sx={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "flex-start",
-            border: `1px solid ${weekdaysSuccess ? "green" : "#e0e0e0"}`,
-            borderRadius: "6px",
-            minWidth: "350px",
-            width: "100%",
-            mt: "40px",
-          }}
-        >
-          <Box className="w-full flex flex-row justify-start" gap={2}>
-            <Box className=" flex flex-col w-full items-start">
-              <Box className="w-full flex flex-row justify-between" p={1}>
-                <Typography variant="subtitle2">Available Weekdays</Typography>
-                {weekdaysSuccess && (
-                  <CheckCircleIcon color="success" flex={1} />
-                )}
-              </Box>
-              <Divider
-                sx={{
-                  width: "100%",
-                  bgcolor: weekdaysSuccess ? "green" : "primary",
-                }}
-              />
-              <Box
-                p="8px 16px"
-                className="w-full flex flex-row flex-wrap gap-4 justify-center"
-              >
-                <form style={{ width: "100%" }} onSubmit={saveWeekdays}>
-                  {weekdays.map((item, index) => (
-                    <FormControlLabel
-                      key={index}
-                      control={<Checkbox />}
-                      label={days[index]}
-                      checked={item}
+        {locations.map((location, index) => {
+          return (
+            <Paper
+              key={index}
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "flex-start",
+                border: `1px solid ${weekdaysSuccess ? "green" : "#e0e0e0"}`,
+                borderRadius: "6px",
+                minWidth: "350px",
+                width: "100%",
+                mt: "40px",
+              }}
+            >
+              <Box className="w-full flex flex-row justify-start" gap={2}>
+                <Box className=" flex flex-col w-full items-start">
+                  <Box className="w-full flex flex-row justify-between" p={1}>
+                    <Typography variant="subtitle2">Locations</Typography>
+                    {weekdaysSuccess && (
+                      <CheckCircleIcon color="success" flex={1} />
+                    )}
+                  </Box>
+                  <Divider
+                    sx={{
+                      width: "100%",
+                      bgcolor: weekdaysSuccess ? "green" : "primary",
+                    }}
+                  />
+
+                  <Box
+                    className="w-full flex flex-row justify-between items-center"
+                    p={2}
+                  >
+                    <Typography variant="body2">Name:</Typography>
+                    <TextField
+                      type="text"
+                      required
+                      value={location[0]}
+                      size="small"
                       onChange={(e) => {
-                        var arr = [...weekdays];
-                        arr[index] = e.target.checked;
-                        setWeekdays(arr);
+                        var { value } = e.target;
+                        setLocations((prevLocations) => {
+                          var updatedLocations = [...prevLocations];
+                          updatedLocations[index][0] = value;
+                          return updatedLocations;
+                        });
                       }}
                     />
-                  ))}
-                  <Box className="w-full" p={2}>
-                    <Button type="submit" variant="contained" fullWidth>
-                      Save
-                    </Button>
                   </Box>
-                </form>
+
+                  <Box
+                    className="w-full flex flex-row justify-between items-center"
+                    p={2}
+                  >
+                    <Typography variant="body2">Price:</Typography>
+                    <TextField
+                      type="number"
+                      required
+                      value={location[1]}
+                      size="small"
+                      onChange={(e) => {
+                        const { value } = e.target;
+                        setLocations((prevLocations) => {
+                          const updatedLocations = [...prevLocations];
+                          updatedLocations[index][1] = value;
+                          return updatedLocations;
+                        });
+                      }}
+                    />
+                  </Box>
+
+                  <Divider
+                    sx={{
+                      width: "100%",
+                      bgcolor: weekdaysSuccess ? "green" : "primary",
+                    }}
+                  />
+                  <Box className="w-full flex flex-row justify-between" p={1}>
+                    <Typography variant="subtitle2">
+                      Available Weekdays
+                    </Typography>
+                    {weekdaysSuccess && (
+                      <CheckCircleIcon color="success" flex={1} />
+                    )}
+                  </Box>
+                  <Divider
+                    sx={{
+                      width: "100%",
+                      bgcolor: weekdaysSuccess ? "green" : "primary",
+                    }}
+                  />
+                  <Box
+                    p="8px 16px"
+                    className="w-full flex flex-row flex-wrap gap-4 justify-center"
+                  >
+                    <form style={{ width: "100%" }} onSubmit={saveWeekdays}>
+                      {location[2].map((item, i) => (
+                        <FormControlLabel
+                          key={i}
+                          control={<Checkbox />}
+                          label={days[i]}
+                          checked={item}
+                          onChange={(e) => {
+                            setLocations((prevLocations) => {
+                              const updatedLocations = [...prevLocations];
+                              updatedLocations[index][2][i] = e.target.checked;
+                              return updatedLocations;
+                            });
+                          }}
+                        />
+                      ))}
+                      <Box className="w-full" p={2}>
+                        <Button type="submit" variant="contained" fullWidth>
+                          Save
+                        </Button>
+                      </Box>
+                    </form>
+                  </Box>
+                </Box>
               </Box>
-            </Box>
-          </Box>
-        </Paper>
+            </Paper>
+          );
+        })}
       </Box>
 
       <Box
@@ -1153,7 +1242,7 @@ export const PackDetails = ({
                 <CardMedia
                   component="img"
                   src={
-                    categoryImage
+                    categoryImage != null
                       ? categoryImage
                       : "https://firebasestorage.googleapis.com/v0/b/sl-explorer.appspot.com/o/CommonImageAssets%2FaddImage.png?alt=media&token=af21ca00-6dfa-4f7a-a72c-2af4f5a4abd9"
                   }
@@ -1173,19 +1262,32 @@ export const PackDetails = ({
                   overflowX: "hidden",
                 }}
               >
-                {/* <CustomDropzone onFileDrop={(selectedFile) => {}} /> */}
-                <Typography
-                  sx={{
-                    fontSize: "10pt",
-                    width: "100%",
-                    height: "100%",
-                    border: "2px dashed grey",
-                    borderRadius: "6px",
-                    p: "20px",
+                <CustomDropzone
+                  onFileDrop={(selectedFile) => {
+                    // console.log(selectedFile);
+                    var thisId = item.at(0);
+                    const reader = new FileReader();
+                    reader.onload = () => {
+                      // Removing the previous file with the same id
+                      setCategoryImage((prevCoverImage) =>
+                        prevCoverImage.filter((item) => item[0] !== thisId)
+                      );
+
+                      // Adding the new file
+                      setCategoryImage((prevCoverImage) => [
+                        ...prevCoverImage,
+                        [thisId, reader.result],
+                      ]);
+
+                      // Sorting the array based on the first element of each subarray
+                      setCategoryImage((prevCoverImage) =>
+                        prevCoverImage.sort((a, b) => a[0] - b[0])
+                      );
+                    };
+                    reader.readAsDataURL(selectedFile);
                   }}
-                >
-                  Category images can not be edited here..!
-                </Typography>
+                />
+                {/* </Box> */}
               </Box>
               <Button size="small" color="error" disabled>
                 <DeleteIcon
@@ -1215,6 +1317,7 @@ export const PackDetails = ({
           </Box>
         </Paper>
 
+        {/* Hotels */}
         {loading ? (
           <div className="w-full h-full flex justify-center items-center">
             <div className="loading-animation" />
@@ -1305,6 +1408,7 @@ export const PackDetails = ({
           </Paper>
         )}
 
+        {/* Services */}
         <Paper
           sx={{
             display: "flex",
@@ -1318,6 +1422,7 @@ export const PackDetails = ({
         >
           <Box className="w-full flex flex-row justify-start" gap={2}>
             <Box className=" flex flex-col w-full items-start">
+              {/**************************   Included   **********************************/}
               <Box className="w-full flex flex-row justify-between" p={1}>
                 <Typography variant="subtitle2">Included Services</Typography>
                 {servicesSuccess && (
@@ -1332,15 +1437,15 @@ export const PackDetails = ({
               />
 
               <form style={{ width: "100%" }} onSubmit={saveServices}>
-                {services.map((item, index) => (
+                {services[0].map((item, index) => (
                   <Box p="8px 16px" className="w-full" key={index}>
                     <TextField
                       required
                       fullWidth
-                      value={services[index]}
+                      value={services[0][index]}
                       onChange={(e) => {
                         const prev = [...services];
-                        prev[index] = e.target.value;
+                        prev[0][index] = e.target.value;
                         setServices(prev);
                       }}
                       placeholder="Type the service"
@@ -1355,8 +1460,8 @@ export const PackDetails = ({
                     color="error"
                     onClick={(e) => {
                       var prev = [...services];
-                      prev = prev.filter(
-                        (previous, index) => index != services.length - 1
+                      prev[0] = prev[0].filter(
+                        (previous, index) => index != services[0].length - 1
                       );
                       setServices(prev);
                     }}
@@ -1366,18 +1471,24 @@ export const PackDetails = ({
                   <Button
                     variant="contained"
                     startIcon={<AddIcon />}
-                    onClick={() => setServices((prev) => [...prev, ""])}
+                    onClick={() => {
+                      var prev = [...services];
+                      prev[0] = [...prev[0], ""];
+                      setServices(prev);
+                    }}
                   >
                     Add
                   </Button>
                 </Box>
-                {/* 
+
                 <Divider
                   sx={{
                     width: "100%",
                     bgcolor: servicesSuccess ? "green" : "primary",
                   }}
                 />
+
+                {/****************************   Not Included   ****************************/}
                 <Box className="w-full flex flex-row justify-between" p={1}>
                   <Typography variant="subtitle2">
                     Not Included Services
@@ -1393,15 +1504,15 @@ export const PackDetails = ({
                   }}
                 />
 
-                {services.map((item, index) => (
+                {services[1].map((item, index) => (
                   <Box p="8px 16px" className="w-full" key={index}>
                     <TextField
                       required
                       fullWidth
-                      value={services[index]}
+                      value={services[1][index]}
                       onChange={(e) => {
                         const prev = [...services];
-                        prev[index] = e.target.value;
+                        prev[1][index] = e.target.value;
                         setServices(prev);
                       }}
                       placeholder="Type the service"
@@ -1416,8 +1527,8 @@ export const PackDetails = ({
                     color="error"
                     onClick={(e) => {
                       var prev = [...services];
-                      prev = prev.filter(
-                        (previous, index) => index != services.length - 1
+                      prev[1] = prev[1].filter(
+                        (previous, index) => index != services[1].length - 1
                       );
                       setServices(prev);
                     }}
@@ -1427,11 +1538,81 @@ export const PackDetails = ({
                   <Button
                     variant="contained"
                     startIcon={<AddIcon />}
-                    onClick={() => setServices((prev) => [...prev, ""])}
+                    onClick={() => {
+                      var prev = [...services];
+                      prev[1] = [...prev[1], ""];
+                      setServices(prev);
+                    }}
                   >
                     Add
                   </Button>
-                </Box> */}
+                </Box>
+
+                <Divider
+                  sx={{
+                    width: "100%",
+                    bgcolor: servicesSuccess ? "green" : "primary",
+                  }}
+                />
+
+                {/****************************   Recommendations   ****************************/}
+
+                <Box className="w-full flex flex-row justify-between" p={1}>
+                  <Typography variant="subtitle2">Recommendations</Typography>
+                  {servicesSuccess && (
+                    <CheckCircleIcon color="success" flex={1} />
+                  )}
+                </Box>
+                <Divider
+                  sx={{
+                    width: "100%",
+                    bgcolor: servicesSuccess ? "green" : "primary",
+                  }}
+                />
+
+                {services[2].map((item, index) => (
+                  <Box p="8px 16px" className="w-full" key={index}>
+                    <TextField
+                      required
+                      fullWidth
+                      value={services[2][index]}
+                      onChange={(e) => {
+                        const prev = [...services];
+                        prev[2][index] = e.target.value;
+                        setServices(prev);
+                      }}
+                      placeholder="Type the recommendation"
+                      size="small"
+                    />
+                  </Box>
+                ))}
+                <Box className="w-full flex justify-between" p={2}>
+                  <Button
+                    variant="outlined"
+                    startIcon={<DeleteIcon />}
+                    color="error"
+                    onClick={(e) => {
+                      var prev = [...services];
+                      prev[2] = prev[2].filter(
+                        (previous, index) => index != services[2].length - 1
+                      );
+                      setServices(prev);
+                    }}
+                  >
+                    Delete Last
+                  </Button>
+                  <Button
+                    variant="contained"
+                    startIcon={<AddIcon />}
+                    onClick={() => {
+                      var prev = [...services];
+                      prev[2] = [...prev[2], ""];
+                      setServices(prev);
+                    }}
+                  >
+                    Add
+                  </Button>
+                </Box>
                 <Box className="w-full" p={2}>
                   <Button type="submit" variant="contained" fullWidth>
                     Save
