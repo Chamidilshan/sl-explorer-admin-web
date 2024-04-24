@@ -25,11 +25,10 @@ import { Festivals } from "./pages/Festival.jsx";
 import { AddRoundTrips } from "./components/tripComponents/PackDetails/AddRoundtrips";
 import EditRoundTrips from "./components/tripComponents/PackDetails/EditRoundTrips.jsx";
 import { AddDayTrips } from "./components/dayTripComponents/AddDayTrips.jsx";
-<<<<<<< Updated upstream
+
 import { SL_A_Zs } from "./pages/SL_A_Z.jsx";
-=======
+
 import { AddCruiseShips } from "./components/cruiseShipComponents/AddCruiseShip.jsx";
->>>>>>> Stashed changes
 
 function App() {
   const [count, setCount] = useState(0);
