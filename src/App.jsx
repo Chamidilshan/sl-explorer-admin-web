@@ -25,7 +25,11 @@ import { Festivals } from "./pages/Festival.jsx";
 import { AddRoundTrips } from "./components/tripComponents/PackDetails/AddRoundtrips";
 import EditRoundTrips from "./components/tripComponents/PackDetails/EditRoundTrips.jsx";
 import { AddDayTrips } from "./components/dayTripComponents/AddDayTrips.jsx";
+<<<<<<< Updated upstream
 import { SL_A_Zs } from "./pages/SL_A_Z.jsx";
+=======
+import { AddCruiseShips } from "./components/cruiseShipComponents/AddCruiseShip.jsx";
+>>>>>>> Stashed changes
 
 function App() {
   const [count, setCount] = useState(0);
@@ -62,6 +66,28 @@ function App() {
               <RequireAuth>
                 <Front in="Dashboard" route="/">
                   <Home />
+                </Front>
+              </RequireAuth>
+            }
+          />
+          <Route
+            path="/cruise-ships/edit-cruise-ships/:tripId"
+            exact
+            element={
+              <RequireAuth>
+                <Front route="/cruise-ships/edit-cruise-ships/:tripId" in="CruiseShips">
+                  <AddCruiseShips />
+                </Front>
+              </RequireAuth>
+            }
+          />
+          <Route
+            path="/cruise-ships/add-cruise-ships"
+            exact
+            element={
+              <RequireAuth>
+                <Front route="/cruise-ships/add-cruise-ships" in="CruiseShips">
+                  <AddCruiseShips />
                 </Front>
               </RequireAuth>
             }
