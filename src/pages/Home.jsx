@@ -31,8 +31,8 @@ const columns = [
 
 
 const makeStyle = (status) => {
-  if (status === "Approved") {
-    return "bg-green-300 text-green-800";
+  if (status === "Confirmed") {
+    return "bg-green-500 text-white";
   } else if (status === "Pending") {
     return "bg-red-200 text-red-800";
   } else {
@@ -173,7 +173,7 @@ export const Home = () => {
           <TableBody>
             {orders.map((order) => (
               <TableRow key={order._id}>
-                <TableCell>{order.packageId.roundTrip.packageName}</TableCell>
+                <TableCell>{order.packageId.roundTrip ? order.packageId.roundTrip.packageName : order.packageId.dayTrip.packageName}</TableCell>
                 <TableCell align="left">{order.customerId}</TableCell>
                 <TableCell align="left">{order.tripDate}</TableCell>
                 <TableCell align="left">
@@ -184,7 +184,7 @@ export const Home = () => {
                   </span>
                 </TableCell>
                 <TableCell align="left" className="Details">
-                  {order.advance.isPaid ? "Done" : "Not Paid"} 
+                  {order.status == 'Confirmed' ? "Done" : "Not Paid"} 
                 </TableCell>
                 <TableCell>
                 <Button variant='contained' onClick={e=>{handleEdit(order)}} color='primary' sx={{margin: '5px'}} >{order.price.finalPrice ? 'See Prices' : 'Add Prices'}</Button>

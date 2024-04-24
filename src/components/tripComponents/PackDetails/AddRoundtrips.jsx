@@ -25,9 +25,10 @@ import { imageDb } from "../../../../config";
 import { v4 } from "uuid";
 import { RoundTripServices } from "../../../services/RoundTripService";
 import NavigateNextIcon from "@mui/icons-material/NavigateNext";
+import { Dates } from "./Dates";
 
 export const AddRoundTrips = () => {
-  const pages = ["PackDetails", "Itinerary", "Hotels", "Prices"];
+  const pages = ["PackDetails", "Itinerary", "Hotels", "Prices", "Dates"];
   const [currentPage, setCurrentPage] = useState(1);
 
   const [packDetails, setPackDetails] = useState(["", "", "", "", 0, ""]); //finished
@@ -35,6 +36,7 @@ export const AddRoundTrips = () => {
   const [itinerary1, setItinerary1] = useState([]);
   const [hotels, setHotels] = useState([]);
   const [prices, setPrices] = useState(["", "", "", "", "", ""]);
+  const [dates, setDates] = useState(["", [""], ""]);
 
   const [packageImage, setPackageImage] = useState(""); //firestore saved url
   const [packageImageLinks, setPackageImageLinks] = useState([""]); //firestore saved urls
@@ -128,6 +130,17 @@ export const AddRoundTrips = () => {
         triple: prices[5],
       },
     };
+    jsonObject["dates"] = {
+      day: dates[0],
+      details: dates[1].map((item, index) => {
+        return {
+          date: item[0],
+          availability: item[1],
+          filledSeats: item[2],
+        };
+      }),
+      bookableUntil: dates[2],
+    };
   };
 
   const [loading, setLoading] = useState(false);
@@ -189,10 +202,10 @@ export const AddRoundTrips = () => {
             <Typography variant="body2" mt={2}>
               This might take some time according to the image size.
             </Typography>
-            <Typography variant="body2" mt={2}>
+            {/* <Typography variant="body2" mt={2}>
               size and quality both are crucial to provide better user
               experience.{" "}
-            </Typography>
+            </Typography> */}
           </div>
         </Modal>
       ) : (
@@ -229,6 +242,12 @@ export const AddRoundTrips = () => {
             <Prices
               onSaveDetails={(data) => setPrices(data)}
               prevDetails={prices}
+            />
+          )}
+          {currentPage == 5 && (
+            <Dates
+              onSaveDetails={(data) => setDates(data)}
+              prevDetails={dates}
             />
           )}
         </Box>

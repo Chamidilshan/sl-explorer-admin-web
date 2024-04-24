@@ -22,7 +22,7 @@ export const RoundTripServices = {
 
   async updateRoundTrip(trip) {
     try {
-      const response = await api.put("/api/v1/roundTrips", trip, {
+      const response = await api.put(`/api/v1/roundTrips/${trip.id}`, trip, {
         headers: {
           "Content-Type": "application/json",
         },
@@ -68,6 +68,50 @@ export const RoundTripServices = {
       const response = await api.get(`/api/v1/roundtrips/${tripId}`);
       console.log(response);
       toast.success("Package has been loaded..!");
+      return response.data;
+    } catch (error) {
+      toast.error("Something went wrong..!\n" + error.message);
+      throw error;
+    }
+  },
+
+  async moveUpATrip(trip) {
+    try {
+      const response = await api.put(
+        `/api/v1/roundtrips/moveUp/${trip._id}`,
+        {
+          order: trip.order,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      console.log(response);
+      toast.success("Package has been moved up..!");
+      return response.data;
+    } catch (error) {
+      toast.error("Something went wrong..!\n" + error.message);
+      throw error;
+    }
+  },
+
+  async moveDownATrip(trip) {
+    try {
+      const response = await api.put(
+        `/api/v1/roundtrips/moveDown/${trip._id}`,
+        {
+          order: trip.order,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      console.log(response);
+      toast.success("Package has been moved down..!");
       return response.data;
     } catch (error) {
       toast.error("Something went wrong..!\n" + error.message);
