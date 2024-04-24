@@ -77,14 +77,32 @@ export const AddDayTrips = () => {
             response.data.packageCoverImage,
             response.data.packageImageLinks.map((item, index) => [index, item]),
           ]);
-          setServices(response.data.services);
+          const categorizedServices = response.data.services.reduce(
+            (accumulator, current) => {
+              accumulator[current.category] =
+                accumulator[current.category] || [];
+              accumulator[current.category].push(current.name);
+              return accumulator;
+            },
+            {}
+          );
+
+          setServices(Object.values(categorizedServices));
+
+          // setServices(response.data.services);
           setHotels(response.data.hotels);
           setPrices([
             response.data.price,
             response.data.price,
             response.data.price,
           ]);
-          setLocations(response.data.locations);
+          setLocations(
+            response.data.locations.map((location) => [
+              location.name,
+              location.prices,
+              location.avaliableDates.map((date) => date.avaliability),
+            ])
+          );
         })
         .then(() => {
           setIsFetching(false);
@@ -205,15 +223,7 @@ export const AddDayTrips = () => {
     }
   };
 
-  const days = [
-    "Monday",
-    "Tuesday",
-    "Wednesday",
-    "Thursday",
-    "Friday",
-    "Saturday",
-    "Sunday",
-  ];
+  const days = ["Mon", "Tues", "Wed", "Thur", "Fri", "Sat", "Sun"];
 
   const jsonObject = {};
   const makeJson = async () => {
@@ -228,24 +238,18 @@ export const AddDayTrips = () => {
     jsonObject["packageSubTitle"] = packDetails[5];
     // jsonObject["packageTotalSeats"] = packDetails[4];
     jsonObject["services"] = [
-      services[0].map((elem, ind) => {
-        return {
-          category: "included",
-          name: elem,
-        };
-      }),
-      services[1].map((elem, ind) => {
-        return {
-          category: "not included",
-          name: elem,
-        };
-      }),
-      services[2].map((elem, ind) => {
-        return {
-          category: "recommendations",
-          name: elem,
-        };
-      }),
+      ...services[0].map((elem) => ({
+        category: "included",
+        name: elem,
+      })),
+      ...services[1].map((elem) => ({
+        category: "not included",
+        name: elem,
+      })),
+      ...services[2].map((elem) => ({
+        category: "recommendations",
+        name: elem,
+      })),
     ];
     jsonObject["hotels"] = hotels;
     jsonObject["locations"] = locations.map((elem, ind) => {
@@ -505,15 +509,7 @@ export const PackDetails = ({
     onSaveServices(services);
   };
 
-  const days = [
-    "Monday",
-    "Tuesday",
-    "Wednesday",
-    "Thursday",
-    "Friday",
-    "Saturday",
-    "Sunday",
-  ];
+  const days = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
   // const [weekdays, setWeekdays] = useState(prevWeekdays);
 
   const [locations, setLocations] = useState(prevWeekdays);
@@ -1246,7 +1242,7 @@ export const PackDetails = ({
                 <CardMedia
                   component="img"
                   src={
-                    categoryImage
+                    categoryImage != null
                       ? categoryImage
                       : "https://firebasestorage.googleapis.com/v0/b/sl-explorer.appspot.com/o/CommonImageAssets%2FaddImage.png?alt=media&token=af21ca00-6dfa-4f7a-a72c-2af4f5a4abd9"
                   }
@@ -1266,19 +1262,32 @@ export const PackDetails = ({
                   overflowX: "hidden",
                 }}
               >
-                {/* <CustomDropzone onFileDrop={(selectedFile) => {}} /> */}
-                <Typography
-                  sx={{
-                    fontSize: "10pt",
-                    width: "100%",
-                    height: "100%",
-                    border: "2px dashed grey",
-                    borderRadius: "6px",
-                    p: "20px",
+                <CustomDropzone
+                  onFileDrop={(selectedFile) => {
+                    // console.log(selectedFile);
+                    var thisId = item.at(0);
+                    const reader = new FileReader();
+                    reader.onload = () => {
+                      // Removing the previous file with the same id
+                      setCategoryImage((prevCoverImage) =>
+                        prevCoverImage.filter((item) => item[0] !== thisId)
+                      );
+
+                      // Adding the new file
+                      setCategoryImage((prevCoverImage) => [
+                        ...prevCoverImage,
+                        [thisId, reader.result],
+                      ]);
+
+                      // Sorting the array based on the first element of each subarray
+                      setCategoryImage((prevCoverImage) =>
+                        prevCoverImage.sort((a, b) => a[0] - b[0])
+                      );
+                    };
+                    reader.readAsDataURL(selectedFile);
                   }}
-                >
-                  Category images can not be edited here..!
-                </Typography>
+                />
+                {/* </Box> */}
               </Box>
               <Button size="small" color="error" disabled>
                 <DeleteIcon

@@ -48,7 +48,7 @@ export const DayTrips = () => {
     {
       field: "actions",
       headerName: "Actions",
-      width: 400,
+      width: 250,
       renderCell: (params) => (
         <Box className="flex flex-row justify-between align-center gap-2">
           <ButtonGroup>
@@ -88,16 +88,16 @@ export const DayTrips = () => {
             variant="contained"
             color="error"
             onClick={async () => {
-              // if (confirm("Are you sure you want to delete this day trip?")) {
-              //   console.log(params.row._id);
-              //   var resp = await DayTripServices.deleteDayTrip(params.row._id);
-              //   if (resp) {
-              //     setRoundTrips(
-              //       roundTrips.filter((item, i) => item._id !== params.row._id)
-              //     );
-              //   }
-              //   // need to call the delete function here
-              // }
+              if (confirm("Are you sure you want to delete this day trip?")) {
+                console.log(params.row._id);
+                var resp = await DayTripServices.deleteDayTrip(params.row._id);
+                if (resp) {
+                  setRoundTrips(
+                    roundTrips.filter((item, i) => item._id !== params.row._id)
+                  );
+                }
+                // need to call the delete function here
+              }
             }}
           >
             <DeleteOutlineIcon fontSize="small" />
