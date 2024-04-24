@@ -124,6 +124,11 @@ const EditRoundTrips = () => {
       // alert("Updated successfully..!\nPlease go back");
       // navigate("/round-trips");
     }
+    // else {
+    //   toast.error(
+    //     "Error : At least one cover image and package image is required..!"
+    //   );
+    // }
   }, [packageImageLinks, packageImage]);
 
   function isURL(str) {
@@ -275,9 +280,8 @@ const EditRoundTrips = () => {
             <Typography variant="body2" mt={2}>
               This might take some time according to the image size.
             </Typography>
-            <Typography variant="body2" mt={2}>
-              size and quality both are crucial to provide better user
-              experience.{" "}
+            <Typography variant="body" mt={2}>
+              Aleast one cover image and package image is required.
             </Typography>
           </div>
         </Modal>
