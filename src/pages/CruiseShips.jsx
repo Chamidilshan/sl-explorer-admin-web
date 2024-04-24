@@ -15,7 +15,7 @@ export const CruiseShips = () => {
       // {id: '_id', name: 'ID'},
       {id: 'cruiseShipDate', name: 'Date'},
       {id: 'cruiseShipName', name: 'Name'},
-      {id: 'cruiseShipPackage', name: 'Package'},
+      {id: 'cruiseShipPackage', name: 'Package'}, 
       {id: 'cruiseShipImage', name: 'Image'},
       {id: 'action', name: 'Actions'},
     ]
@@ -186,100 +186,9 @@ export const CruiseShips = () => {
 
   return (
     <>
-      <div>
-        <Box className='w-full' sx={{ display: 'flex' }}>
-          <h1 className='text-cyan-900'>CruiseShips</h1>
-        </Box>
-        <Paper className='w-full'>
-          <div className='flex justify-end w-full'>
-            <Button onClick={functionAdd} variant="contained" color="primary">Add New Cruise</Button>
-          </div>
-          <div style={{margin: '1%'}}> 
-      <TableContainer className='w-full'>
-        <Table style={{border: '1px solid #D4D4D4', color: '#262626'}} className='min-w-max'>
-          <TableHead>
-            <TableRow style={{backgroundColor: '#D4D4D4'}}>
-            {columns.map((column) => (
-              <TableCell key={column.id} style={{color: '#262626', fontSize: '18px', fontWeight: 600}}>
-                {column.name}
-              </TableCell>
-            ))}
-            </TableRow> 
-          </TableHead>
-          <TableBody >
-          {cruiseShips.slice(page*rowsPerPage, page*rowsPerPage + rowsPerPage).map((cruiseShip) => ( 
-              <TableRow key={cruiseShip._id} >
-                {/* <TableCell>{cruiseShip._id}</TableCell> */}
-
-                <TableCell style={{fontSize: '16px'}}>{cruiseShip.cruiseShipName}</TableCell>
-                <TableCell style={{fontSize: '16px'}}>{cruiseShip.cruiseShipDate}</TableCell>
-                <TableCell style={{fontSize: '16px'}}>{cruiseShip.cruiseShipPackage}</TableCell>
-                <TableCell style={{fontSize: '16px'}}>
-                  <img src={cruiseShip.cruiseShipImage} alt={cruiseShip.cruiseShiplName} style={{ maxWidth: '100px' }} />
-                </TableCell>
-                <TableCell>
-                <Button variant='contained' onClick={e=>{handleEdit(cruiseShip._id)}} color='primary' sx={{margin: '5px'}} >Edit</Button>
-                  <Button variant='contained' onClick={e=>{handleDelete(cruiseShip._id)}} style={{backgroundColor: '#D97706'}} >Delete</Button>
-                </TableCell>
-              </TableRow>
-            ))} 
-          </TableBody>
-        </Table>
-      </TableContainer> 
-    <TablePagination
-      rowsPerPageOptions={[2, 5, 10, 20]}
-      rowsPerPage={rowsPerPage}
-      page={page}
-      count={cruiseShips.length} 
-      component={'div'}
-      onPageChange={handlePageChange}
-      onRowsPerPageChange={handleRowPerPageChange}>
-    </TablePagination>
-
-      </div>
-
-
-
-        </Paper>
-
-      <Dialog open={open} onClose={closePopUp} fullWidth maxWidth='sm' >
-      <DialogTitle>
-        <span>{title}</span>
-      </DialogTitle> 
-      <DialogContent> 
-        <form onSubmit={handleSubmit}> 
-          <Stack spacing={2} margin={2}>
-            <TextField value={cruiseShipName} required onChange={e=>{cruiseShipNameChange(e.target.value)}} variant='outlined' label='cruiseShip Name'></TextField>
-            <TextField value={cruiseShipDate} required onChange={e=>{cruiseShipDateChange(e.target.value)}} variant='outlined' label='cruiseShip Date'></TextField>
-            <TextField value={cruiseShipPackage} onChange={e=>{cruiseShipPackageChange(e.target.value)}} variant='outlined' label='cruiseShip Package'></TextField>
-            <input type="file" onChange={handleFileChange}/> 
-            {img !== '' ? (imgUrl && <img src={imgUrl} alt="Selected" />) : null} 
-                <br/>
-            <Button type='submit' variant='contained' disabled={loading}>Save</Button>
-          </Stack>
-        </form> 
-      </DialogContent>
-     </Dialog>
-
-
-
-     <Dialog open={deleteConfirmationOpen} onClose={cancelDelete}>
-        <DialogTitle>Confirm Delete</DialogTitle>
-        <DialogContent>
-          Are you sure you want to delete this cruiseShip?
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={cancelDelete}>Cancel</Button>
-          <Button onClick={confirmDelete} color='secondary'>Delete</Button>
-        </DialogActions>
-      </Dialog>
-
-
-
-
-
-
-      </div>
+      <Box sx={{ display: "flex" }}>
+        <h1 className="text-cyan-900">Cruise Ships</h1>
+      </Box>
     </>
   );
 };

@@ -33,6 +33,7 @@ import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import MenuIcon from "@mui/icons-material/Menu";
 import CloseIcon from "@mui/icons-material/Close";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
+import { RiGlobalFill } from "react-icons/ri";
 
 const drawerWidth = 240;
 
@@ -50,6 +51,7 @@ export default function PermanentDrawerLeft(props) {
     "/day-trips",
     "/hotels",
     "/festivals",
+    "/a_z",
     "/notification-campaign",
     "/messages",
     "/settings",
@@ -232,6 +234,11 @@ export default function PermanentDrawerLeft(props) {
                   icon: <CelebrationOutlined />,
                 },
                 {
+                  route: "/a_z",
+                  text: "Sri Lanka A-Z",
+                  icon: <RiGlobalFill />,
+                },
+                {
                   route: "/notification-campaign",
                   text: "Notification Campaign",
                   icon: <NotificationAdd />,
@@ -322,6 +329,11 @@ export default function PermanentDrawerLeft(props) {
                 route: "/festivals",
                 text: "Festivals & Events",
                 icon: <CelebrationOutlined />,
+              },
+              {
+                route: "/a_z",
+                text: "Sri Lanka A-Z",
+                icon: <RiGlobalFill />,
               },
               {
                 route: "/notification-campaign",
